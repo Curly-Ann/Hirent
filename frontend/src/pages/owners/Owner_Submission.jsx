@@ -4,7 +4,7 @@ import logo from "../../assets/hirent-logo.png";
 import Footer from "../../components/Footer";
 import bgImage from "../../assets/bg-signup.jpg";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import OwnerStepper from "../../components/OwnerStepper";
+import Stepper from "../../components/Stepper";
 
 
 const Owner_Submission = () => {
@@ -32,7 +32,7 @@ const Owner_Submission = () => {
                 <div className="z-10 bg-white w-100 md:w-[350px] lg:w-[550px] h-[670px] rounded-lg shadow-lg p-10 flex flex-col justify-between">
 
                     <div className="w-full flex justify-center mb-2">
-                        <OwnerStepper activeStep={1} />
+                        <Stepper activeStep={1} />
                     </div>
 
                     <div className="flex flex-col items-center mt-2">

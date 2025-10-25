@@ -4,13 +4,15 @@ import hirentLogo from "../assets/hirent-logo.png";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#7A1CA9] text-white py-10 px-8 w-full text-sm">
-            <div className="max-w-6xl mx-auto flex flex-wrap justify-between gap-10">
+        <footer className="bg-[#7A1CA9] text-white py-10 px-5 w-full text-sm">
+  <div className="max-w-6xl mx-auto flex flex-wrap justify-between gap-10">
+
+                {/* subscription */}
                 <div>
                     <img
                         src={hirentLogo}
                         alt="Hirent Logo"
-                        className="w-24 h-auto mb-3"
+                        className="w-24 h-auto mb-4"
                     />
 
                     <p className="text-xs text-gray-300 mb-3">Subscribe</p>
@@ -29,12 +31,15 @@ const Footer = () => {
                         </button>
                     </div>
                 </div>
+
+                {/* support */}
                 <div className="space-y-4">
                     <h3 className="font-bold text-base mb-5">Support</h3>
 
                     <p className="text-xs text-gray-300 flex items-center gap-2">
                         <i className="fas fa-map-marker-alt w-3"></i>
-                        Naga City, Camarines Sur, Philippines 4400
+                        Naga City, Camarines Sur,<br />
+                        Philippines 4400
                     </p>
 
                     <p className="text-xs text-gray-300 flex items-center gap-2">
@@ -48,6 +53,7 @@ const Footer = () => {
                     </p>
                 </div>
 
+                {/* account */}
                 <div>
                     <h3 className="font-bold text-base mb-5">Account</h3>
                     <ul className="text-xs text-gray-300 space-y-4">
@@ -57,9 +63,9 @@ const Footer = () => {
                         <li><a href="#" className="no-underline hover:no-underline hover:text-[#e3c6ff] transition-colors duration-200">Wishlist</a></li>
                         <li><a href="#" className="no-underline hover:no-underline hover:text-[#e3c6ff] transition-colors duration-200">Shop</a></li>
                     </ul>
-
                 </div>
 
+                {/* quick link */}
                 <div>
                     <h3 className="font-bold text-base mb-5">Quick Link</h3>
                     <ul className="text-xs text-gray-300 space-y-4">
@@ -70,6 +76,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
+                {/* download app & social media */}
                 <div>
                     <h3 className="font-bold text-base mb-5">Download App</h3>
                     <p className="text-xs text-gray-300 mb-3">
@@ -108,6 +115,7 @@ const Footer = () => {
                 </div>
             </div>
 
+            {/* copyright */}
             <div className="text-center text-xs text-gray-400 mt-10 border-t border-gray-400 pt-6">
                 © Copyright Hirent 2025. All right reserved.
             </div>

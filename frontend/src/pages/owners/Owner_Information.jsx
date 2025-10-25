@@ -4,7 +4,7 @@ import logo from "../../assets/hirent-logo.png";
 import Footer from "../../components/Footer";
 import bgImage from "../../assets/bg-signup.jpg";
 import { useNavigate } from "react-router-dom";
-import OwnerStepper from "../../components/OwnerStepper";
+import Stepper from "../../components/Stepper";
 import { regions, provinces, cities, barangays } from "select-philippines-address";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
@@ -146,7 +146,7 @@ const Owner_Information = () => {
         <div className="z-10 bg-white w-100 md:w-[350px] lg:w-[550px] h-[670px] rounded-lg shadow-lg p-10 flex flex-col justify-center">
 
           <div className="w-[full] flex justify-center mb-6">
-            <OwnerStepper activeStep={0} />
+            <Stepper activeStep={0} />
           </div>
 
           <h2 className="text-[24px] font-bold text-gray-900 mb-1 text-center">

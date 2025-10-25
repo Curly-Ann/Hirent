@@ -23,3 +23,18 @@ footer ul li:hover {
 .bg-white {
   animation: fadeIn 0.6s ease-in-out;
 }
+
+/* Change autofill background to light purple */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f7f0ff inset !important; /* light purple background */
+  -webkit-text-fill-color: #1a1a1a !important; /* text color */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* optional: focus + hover states */
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0px 1000px #f7f0ff inset !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
+

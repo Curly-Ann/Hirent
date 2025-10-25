@@ -1,15 +1,15 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
+import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import Box from "@mui/material/Box";
 
 const steps = ["Owner Information", "Owner Submission"];
 
-export default function OwnerStepper({ activeStep }) {
+export default function Stepper({ activeStep }) {
   return (
     <Box sx={{ width: "100%" }}>
-      <Stepper
+      <MuiStepper
         activeStep={activeStep}
         alternativeLabel
         sx={{
@@ -41,7 +41,7 @@ export default function OwnerStepper({ activeStep }) {
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
-      </Stepper>
+      </MuiStepper>
     </Box>
   );
 }

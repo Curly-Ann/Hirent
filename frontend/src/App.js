@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Signup from "./signup/Signup";
-import Login from "./login/Login";
-import OwnerInformation from "./users/owners/Owner_Information";
-import OwnerSubmission from "./users/owners/Owner_Submission";
+import Signup from './pages/auth/Signup';
+import Login from './pages/auth/Login';
+import OwnerInformation from './pages/owners/Owner_Information';
+import OwnerSubmission from './pages/owners/Owner_Submission';
 
 function App() {
   return (
