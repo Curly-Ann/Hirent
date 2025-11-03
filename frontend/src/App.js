@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Owner Dashboard pages
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import AddItem from './pages/owner/AddItem';
-import OwnerProfile from './pages/owner/owner_profile'; // Updated import
+import OwnerProfile from './pages/owner/OwnerProfile'; // Updated import
 
 // Main App Component
 function App() {
