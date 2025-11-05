@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/auth/Signup";
 import Login from "./pages/auth/Login";
-import OwnerInformation from "./pages/owners/Owner_Information";
-import OwnerSubmission from "./pages/owners/Owner_Submission";
+import OwnerInformation from "./pages/auth/Owner_Information";
+import OwnerSubmission from "./pages/auth/Owner_Submission";
 import Onboarding1 from "./pages/onboarding/Onboarding1";
 import Onboarding2 from "./pages/onboarding/Onboarding2";
 import Onboarding3 from "./pages/onboarding/Onboarding3";
 import Onboarding4 from "./pages/onboarding/Onboarding4";
 import OnboardingLayout from "./layouts/OnboardingLayout";
+import BrowseRentals from "./pages/home/BrowseRentals";
 import "leaflet/dist/leaflet.css";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/onboarding3" element={<Onboarding3 />} />
           <Route path="/onboarding4" element={<Onboarding4 />} />
         </Route>
+        <Route path="/browse" element={<BrowseRentals />} />
       </Routes>
     </Router>
   );

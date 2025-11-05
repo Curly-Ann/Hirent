@@ -12,7 +12,7 @@ const Onboarding = () => {
     const handleNext = () => {
         clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => {
-            navigate("/onboarding2");
+            navigate("/homepage");
         }, 300);
     };
 

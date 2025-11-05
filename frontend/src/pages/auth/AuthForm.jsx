@@ -90,7 +90,7 @@ const AuthForm = ({ mode }) => {
             navigate("/onboarding1");
         } else {
             console.log("Login data:", formData);
-            navigate("/homepage"); // redirect to homepage after login
+            navigate("/browse"); // change this to redirect to homepage after login
         }
     };
 
