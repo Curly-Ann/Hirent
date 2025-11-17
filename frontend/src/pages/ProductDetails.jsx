@@ -25,15 +25,10 @@ const ProductDetails = () => {
     rating: 4.5,
     reviews: 150,
     inStock: true,
+    quantity: 2,
     price: 300.00,
     originalPrice: 500.00,
     description: 'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
-    colors: [
-      { name: 'purple', code: '#A855F7' },
-      { name: 'red', code: '#EF4444' },
-      { name: 'yellow', code: '#F59E0B' }
-    ],
-    sizes: ['M', 'L'],
     images: [
       havicGamepad,
       havicGamepad1,

@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ProductInfo = ({ product }) => {
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('M');
   const [quantity, setQuantity] = useState(2);
   const [dateRange, setDateRange] = useState({
     start: new Date(2025, 9, 21),
@@ -38,7 +36,9 @@ const ProductInfo = ({ product }) => {
   };
 
   const incrementQuantity = () => {
-    setQuantity(quantity + 1);
+    if (quantity < product.quantity) {
+      setQuantity(quantity + 1);
+    }
   };
 
   const totalPrice = product.price * quantity;
@@ -165,7 +165,7 @@ const ProductInfo = ({ product }) => {
         </div>
         <span className="text-gray-600 text-xs shrink-0">{`(${product.reviews} Reviews)`}</span>
         <span className="text-gray-300 text-xs shrink-0">|</span>
-        <span className="text-green-500 font-medium text-xs shrink-0">In Stock</span>
+        <span className="text-green-500 font-medium text-xs shrink-0">In Stock ({product.quantity} available)</span>
       </div>
 
       {/* Price */}
@@ -178,46 +178,6 @@ const ProductInfo = ({ product }) => {
       <p className="text-gray-600 text-xs leading-relaxed border-b pb-3">
         {product.description}
       </p>
-
-      {/* Colors */}
-      <div className="flex items-center gap-3">
-        <span className="text-gray-900 font-medium text-xs shrink-0">Colors:</span>
-        <div className="flex gap-2">
-          {product.colors.map((color, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedColor(index)}
-              className={`w-5 h-5 rounded-full border-2 transition-all shrink-0 ${
-                selectedColor === index
-                  ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-900'
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              style={{ backgroundColor: color.code }}
-              title={color.name}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Size */}
-      <div className="flex items-center gap-3">
-        <span className="text-gray-900 font-medium text-xs shrink-0">Size:</span>
-        <div className="flex gap-2">
-          {product.sizes.map((size) => (
-            <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`w-8 h-8 rounded border-2 font-medium text-xs transition-all shrink-0 ${
-                selectedSize === size
-                  ? 'bg-purple-600 text-white border-purple-600'
-                  : 'bg-white text-gray-900 border-gray-300 hover:border-purple-600'
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Date Range */}
       <div className="border-t pt-4">
