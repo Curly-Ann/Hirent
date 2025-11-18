@@ -1,97 +1,79 @@
-import React, { useState } from 'react';
-import { Menu, X, Search, Heart, ShoppingCart, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Browse", path: "/browse" },
+    { name: "How It Works", path: "/how-it-works" },
+    { name: "About Us", path: "/about" },
+    { name: "Be A Seller", path: "/seller" },
+  ];
 
   return (
-    <>
-      {/* NAVBAR */}
-      <nav className="text-white fixed top-0 left-0 w-full z-50 shadow-md" style={{ backgroundColor: '#7A1CA9' }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          
-          {/* Logo */}
-          <Link to="/" className="flex items-center flex-shrink-0">
-            <img 
-              src="/assets/icons/hirent-white.png"  // Updated path based on your folder structure
-              alt="HIRENT Logo"
-              className="w-24 h-auto"  // Adjust the size of your logo as needed
-            />
-          </Link>
+    <nav
+      className="fixed top-0 left-0 w-full z-50 flex items-center"
+      style={{ backgroundColor: "#7A1CA9", height: "55px" }}
+    >
+      <div className="w-full px-6 md:px-16 lg:px-24 flex items-center justify-between">
 
-          {/* Desktop Menu - Adjusted to move left */}
-          <div className="hidden lg:flex items-center space-x-8 absolute left-1/4">
-            <Link to="/" className="text-sm font-medium hover:text-white/80 transition">Home</Link>
-            <Link to="/browse" className="text-sm font-medium hover:text-white/80 transition">Browse</Link>
-            <Link to="/how-it-works" className="text-sm font-medium hover:text-white/80 transition">How It Works</Link>
-            <Link to="/about" className="text-sm font-medium hover:text-white/80 transition">About Us</Link>
-          </div>
-
-          {/* Right Side Icons */}
-          <div className="hidden lg:flex items-center space-x-6 flex-shrink-0">
-            {/* Search Bar */}
-            <div className="flex items-center bg-white rounded-full px-4 py-2.5 text-gray-700 w-72">
-              <input 
-                type="text" 
-                placeholder="What are you looking for?" 
-                className="flex-1 outline-none text-sm bg-transparent placeholder-gray-400"
-              />
-              <Search className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600 transition" />
-            </div>
-
-            {/* Icon Buttons */}
-            <button className="hover:text-white/80 transition">
-              <Heart className="w-5 h-5" />
-            </button>
-            <button className="hover:text-white/80 transition">
-              <ShoppingCart className="w-5 h-5" />
-            </button>
-            <button className="hover:text-white/80 transition">
-              <User className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button 
-            className="lg:hidden ml-auto text-white"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+        {/* LEFT — LOGO */}
+        <div className="flex items-center">
+          <img
+            src="/assets/hirent-logo.png"
+            alt="HIRENT"
+            className="h-8"
+          />
         </div>
 
-        {/* Mobile Menu Dropdown */}
-        {isOpen && (
-          <div className="lg:hidden px-6 py-4 space-y-3" style={{ backgroundColor: '#6B1595' }}>
-            <Link to="/" className="block text-sm font-medium hover:text-white/80">Home</Link>
-            <Link to="/browse" className="block text-sm font-medium hover:text-white/80">Browse</Link>
-            <Link to="/how-it-works" className="block text-sm font-medium hover:text-white/80">How It Works</Link>
-            <Link to="/about" className="block text-sm font-medium hover:text-white/80">About Us</Link>
-            
-            {/* Mobile Search */}
-            <div className="flex items-center bg-white rounded-full px-4 py-2 text-gray-700 mt-4">
-              <input 
-                type="text" 
-                placeholder="What are you looking for?" 
-                className="flex-1 outline-none text-sm bg-transparent placeholder-gray-400"
-              />
-              <Search className="w-5 h-5 text-gray-400" />
-            </div>
-            
-            {/* Mobile Icons */}
-            <div className="flex items-center space-x-6 pt-3">
-              <Heart className="w-5 h-5" />
-              <ShoppingCart className="w-5 h-5" />
-              <User className="w-5 h-5" />
-            </div>
-          </div>
-        )}
-      </nav>
+        {/* CENTER — NAV LINKS */}
+        <div className="flex items-center space-x-8 font-inter text-[14px] font-medium">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
 
-      {/* PUSH CONTENT DOWN SO IT DOESN'T OVERLAP NAV */}
-      <div className="pt-[72px]"></div>
-    </>
+            return (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={`text-white transition relative ${
+                  isActive ? "font-semibold" : "hover:text-white/90"
+                }`}
+              >
+                {link.name}
+
+                {/* ACTIVE UNDERLINE */}
+                {isActive && (
+                  <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-[#f6dc8f] rounded-full"></span>
+                )}
+              </NavLink>
+            );
+          })}
+        </div>
+
+        {/* RIGHT — LOGIN + REGISTER */}
+        <div className="flex items-center space-x-3">
+
+          {/* LOGIN */}
+          <NavLink
+            to="/login"
+            className="px-4 py-1.5 text-white border border-white rounded-md text-[14px] hover:bg-white/10 transition"
+          >
+            Login
+          </NavLink>
+
+          {/* REGISTER */}
+          <NavLink
+            to="/signup"
+            className="px-5 py-1.5 bg-white text-[#7A1CA9] font-semibold rounded-md text-[14px] hover:bg-white/90 transition"
+          >
+            Register
+          </NavLink>
+
+        </div>
+      </div>
+    </nav>
   );
 };
 

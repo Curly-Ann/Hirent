@@ -1,38 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import ProductSidebar from './components/layout/ProductSidebar';
-import Cart from './pages/Cart';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AboutPage from './pages/AboutPage';
 
-function Layout() {
-  const location = useLocation();
-  
-  // Show footer only on these routes
-  const showFooterRoutes = ['/cart'];
-  const shouldShowFooter = showFooterRoutes.includes(location.pathname);
-
-  return (
-    <div className="App">
-      <Navbar />
-      <ProductSidebar />
-      
-      <Routes>
-        <Route path="/cart" element={<Cart />} />
-        {/* Add your other routes here */}
-      </Routes>
-
-      {shouldShowFooter && <Footer />}
-    </div>
-  );
-}
-
-function App() {
+const App = () => {
   return (
     <Router>
-      <Layout />
+      <Routes>
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;
