@@ -5,11 +5,16 @@ import Footer from "../../components/Footer";
 import emptyCart from "../../assets/empty-cart.png";
 import { User, Calendar, Truck, CircleCheckBig, Clock, Package, MessageCircle, Pencil, CalendarPlus } from "lucide-react";
 import sampleUserCart from "../../data/sampleUserCart";
+import CancelConfirmationModal from "../../components/CancelModal";
 import mockListings from "../../data/mockData";
+
 import { getFakeUser, generateFakeToken } from "../../utils/fakeAuth";
 
 const CartPage = () => {
     const navigate = useNavigate();
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [selectedCancelId, setSelectedCancelId] = useState(null);
+
 
     // Load cart from fake user token
     const [cartItems, setCartItems] = useState([]);
@@ -43,8 +48,11 @@ const CartPage = () => {
                 status: cartItem.status || defaultCartItem.status || "pending",
                 bookedFrom: cartItem.bookedFrom || defaultCartItem.bookedFrom || "",
                 bookedTo: cartItem.bookedTo || defaultCartItem.bookedTo || "",
+                couponDiscount: cartItem.couponDiscount ?? defaultCartItem.couponDiscount ?? 0,
                 adjustedSubtotal: price * (cartItem.days || defaultCartItem.days || 1),
             };
+
+
         }).filter(Boolean);
 
         setCartItems(merged);
@@ -72,13 +80,68 @@ const CartPage = () => {
     const totalShipping = cartItems.reduce((acc, item) => acc + item.shipping, 0);
     const total = subtotal + totalShipping;
 
+    // Cart summary with discount + shipping + duration
+    const calculateItemTotal = (item) => {
+        const pricePerDay = item.price || 0;
+
+        // Determine rental duration
+        let daysCount = item.days || 1;
+        if (item.bookedFrom && item.bookedTo) {
+            const from = new Date(item.bookedFrom);
+            const to = new Date(item.bookedTo);
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const diff = Math.floor((to - from) / msPerDay) + 1;
+            daysCount = diff > 0 ? diff : daysCount;
+        }
+
+        // Shipping fee
+        const shippingFee = typeof item.shipping === "number" ? item.shipping : 0;
+
+        // Fetch discount from sampleUserCart based on item id
+        const sampleItem = sampleUserCart.find(si => si.id === item.id);
+        const discountPercent = sampleItem ? sampleItem.couponDiscount : 0;
+
+        // Subtotal before discount
+        const subtotal = pricePerDay * daysCount;
+
+        // Discount amount
+        const discountAmount = (subtotal * discountPercent) / 100;
+
+        // Total after shipping and discount
+        const total = subtotal + shippingFee - discountAmount;
+
+        return { subtotal, discountAmount, shippingFee, total, daysCount, pricePerDay };
+    };
+
+
+
+    // Overall cart totals
+    const cartTotals = cartItems.reduce(
+        (acc, item) => {
+            const itemTotals = calculateItemTotal(item);
+            acc.subtotal += itemTotals.subtotal;
+            acc.shipping += itemTotals.shippingFee;
+            acc.discount += itemTotals.discountAmount;
+            acc.total += itemTotals.total;
+            return acc;
+        },
+        { subtotal: 0, shipping: 0, discount: 0, total: 0 }
+    );
+
+
+
 
     const [filter, setFilter] = useState("all"); // "all", "approved", "pending"
 
     // Cancel booking for approved/pending items
-    const handleCancelBooking = (id) => {
+    const openCancelModal = (id) => {
+        setSelectedCancelId(id);
+        setShowCancelModal(true);
+    };
+
+    const confirmCancelBooking = () => {
         const updatedCart = cartItems.map(item => {
-            if (item.id === id) {
+            if (item.id === selectedCancelId) {
                 return {
                     ...item,
                     status: "not booked",
@@ -91,8 +154,11 @@ const CartPage = () => {
 
         setCartItems(updatedCart);
         updateFakeUserCart(updatedCart);
+        setShowCancelModal(false);
+        setSelectedCancelId(null);
         alert("Booking canceled successfully.");
     };
+
 
 
     // Filtered items based on selected tab
@@ -116,11 +182,30 @@ const CartPage = () => {
         return sortOrder === "latest" ? bDate - aDate : aDate - bDate;
     });
 
+    // Approved items only
+    const approvedItems = cartItems.filter(item => item.status === "approved");
+
+    // Rental Summary totals for approved items including discount
+    const approvedTotals = approvedItems.reduce(
+        (acc, item) => {
+            const itemTotals = calculateItemTotal(item);
+            acc.subtotal += itemTotals.subtotal;
+            acc.shipping += itemTotals.shippingFee;
+            acc.discount += itemTotals.discountAmount;
+            return acc;
+        },
+        { subtotal: 0, shipping: 0, discount: 0 }
+    );
+
+    // Final total including discount
+    const approvedGrandTotal = approvedTotals.subtotal + approvedTotals.shipping - approvedTotals.discount;
+
+
     return (
         <div className="flex flex-col min-h-screen bg-[#fbfbfb]">
             <div className="flex flex-1">
                 <Sidebar />
-                <div className="cart-scale flex-1 px-8 mb-15">
+                <div className="cart-scale flex-1 mb-15">
                     <div className="max-w-8xl mx-auto pt-12">
                         <div>
                             <h1 className="text-[20px] font-bold">Your Cart</h1>
@@ -146,7 +231,7 @@ const CartPage = () => {
                                     onClick={() => setFilter("pending")}
                                     className={`px-2 py-1 rounded-lg text-sm ${filter === "pending" ? "bg-[#7A1CA9] text-white" : "bg-gray-100 text-gray-800"}`}
                                 >
-                                    Waiting ({waitingCount})
+                                    Pending ({waitingCount})
                                 </button>
                             </div>
 
@@ -194,7 +279,7 @@ const CartPage = () => {
                                                 {/* Conditional Action */}
                                                 {item.status === "approved" || item.status === "pending" ? (
                                                     <button
-                                                        onClick={() => handleCancelBooking(item.id)}
+                                                        onClick={() => openCancelModal(item.id)}
                                                         className="absolute top-4 right-4 text-red-500 hover:text-red-700 px-3 py-1 text-sm font-medium border border-red-300 rounded-lg bg-red-50"
                                                     >
                                                         Cancel Booking
@@ -207,6 +292,7 @@ const CartPage = () => {
                                                         Remove to cart
                                                     </button>
                                                 )}
+
 
                                                 <div className="flex flex-col sm:flex-row gap-6">
                                                     <img src={item.image} className="w-40 h-40 object-contain rounded" />
@@ -249,6 +335,7 @@ const CartPage = () => {
                                                             {(!item.bookedFrom && !item.bookedTo && item.status !== "approved" && item.status !== "pending") && (
                                                                 <div className="flex items-center gap-4 mt-2 text-gray-600 text-[13px]">
                                                                     <Calendar className="w-4 h-4" />
+
                                                                     <span>
                                                                         {item.daysAvailable || item.days || item.availableDays || 0} days available
                                                                     </span>
@@ -275,16 +362,16 @@ const CartPage = () => {
                                                             <div className="flex justify-between items-center">
                                                                 <p className="text-gray-800 text-[17px] font-bold mt-1.5">₱{item.price.toFixed(2)}/day</p>
 
-                                                                {(item.status === "approved" || item.status === "pending") && (
-                                                                    <div className="flex gap-6 text-[14px] mt-2 mr-28">
-                                                                        <span className=" text-gray-900">
-                                                                            Subtotal: <span className="text-[14px]">₱{(item.price * item.days).toFixed(2)}</span>
-                                                                        </span>
-                                                                        <span className="font-bold text-gray-900 text-[14px]">
-                                                                            Total: <span>₱{(item.adjustedSubtotal + item.shipping).toFixed(2)}</span>
-                                                                        </span>
-                                                                    </div>
-                                                                )}
+                                                                {(item.status === "approved" || item.status === "pending") && (() => {
+                                                                    const itemTotals = calculateItemTotal(item);
+                                                                    return (
+                                                                        <div className="flex justify-between mt-2 mr-28 text-[14px]">
+                                                                            <span className="mr-6">Subtotal: ₱{itemTotals.subtotal.toFixed(2)}</span>
+                                                                            <span className="text-[15px] font-semibold">Total: ₱{itemTotals.total.toFixed(2)}</span>
+                                                                        </div>
+                                                                    );
+                                                                })()}
+
 
                                                                 {item.status === "approved" ? (
                                                                     <button
@@ -364,21 +451,28 @@ const CartPage = () => {
 
                                                 <hr className="my-2" />
 
-                                                {/* Subtotal / Shipping / Total */}
+                                                {/* Subtotal / Shipping / Discount / Total for approved items */}
                                                 <div className="text-sm space-y-2">
                                                     <div className="flex justify-between">
                                                         <span>Subtotal</span>
-                                                        <span>₱{subtotal.toFixed(2)}</span>
+                                                        <span>₱{approvedTotals.subtotal.toFixed(2)}</span>
                                                     </div>
                                                     <div className="flex justify-between">
                                                         <span>Shipping</span>
-                                                        <span>{totalShipping === 0 ? "Free" : `₱${totalShipping.toFixed(2)}`}</span>
+                                                        <span>{approvedTotals.shipping === 0 ? "Free" : `₱${approvedTotals.shipping.toFixed(2)}`}</span>
                                                     </div>
+                                                    {approvedTotals.discount > 0 && (
+                                                        <div className="flex justify-between text-green-700">
+                                                            <span>Discount</span>
+                                                            <span>-₱{approvedTotals.discount.toFixed(2)}</span>
+                                                        </div>
+                                                    )}
                                                     <div className="flex justify-between font-bold text-lg">
                                                         <span>Total</span>
-                                                        <span className="text-gray-900">₱{total.toFixed(2)}</span>
+                                                        <span className="text-gray-900">₱{approvedGrandTotal.toFixed(2)}</span>
                                                     </div>
                                                 </div>
+
 
                                                 {/* Info box */}
                                                 <div className="flex flex-col space-y-3">
@@ -408,6 +502,12 @@ const CartPage = () => {
                     </div>
                 </div>
             </div>
+            <CancelConfirmationModal
+                isOpen={showCancelModal}
+                onClose={() => setShowCancelModal(false)}
+                onConfirm={confirmCancelBooking}
+            />
+
             <Footer />
         </div>
     );

@@ -233,7 +233,7 @@ const BrowseRentals = () => {
 
 
             {/* Content */}
-            <div className="flex flex-1 overflow-hidden px-6 py-6 gap-6 bg-[#fbfbfb]">
+            <div className=" flex flex-1 overflow-hidden px-6 py-6 gap-6 bg-[#fbfbfb]">
 
                 {/* Filter Sidebar */}
                 <FilterSidebar onApplyFilters={handleApplyFilters} />
@@ -320,14 +320,14 @@ const BrowseRentals = () => {
                                         <div className="flex w-full rounded-b-2xl overflow-hidden">
                                             <button
                                                 onClick={() => navigate(`/booking/${item.id}`)}
-                                                className="flex-[0.9] bg-[#7A1CA9] hover:bg-[#681690] text-white text-[12.5px] font-medium py-3 flex justify-center items-center transition"
+                                                className="flex-[0.9] bg-[#7A1CA9] hover:bg-[#681690] text-white text-[12.5px] font-medium py-2.5 flex justify-center items-center transition"
                                             >
                                                 Book Item
                                             </button>
 
                                             <button
                                                 onClick={() => handleAddToCart(item)}
-                                                className={`flex-[1] border border-[#7A1CA9] rounded-br-2xl font-medium py-3 flex justify-center items-center gap-1 transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
+                                                className={`flex-[1] border border-[#7A1CA9] rounded-br-2xl font-medium py-2.5 flex justify-center items-center gap-1 transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
                                                     ? "bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
                                                     : "text-[#7A1CA9] hover:bg-purple-100"
                                                     }`}

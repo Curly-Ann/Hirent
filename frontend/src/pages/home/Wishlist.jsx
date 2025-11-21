@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Calendar, Eye } from "lucide-react";
+import { MapPin, Calendar, ShoppingCart } from "lucide-react";
 import Footer from "../../components/Footer";
 import Sidebar from "../../components/Sidebar";
 import emptyWishlist from "../../assets/empty-wishlist.png";
@@ -97,7 +97,7 @@ const WishlistPage = () => {
                 <Sidebar />
 
                 {/* MAIN CONTENT */}
-                <div className="cart-scale flex-1 px-8 mb-10">
+                <div className="cart-scale flex-1 mb-10">
                     <div className="max-w-8xl mx-auto pt-12">
                         <div>
                             <h1 className="text-[20px] font-bold">Your Wishlist</h1>
@@ -229,9 +229,12 @@ const WishlistPage = () => {
                                                     <span className="text-sm text-gray-600"></span>
                                                 </p>
 
-                                                <button className="w-full bg-[#7A1CA9] text-white py-2 rounded-lg text-[14px] font-medium hover:bg-purple-700 transition">
-                                                    Add to Cart
-                                                </button>
+                                               <button className="w-full bg-[#7A1CA9] px-3 py-2 text-sm text-white border rounded-lg 
+    hover:bg-purple-700 transition flex items-center justify-center gap-2">
+    <ShoppingCart className="w-4 h-4" />
+    Add to Cart
+</button>
+
                                             </div>
                                         </div>
                                     ))}

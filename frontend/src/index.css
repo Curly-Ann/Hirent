@@ -31,16 +31,15 @@ a:hover {
 }
 
 .cart-scale {
-    transform: scale(0.8);
+    transform: scale(0.9);
     transform-origin: top center;
-    width: 111%; /* Fix shrinking caused by scale(0.9) */
+    width: 111%; /* compensate for 90% scale */
 }
 
 @media (min-width: 1024px) {
     .cart-scale {
         transform: scale(0.9);
         transform-origin: top center;
-        width: 111%;
+        width: 111%; /* keep consistent scaling */
     }
 }
-
