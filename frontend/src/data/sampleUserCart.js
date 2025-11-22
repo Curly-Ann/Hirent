@@ -1,6 +1,6 @@
 const sampleUserCart = [
   {
-    id: 1, 
+    id: 1,
     days: 3,
     shipping: 20,
     status: "approved",
@@ -25,7 +25,7 @@ const sampleUserCart = [
   },
 
   {
-    id: 2,  
+    id: 2,
     days: 2,
     shipping: 0,
     status: "pending",

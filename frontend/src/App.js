@@ -8,6 +8,7 @@ import BrowseRentals from "./pages/home/BrowseRentals";
 import Cart from "./pages/home/Cart";
 import Wishlist from "./pages/home/Wishlist";
 import MyRentals from "./pages/home/sidebar/MyRentals";
+import Bookings from "./pages/home/sidebar/Booking";
 import MainLayout from "./layouts/MainLayout";
 import "leaflet/dist/leaflet.css";
 // index.js or App.js
@@ -38,7 +39,8 @@ function App() {
             <Route path="/wishlist" element={<Wishlist/>} />
             <Route path="/cart" element={<Cart/>} />
             <Route path="/my-rentals" element={<MyRentals/>} />
-            <Route path="/profile" element={<div></div>} />
+            <Route path="/booking" element={<Bookings/>} />
+            <Route path="/profile" element={<Bookings/>} />
           </Route>
         </Routes>
       </Router>
