@@ -5,16 +5,7 @@ module.exports = {
     "./src/assets/**/*.css", 
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        'inter': ['Inter', 'sans-serif'],
-      },
-      colors: {
-        'primary-purple': '#7A1CA9',
-        'dark-purple': '#5B21B6',
-        'light-purple': '#A78BFA',
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };

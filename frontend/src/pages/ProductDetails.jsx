@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/layouts/Navbar';
-import ProductSidebar from '../components/layouts/Sidebar';
+import Sidebar from '../components/layouts/Sidebar';
 import Footer from '../components/layouts/Footer';
 import ImageGallery from '../components/product/ImageGallery';
 import ProductInfo from '../components/product/ProductInfo';
@@ -26,15 +26,11 @@ const ProductDetails = () => {
     reviews: 150,
     inStock: true,
     quantity: 2,
-    price: 300.00,
-    originalPrice: 500.00,
-    description: 'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
-    images: [
-      havicGamepad,
-      havicGamepad1,
-      havicGamepad2,
-      havicGamepad3
-    ]
+    price: 300.0,
+    originalPrice: 500.0,
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
+    images: [havicGamepad, havicGamepad1, havicGamepad2, havicGamepad3],
   };
 
   const relatedProducts = [
@@ -46,7 +42,7 @@ const ProductDetails = () => {
       rating: 5,
       reviews: 88,
       image: havitHv,
-      discount: 40
+      discount: 40,
     },
     {
       id: 2,
@@ -56,7 +52,7 @@ const ProductDetails = () => {
       rating: 4,
       reviews: 75,
       image: keyboard,
-      discount: 35
+      discount: 35,
     },
     {
       id: 3,
@@ -66,7 +62,7 @@ const ProductDetails = () => {
       rating: 5,
       reviews: 99,
       image: ipsLcd,
-      discount: 30
+      discount: 30,
     },
     {
       id: 4,
@@ -75,45 +71,54 @@ const ProductDetails = () => {
       originalPrice: 170,
       rating: 4.5,
       reviews: 65,
-      image: rgbLiquid
-    }
+      image: rgbLiquid,
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
-      <ProductSidebar />
-      
-      {/* Main Content with Left Sidebar Offset */}
-      <div className="ml-16">
-        {/* Breadcrumb */}
-        <div className="pl-32 pr-6 py-8">
-          <div className="flex items-center space-x-3 text-lg">
-            <a href="/" className="text-gray-400 hover:text-gray-600 transition">Home</a>
-            <span className="text-gray-400">/</span>
-            <a href="/categories" className="text-gray-400 hover:text-gray-600 transition">Categories</a>
-            <span className="text-gray-400">/</span>
-            <a href="/gadgets" className="text-gray-400 hover:text-gray-600 transition">Gadgets</a>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-medium">{product.name}</span>
+
+      {/* Main content with Sidebar */}
+      <div className="flex flex-1">
+        <Sidebar />
+
+        <div className="flex-1 ml-5">
+          {/* Breadcrumb */}
+          <div className="pl-32 pr-6 py-8">
+            <div className="flex items-center space-x-3 text-lg">
+              <a href="/" className="text-gray-400 hover:text-gray-600 transition">
+                Home
+              </a>
+              <span className="text-gray-400">/</span>
+              <a href="/categories" className="text-gray-400 hover:text-gray-600 transition">
+                Categories
+              </a>
+              <span className="text-gray-400">/</span>
+              <a href="/gadgets" className="text-gray-400 hover:text-gray-600 transition">
+                Gadgets
+              </a>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 font-medium">{product.name}</span>
+            </div>
+          </div>
+
+          {/* Main Product Section */}
+          <div className="pl-32 pr-6 py-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ImageGallery images={product.images} />
+              <ProductInfo product={product} />
+            </div>
+          </div>
+
+          {/* Related Items */}
+          <div className="pl-32 pr-6 py-6">
+            <RelatedItems products={relatedProducts} />
           </div>
         </div>
-
-        {/* Main Product Section */}
-        <div className="pl-32 pr-6 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ImageGallery images={product.images} />
-            <ProductInfo product={product} />
-          </div>
-        </div>
-
-        {/* Related Items */}
-        <div className="pl-32 pr-6 py-6">
-          <RelatedItems products={relatedProducts} />
-        </div>
-
-        <Footer />
       </div>
+
+      <Footer />
     </div>
   );
 };

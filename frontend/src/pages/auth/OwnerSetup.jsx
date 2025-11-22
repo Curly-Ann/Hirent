@@ -221,7 +221,7 @@ const OwnerSetup = () => {
 
             <button
               className="w-80 bg-[#7A1CA9] text-white rounded-md py-2 hover:bg-purple-600 transition text-[15px] font-medium"
-              onClick={() => navigate("/additem")}
+              onClick={() => navigate("/owner/add-item")}
             >
               List Your Item
             </button>
@@ -633,7 +633,7 @@ const OwnerSetup = () => {
           <img src={logo} alt="Hirent Logo" className="w-8 h-auto" />
         </div>
 
-        <div className=" relative z-10 bg-white w-100 md:w-[600px] lg:w-[800px] min-h-[500px] rounded-lg shadow-lg p-15 flex flex-col">
+        <div className=" relative z-10  bg-white w-100 md:w-[600px] lg:w-[800px] min-h-[500px] rounded-lg shadow-lg p-15 flex flex-col">
 
           <div
             className={`w-full flex flex-col items-center justify-center 

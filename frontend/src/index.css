@@ -9,11 +9,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* Hide horizontal scrollbar globally */
-body {
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 a {

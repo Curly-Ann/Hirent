@@ -38,16 +38,19 @@ const Sidebar = () => {
                     <Menu className="w-5 h-5 text-gray-500" />
                 </div>
 
+
+
+                <div className="flex flex-col flex-1 overflow-y-auto">
                 {sidebarItems.map((item, index) => {
                     const active = isActive(item.link);
                     return (
                         <Link
                             key={index}
                             to={item.link}
-                            className={`relative transition-all ${active
+                            className={`relative transition-all duration-200 transform ${active
                                 ? 'bg-gray-100 text-[#7A1CA9] border-l-4 border-l-[#7A1CA9]'
-                                : 'text-gray-700 hover:bg-gray-50'
-                                }`}
+                                : 'text-gray-700 hover:bg-purple-50 hover:text-[#7A1CA9] hover:scale-105'
+                                } rounded-r-md`}
                         >
                             <div className="flex items-center gap-4 px-5 py-2">
                                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -61,6 +64,7 @@ const Sidebar = () => {
 
                     );
                 })}
+                </div>
             </div>
 
             {/* Logout Button */}

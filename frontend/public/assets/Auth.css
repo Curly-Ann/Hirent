@@ -1,0 +1,72 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+div[style*="background-image"] {
+  position: relative;
+}
+
+.bg-white {
+  position: relative;
+  z-index: 1;
+}
+
+footer ul li:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bg-white {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.auth-container {
+  background: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.auth-card {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.input-field {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px 5px;
+  font-size: 15px;
+  outline: none;
+  background-color: transparent;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: #bb84d6;
+}
+
+.btn-primary {
+  background-color: #7A1CA9;
+}
+
+.btn-primary:hover {
+  background-color: #9b4dca;
+}
+
+
+/* Change autofill background to light purple */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f3f0fa inset !important; /* light purple background */
+  -webkit-text-fill-color: #1a1a1a !important; /* text color */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* optional: focus + hover states */
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0px 1000px #f7f0ff inset !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+}
