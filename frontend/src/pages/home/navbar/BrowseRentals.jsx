@@ -13,6 +13,7 @@ import { Base64 } from 'js-base64';
 import { getFakeUser, generateFakeToken } from '../../../utils/fakeAuth';
 
 const BrowseRentals = () => {
+    
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [listings, setListings] = useState([]);
@@ -29,7 +30,13 @@ const BrowseRentals = () => {
     const [loading, setLoading] = useState(true);
     const [cartItems, setCartItems] = useState([]);
 
+    useEffect(() => {
+    document.title = "Hirent — Browse";
 
+    return () => {
+      document.title = "Hirent";
+    };
+  }, []);
 
     useEffect(() => {
         let user = getFakeUser();

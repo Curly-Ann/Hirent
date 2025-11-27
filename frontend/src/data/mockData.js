@@ -15,7 +15,7 @@ export // src/data/mockData.js
     {
       id: 1,
       name: "MacBook Pro",
-      image: "items/macbook.png",
+      image: "assets/items/macbook.png",
       price: "₱450/day",
       category: "Gadgets",
       location: "Quezon City, Metro Manila",
@@ -36,7 +36,7 @@ export // src/data/mockData.js
     {
       id: 2,
       name: "Nikon DSLR",
-      image: "items/camera.png",
+      image: "assets/items/camera.png",
       price: "₱550/day",
       category: "Cameras",
       location: "Naga City, Camarines Sur",
@@ -57,7 +57,7 @@ export // src/data/mockData.js
     {
       id: 3,
       name: "Electric Bike",
-      image: "items/bike.png",
+      image: "assets/items/bike.png",
       price: "₱700/day",
       category: "Vehicles",
       location: "Davao City, Davao del Sur",
@@ -78,7 +78,7 @@ export // src/data/mockData.js
     {
       id: 4,
       name: "Drill Set",
-      image: "items/drill.png",
+      image: "assets/items/drill.png",
       price: "₱120/day",
       category: "Tools",
       location: "Baguio City, Benguet",
@@ -99,7 +99,7 @@ export // src/data/mockData.js
     {
       id: 5,
       name: "DJI Mini Drone",
-      image: "items/drone.png",
+      image: "assets/items/drone.png",
       price: "₱500/day",
       category: "Gadgets",
       location: "Iriga City, Camarines Sur",
@@ -120,7 +120,7 @@ export // src/data/mockData.js
     {
       id: 6,
       name: "Yamaha Keyboard",
-      image: "items/keyboard.png",
+      image: "assets/items/keyboard.png",
       price: "₱200/day",
       category: "Musical Instruments",
       location: "Cagayan de Oro City, Misamis Oriental",
@@ -141,7 +141,7 @@ export // src/data/mockData.js
     {
       id: 7,
       name: "Projector Set",
-      image: "items/projector.png",
+      image: "assets/items/projector.png",
       price: "₱300/day",
       category: "Electronics",
       location: "Tacloban City, Leyte",
@@ -162,7 +162,7 @@ export // src/data/mockData.js
     {
       id: 8,
       name: "Camping Tent",
-      image: "items/tent.png",
+      image: "assets/items/tent.png",
       price: "₱100/day",
       category: "Outdoors",
       location: "Tagaytay City, Cavite",

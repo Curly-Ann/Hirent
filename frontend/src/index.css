@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 
 body {
   margin: 0;
@@ -42,4 +44,30 @@ a:hover {
         transform-origin: top center;
         width: 111%; /* keep consistent scaling */
     }
+}
+
+.carousel-edge-fade {
+  position: relative;
+  overflow: hidden; /* keep overflow content inside */
+}
+
+.carousel-edge-fade::before,
+.carousel-edge-fade::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 60px; /* width of fade */
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.carousel-edge-fade::before {
+  left: 0;
+  background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.carousel-edge-fade::after {
+  right: 0;
+  background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
 }

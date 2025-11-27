@@ -5,7 +5,7 @@ import { Base64 } from "js-base64";
 export const generateFakeToken = (userId = 1) => {
   const tokenPayload = {
     id: userId,
-    name: "John Döe", // Unicode-safe
+    name: "Genlord", // Unicode-safe
     email: "johndoe@example.com",
     role: "user",
     exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 24h expiry

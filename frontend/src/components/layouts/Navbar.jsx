@@ -158,8 +158,6 @@ const Navbar = ({ onSearch }) => {
             >
               Logout
             </NavLink>
-
-           
           </div>
         </div>
       </nav>

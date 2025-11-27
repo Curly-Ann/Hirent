@@ -112,7 +112,7 @@ export default function OwnerDashboard() {
   const navigate = useNavigate();
 
   const handleAddListing = () => {
-    navigate('/add-item');
+    navigate('/owner/add-item');
   };
 
   const exportToCSV = () => {
@@ -190,11 +190,9 @@ export default function OwnerDashboard() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-     <div className="fixed top-0 left-0 h-full w-64 z-50">
-    <Sidebar />
-  </div>
-  <div className="flex-1 overflow-y-auto">
-     <main className="cart-scale flex-1 ml-60 pt-12 max-w-7xl mx-auto">
+      <Sidebar />
+
+      <main className="cart-scale flex-1 mt-12">
         <div className="text-gray-400 text-xs mb-2">My Dashboard</div>
         <h2 className="text-2xl font-bold mb-1">
           Hello, <span className="text-black">Genlord!</span>
@@ -333,7 +331,6 @@ export default function OwnerDashboard() {
           </div>
         )}
       </main>
-      </div>
     </div>
   );
 }

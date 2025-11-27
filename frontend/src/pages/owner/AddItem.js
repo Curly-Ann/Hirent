@@ -10,7 +10,7 @@ export default function AddItem() {
   const handleSubmit = async (formData, images) => {
     console.log('Form Data:', formData);
     console.log('Images:', images);
-
+    
     // TODO: Add your API call here to submit the new item
     navigate('/ownerdashboard');
   };
@@ -21,22 +21,16 @@ export default function AddItem() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar />
 
-      {/* Fixed Sidebar */}
-      <div className="fixed top-0 left-0 h-full w-64 z-50">
-        <Sidebar />
-      </div>
-      
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto ml-64">
-        <main className="cart-scale pt-12 max-w-7xl mx-auto">
-          <AddNewItemForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-          />
-        </main>
+      <div className="cart-scale flex-1 mt-12">
+        <AddNewItemForm 
+          onSubmit={handleSubmit} 
+          onCancel={handleCancel} 
+        />
       </div>
-
     </div>
   );
 }

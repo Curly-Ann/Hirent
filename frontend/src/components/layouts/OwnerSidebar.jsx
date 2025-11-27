@@ -1,3 +1,4 @@
+// src/components/layout/OwnerSidebar.jsx
 import React from 'react';
 import {
     House,
@@ -11,9 +12,9 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import hirentLogo from '../../assets/hirent-logo-purple.png';
 
-const Sidebar = () => {
+const OwnerSidebar = () => {
     const location = useLocation();
-    const navigate = useNavigate(); // <-- useNavigate for redirect
+    const navigate = useNavigate();
 
     const sidebarItems = [
         { icon: House, link: '/owner/dashboard', label: 'Dashboard' },
@@ -27,63 +28,56 @@ const Sidebar = () => {
     const isActive = (path) => location.pathname === path;
 
     const handleLogout = () => {
-        // 1. Clear user session (example with localStorage)
-        localStorage.removeItem('userToken'); // adjust key if different
+        localStorage.removeItem('userToken');
         localStorage.removeItem('userData');
-
-        // 2. Redirect to login page
         navigate('/login');
     };
 
     return (
         <div
-            className="bg-white border-r border-gray-200 flex flex-col fixed top-0 left-0 h-screen w-70 z-10
+            className="bg-white border-r border-gray-200 flex flex-col min-h-screen w-72 z-20
              transition-shadow duration-300 hover:shadow-lg"
         >
-            {/* Logo + Title */}
-            <div className="flex flex-col items-start ml-5 pt-6 pb-4">
-                <img src={hirentLogo} alt="HiRENT Logo" className="h-6 mb-1" />
+
+            {/* Logo */}
+            <div className="flex flex-col items-start ml-6 pt-6 pb-3">
+                <img src={hirentLogo} alt="HiRENT Logo" className="h-7 mb-1" />
                 <h2 className="text-[13px] text-gray-700">Owner Dashboard</h2>
             </div>
 
             <hr className="border-t border-gray-200 mb-3" />
 
-            {/* Scrollable Menu */}
+            {/* Menu List */}
             <div className="flex flex-col flex-1 overflow-y-auto">
-                {sidebarItems.map((item, index) => {
-                    const active = isActive(item.link);
-                    return (
-                        <Link
-                            key={index}
-                            to={item.link}
-                            className={`relative transition-all duration-200 transform ${active
-                                    ? 'bg-gray-100 text-[#7A1CA9] border-l-4 border-l-[#7A1CA9]'
-                                    : 'text-gray-700 hover:bg-purple-50 hover:text-[#7A1CA9] hover:scale-105'
-                                } rounded-r-md`}
-                        >
-                            <div className="flex items-center gap-4 px-5 py-2">
-                                <item.icon className="w-5 h-5" />
-                                <span className="text-[13px] font-medium whitespace-nowrap">
-                                    {item.label}
-                                </span>
-                            </div>
-                        </Link>
-                    );
-                })}
+                {sidebarItems.map((item, index) => (
+                    <Link
+                        key={index}
+                        to={item.link}
+                        className={`transition-all duration-200 rounded-r-md ${isActive(item.link)
+                                ? 'bg-gray-100 text-[#7A1CA9] border-l-4 border-l-[#7A1CA9]'
+                                : 'text-gray-700 hover:bg-purple-50 hover:text-[#7A1CA9] hover:scale-105'
+                            }`}
+                    >
+                        <div className="flex items-center gap-4 px-6 py-2">
+                            <item.icon className="w-5 h-5" />
+                            <span className="text-[14px] font-medium">{item.label}</span>
+                        </div>
+                    </Link>
+                ))}
             </div>
 
-            {/* Fixed Bottom Logout */}
-            <div className="border-t border-gray-200 mt-auto">
+            {/* Logout */}
+            <div className="border-t border-gray-200">
                 <button
-                    className="flex items-center gap-4 px-5 py-3 text-gray-700 hover:bg-gray-50 transition-all w-full"
-                    onClick={handleLogout} // <-- call handleLogout
+                    onClick={handleLogout}
+                    className="flex items-center gap-4 px-6 py-4 text-gray-700 hover:bg-gray-50 transition w-full"
                 >
                     <LogOut className="w-5 h-5" />
-                    <span className="text-[13px] font-medium whitespace-nowrap">Logout</span>
+                    <span className="text-[14px] font-medium">Logout</span>
                 </button>
             </div>
         </div>
     );
 };
 
-export default Sidebar;
+export default OwnerSidebar;

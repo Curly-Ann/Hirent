@@ -20,6 +20,15 @@ const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
+          document.title = "Hirent — Cart";
+      
+          return () => {
+            document.title = "Hirent";
+          };
+        }, []);
+      
+
+    useEffect(() => {
         let user = getFakeUser();
 
         if (!user) {

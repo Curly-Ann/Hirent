@@ -11,7 +11,6 @@ import SortDropdown from "../../../components/filters/SortDropdown";
 import { getFakeUser, generateFakeToken } from "../../../utils/fakeAuth";
 
 const MyRentalsPage = () => {
-    const navigate = useNavigate();
 
     const [showModal, setShowModal] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -23,6 +22,14 @@ const MyRentalsPage = () => {
     const [rentals, setRentals] = useState([]);
     const [filter, setFilter] = useState("all");
     const [sortOrder, setSortOrder] = useState("latest");
+
+    useEffect(() => {
+                  document.title = "Hirent — My Rentals";
+              
+                  return () => {
+                    document.title = "Hirent";
+                  };
+                }, []);
 
     useEffect(() => {
         let user = getFakeUser();

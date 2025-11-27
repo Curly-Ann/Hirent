@@ -33,6 +33,14 @@ const WishlistPage = () => {
     const [sortOrder, setSortOrder] = useState("latest");
 
     useEffect(() => {
+              document.title = "Hirent — Wishlist";
+          
+              return () => {
+                document.title = "Hirent";
+              };
+            }, []);
+
+    useEffect(() => {
         let filtered = mockListings.filter((item) =>
             wishlistIds.includes(item.id)
         );

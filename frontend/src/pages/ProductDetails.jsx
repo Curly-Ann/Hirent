@@ -26,10 +26,22 @@ const ProductDetails = () => {
     reviews: 150,
     inStock: true,
     quantity: 2,
+
+    // RENTAL PRICING
     price: 300.0,
     originalPrice: 500.0,
+
+    // PRODUCT DESCRIPTION
     description:
-      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
+      'High-quality gaming controller with ergonomic grip, responsive buttons, smooth analog sticks and durable build. Perfect for long gaming sessions.',
+
+    condition: 'Excellent — Fully tested and sanitized',
+    brand: 'Havic',
+    model: 'HV-G92',
+    platformCompatibility: 'PC / PS3 / Android',
+    connectivity: 'USB Wired',
+    includedAccessories: 'Gamepad + USB Cable',
+
     images: [havicGamepad, havicGamepad1, havicGamepad2, havicGamepad3],
   };
 
@@ -76,48 +88,52 @@ const ProductDetails = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white">
+      {/* Top Navigation */}
       <Navbar />
 
-      {/* Main content with Sidebar */}
-      <div className="flex flex-1">
+      {/* MAIN LAYOUT: Sidebar + Content */}
+      <div className="flex">
         <Sidebar />
 
-        <div className="flex-1 ml-5">
+        {/* MAIN CONTENT AREA */}
+        <div className="mt-12 flex-1">
+
           {/* Breadcrumb */}
-          <div className="pl-32 pr-6 py-8">
-            <div className="flex items-center space-x-3 text-lg">
-              <a href="/" className="text-gray-400 hover:text-gray-600 transition">
-                Home
-              </a>
-              <span className="text-gray-400">/</span>
-              <a href="/categories" className="text-gray-400 hover:text-gray-600 transition">
-                Categories
-              </a>
-              <span className="text-gray-400">/</span>
-              <a href="/gadgets" className="text-gray-400 hover:text-gray-600 transition">
-                Gadgets
-              </a>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-900 font-medium">{product.name}</span>
+          <div className="pl-32 py-4">
+            <div className="flex items-center space-x-2 text-sm">
+              <a href="/" className="text-gray-400 hover:text-gray-600 transition">Home</a>
+              <span className="text-gray-300">/</span>
+
+              <a href="/categories" className="text-gray-400 hover:text-gray-600 transition">Categories</a>
+              <span className="text-gray-300">/</span>
+
+              <a href="/gadgets" className="text-gray-400 hover:text-gray-600 transition">Gadgets</a>
+              <span className="text-gray-300">/</span>
+
+              <span className="text-gray-900 font-medium truncate max-w-[200px]">
+                {product.name}
+              </span>
             </div>
           </div>
 
-          {/* Main Product Section */}
-          <div className="pl-32 pr-6 py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Product Section */}
+          <div className="pl-32 py-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <ImageGallery images={product.images} />
               <ProductInfo product={product} />
             </div>
           </div>
 
           {/* Related Items */}
-          <div className="pl-32 pr-6 py-6">
+          <div className="pl-32 mr-40 py-4 mb-20">
             <RelatedItems products={relatedProducts} />
           </div>
+
         </div>
       </div>
 
+      {/* FOOTER */}
       <Footer />
     </div>
   );

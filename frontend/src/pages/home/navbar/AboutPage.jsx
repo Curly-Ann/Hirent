@@ -1,11 +1,21 @@
-import React from "react";
-import Navbar from "../components/layouts/Navbar";
+import React, { useEffect } from "react";
+import Navbar from "../../../components/layouts/Navbar";
 
 const AboutPage = () => {
+
+  useEffect(() => {
+      document.title = "Hirent — About Us";
+  
+      return () => {
+        document.title = "Hirent";
+      };
+    }, []);
+  
+
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-white pt-[55px]">
+      <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative h-[400px] bg-gradient-to-br from-purple-900 to-purple-700 overflow-hidden">
           <div 

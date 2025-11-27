@@ -36,11 +36,11 @@ export default function AddNewItemForm() {
   };
 
   return (
-    <div className="w-full">
+    <div className="mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-[22px] font-bold text-gray-900">Add New Item</h1>
-        <p className="text-[15px] text-gray-600 mt-0.5">List a new item for rent on HIRENT</p>
+        <h1 className="text-2xl font-bold text-gray-900">Add New Item</h1>
+        <p className="text-sm text-gray-500">List a new item for rent on HIRENT</p>
       </div>
 
       {/* Form Box */}

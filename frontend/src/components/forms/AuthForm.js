@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import "../../assets/Auth.css";
 import hirentLogo from "../../assets/hirent-logo-purple.png";
 import bg from "../../assets/auth-bg.jpg";
-import Footer from "../../components/layouts/Footer";
+import Footer from "../layouts/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";

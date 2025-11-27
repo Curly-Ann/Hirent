@@ -1,22 +1,28 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Heart, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import { Heart, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ProductInfo = ({ product }) => {
-  const [quantity, setQuantity] = useState(2);
+  const [quantity, setQuantity] = useState(1);
+
+  const [damageWaiver, setDamageWaiver] = useState(false);
+  const DAMAGE_FEE = 150;
+  const DEPOSIT_FEE = 300;
+
   const [dateRange, setDateRange] = useState({
     start: new Date(2025, 9, 21),
-    end: new Date(2025, 9, 26)
+    end: new Date(2025, 9, 26),
   });
-  const [selectedPeriod, setSelectedPeriod] = useState('This Week');
+
+  const [selectedPeriod, setSelectedPeriod] = useState("This Week");
   const [showStartCalendar, setShowStartCalendar] = useState(false);
   const [showEndCalendar, setShowEndCalendar] = useState(false);
   const [startMonth, setStartMonth] = useState(new Date(2025, 9));
   const [endMonth, setEndMonth] = useState(new Date(2025, 9));
-  const [selectingFor, setSelectingFor] = useState('start');
+  const [selectingFor, setSelectingFor] = useState("start");
+
   const startCalendarRef = useRef(null);
   const endCalendarRef = useRef(null);
 
-  // Close calendars when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (startCalendarRef.current && !startCalendarRef.current.contains(event.target)) {
@@ -26,43 +32,39 @@ const ProductInfo = ({ product }) => {
         setShowEndCalendar(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const decrementQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
+  const decrementQuantity = () => quantity > 1 && setQuantity(quantity - 1);
+  const incrementQuantity = () =>
+    quantity < product.quantity && setQuantity(quantity + 1);
 
-  const incrementQuantity = () => {
-    if (quantity < product.quantity) {
-      setQuantity(quantity + 1);
-    }
-  };
+  const rentalTotal = product.price * quantity;
+  const totalDamageFee = damageWaiver ? DAMAGE_FEE : 0;
+  const totalPrice = rentalTotal + DEPOSIT_FEE + totalDamageFee;
 
-  const totalPrice = product.price * quantity;
+  const getDaysInMonth = (date) =>
+    new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-  const getDaysInMonth = (date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  };
+  const getFirstDayOfMonth = (date) =>
+    new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
   const formatDate = (date) => {
-    if (!date) return '';
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    if (!date) return "";
+    const d = String(date.getDate()).padStart(2, "0");
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    return `${d}-${m}-${date.getFullYear()}`;
   };
 
   const handleDateSelect = (day, currentMonth) => {
-    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    
-    if (selectingFor === 'start') {
+    const selectedDate = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day
+    );
+
+    if (selectingFor === "start") {
       setDateRange({ ...dateRange, start: selectedDate });
       setShowStartCalendar(false);
     } else {
@@ -77,16 +79,14 @@ const ProductInfo = ({ product }) => {
     let start = new Date(today);
     let end = new Date(today);
 
-    if (period === 'Today') {
+    if (period === "Today") {
       start = today;
       end = today;
-    } else if (period === 'This Week') {
+    } else if (period === "This Week") {
       const dayOfWeek = today.getDay();
-      start = new Date(today);
       start.setDate(today.getDate() - dayOfWeek);
-      end = new Date(today);
       end.setDate(today.getDate() + (6 - dayOfWeek));
-    } else if (period === 'This Month') {
+    } else if (period === "This Month") {
       start = new Date(today.getFullYear(), today.getMonth(), 1);
       end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     }
@@ -97,39 +97,48 @@ const ProductInfo = ({ product }) => {
   const renderCalendar = (currentMonth) => {
     const daysInMonth = getDaysInMonth(currentMonth);
     const firstDay = getFirstDayOfMonth(currentMonth);
-    const days = [];
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const days = [];
+
     for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="p-1"></div>);
+      days.push(<div key={`empty-${i}`} className="p-1" />);
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const date = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        day
+      );
       date.setHours(0, 0, 0, 0);
-      
+
       const isToday = date.getTime() === today.getTime();
-      const isSelected = 
+      const isSelected =
         (dateRange.start && date.getTime() === dateRange.start.getTime()) ||
         (dateRange.end && date.getTime() === dateRange.end.getTime());
-      const isInRange = 
-        dateRange.start && dateRange.end &&
-        date > dateRange.start && date < dateRange.end;
+      const isInRange =
+        dateRange.start &&
+        dateRange.end &&
+        date > dateRange.start &&
+        date < dateRange.end;
 
       days.push(
         <button
           key={day}
           onClick={() => handleDateSelect(day, currentMonth)}
-          className={`p-1.5 text-xs font-medium rounded-full transition-all hover:bg-purple-100 ${
-            isSelected
-              ? 'bg-purple-600 text-white hover:bg-purple-700'
-              : isInRange
-              ? 'bg-purple-100 text-purple-700'
-              : isToday
-              ? 'bg-purple-50 text-purple-600 font-bold'
-              : 'text-gray-700'
-          }`}
+          className={`p-1.5 text-[10px] rounded-full transition-all font-medium
+            ${
+              isSelected
+                ? "bg-[#7A1CA9] text-white shadow"
+                : isInRange
+                ? "bg-purple-100 text-[#7A1CA9]"
+                : isToday
+                ? "bg-purple-50 text-[#7A1CA9] font-bold"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
         >
           {day}
         </button>
@@ -139,22 +148,33 @@ const ProductInfo = ({ product }) => {
     return days;
   };
 
-  const startMonthName = startMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
-  const endMonthName = endMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const startMonthName = startMonth.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+  const endMonthName = endMonth.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <div className="max-w-sm space-y-4">
-      {/* Product Title */}
-      <h1 className="text-lg font-bold text-gray-900 truncate">{product.name}</h1>
+    <div className="w-[400px] space-y-3">
 
-      {/* Rating Row */}
-      <div className="flex items-center gap-1">
-        <div className="flex items-center shrink-0">
+      {/* TITLE */}
+      <h1 className="text-lg font-semibold text-gray-900 tracking-tight">
+        {product.name}
+      </h1>
+
+      {/* RATINGS */}
+      <div className="flex items-center gap-2">
+        <div className="flex">
           {[...Array(5)].map((_, i) => (
             <svg
               key={i}
-              className={`w-3 h-3 ${
-                i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'
+              className={`w-3.5 h-3.5 ${
+                i < Math.floor(product.rating)
+                  ? "text-yellow-400"
+                  : "text-gray-300"
               }`}
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -163,90 +183,134 @@ const ProductInfo = ({ product }) => {
             </svg>
           ))}
         </div>
-        <span className="text-gray-600 text-xs shrink-0">{`(${product.reviews} Reviews)`}</span>
-        <span className="text-gray-300 text-xs shrink-0">|</span>
-        <span className="text-green-500 font-medium text-xs shrink-0">In Stock ({product.quantity} available)</span>
+
+        <span className="text-gray-600 text-[10px]">
+          ({product.reviews} Reviews)
+        </span>
+
+        <span className="text-gray-300 text-[10px]">•</span>
+
+        <span className="text-green-600 text-[10px] font-medium">
+          In Stock ({product.quantity} available)
+        </span>
       </div>
 
-      {/* Price */}
+      {/* PRICE */}
       <div className="flex items-center gap-2">
-        <span className="text-2xl font-bold text-purple-600 shrink-0">₱ {product.price.toFixed(2)}</span>
-        <span className="text-gray-400 line-through text-sm shrink-0">₱ {product.originalPrice}</span>
+        <span className="text-2xl font-bold text-[#7A1CA9]">
+          ₱ {product.price.toFixed(2)}
+        </span>
+        <span className="text-gray-400 line-through text-xs">
+          ₱ {product.originalPrice}
+        </span>
       </div>
 
-      {/* Description */}
+      {/* DESCRIPTION */}
       <p className="text-gray-600 text-xs leading-relaxed border-b pb-3">
         {product.description}
       </p>
 
-      {/* Date Range */}
+      {/* PRODUCT ATTRIBUTES */}
+      <div className="space-y-1 text-xs text-gray-700 border-b pb-3">
+        <p><strong>Condition:</strong> {product.condition}</p>
+        <p><strong>Platform Compatibility:</strong> {product.platformCompatibility}</p>
+        <p><strong>Connectivity:</strong> {product.connectivity}</p>
+        <p><strong>Included Accessories:</strong> {product.includedAccessories}</p>
+      </div>
+
+      {/* FEES */}
+      <div className="border-b pb-3 space-y-3 text-xs text-gray-700">
+        <div className="flex justify-between items-center">
+          <span>Refundable Deposit:</span>
+          <span className="font-semibold text-gray-900">₱{DEPOSIT_FEE}</span>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span>Damage Waiver (optional):</span>
+
+          <div className="flex items-center gap-2">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={damageWaiver}
+                onChange={() => setDamageWaiver(!damageWaiver)}
+                className="sr-only peer"
+              />
+
+              <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-purple-600 transition-all" />
+              <div className="absolute left-1 top-1 w-3.5 h-3.5 bg-white rounded-full transition-all peer-checked:translate-x-5 shadow" />
+            </label>
+
+            <span className="font-semibold text-gray-900 text-xs">+₱{DAMAGE_FEE}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* DATE RANGE */}
       <div className="border-t pt-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-gray-900 font-medium text-xs shrink-0">Date Range</span>
-          <button 
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-gray-900 font-medium text-[11px]">Date Range</span>
+          <button
             onClick={() => setDateRange({ start: null, end: null })}
-            className="text-purple-600 text-xs font-medium hover:text-purple-700 transition-colors"
+            className="text-purple-600 text-[11px] hover:text-[#7A1CA9]"
           >
             Reset
           </button>
         </div>
-        
-        {/* Date Inputs */}
-        <div className="grid grid-cols-2 gap-2 mb-3">
+
+        {/* Inputs */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+
           {/* START DATE */}
           <div ref={startCalendarRef} className="relative">
-            <label className="text-gray-500 text-xs block mb-1">From</label>
+            <label className="text-gray-500 text-[10px] block mb-1">From</label>
             <div className="relative">
               <input
                 type="text"
                 value={formatDate(dateRange.start)}
                 readOnly
                 onClick={() => {
-                  setSelectingFor('start');
+                  setSelectingFor("start");
                   setShowStartCalendar(!showStartCalendar);
                   setShowEndCalendar(false);
                 }}
-                className="w-full px-2 py-2 border border-purple-300 rounded text-xs bg-white text-gray-900 cursor-pointer hover:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:border-purple-500 transition-all"
-                placeholder="Select start date"
+                className="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-[11px] cursor-pointer hover:border-purple-400 transition"
               />
-              <button
-                onClick={() => {
-                  setSelectingFor('start');
-                  setShowStartCalendar(!showStartCalendar);
-                  setShowEndCalendar(false);
-                }}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple-600 hover:text-purple-700 transition-colors mt-1"
-              >
-                <Calendar className="w-4 h-4" />
-              </button>
-              
+              <Calendar className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7A1CA9] w-4 h-4" />
+
               {showStartCalendar && (
-                <div className="absolute top-16 left-0 bg-white border-2 border-purple-200 rounded-lg shadow-2xl p-3 z-50 w-64">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="absolute top-14 left-0 w-60 bg-white border shadow-xl rounded-xl p-3 z-50">
+                  <div className="flex justify-between items-center mb-2">
                     <button
-                      onClick={() => setStartMonth(new Date(startMonth.getFullYear(), startMonth.getMonth() - 1))}
-                      className="p-1 hover:bg-purple-50 rounded-full text-purple-600 transition-colors"
+                      onClick={() =>
+                        setStartMonth(
+                          new Date(startMonth.getFullYear(), startMonth.getMonth() - 1)
+                        )
+                      }
+                      className="p-1 rounded hover:bg-purple-50 text-[#7A1CA9]"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
-                    <span className="text-xs font-bold text-purple-900">{startMonthName}</span>
+
+                    <span className="text-xs font-semibold">{startMonthName}</span>
+
                     <button
-                      onClick={() => setStartMonth(new Date(startMonth.getFullYear(), startMonth.getMonth() + 1))}
-                      className="p-1 hover:bg-purple-50 rounded-full text-purple-600 transition-colors"
+                      onClick={() =>
+                        setStartMonth(
+                          new Date(startMonth.getFullYear(), startMonth.getMonth() + 1)
+                        )
+                      }
+                      className="p-1 rounded hover:bg-purple-50 text-[#7A1CA9]"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="grid grid-cols-7 gap-1 text-xs font-bold text-center mb-2 text-purple-700">
-                    <div>S</div>
-                    <div>M</div>
-                    <div>T</div>
-                    <div>W</div>
-                    <div>T</div>
-                    <div>F</div>
-                    <div>S</div>
+
+                  <div className="grid grid-cols-7 gap-1 text-[10px] font-bold text-[#7A1CA9] text-center">
+                    <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
                   </div>
-                  <div className="grid grid-cols-7 gap-1">
+
+                  <div className="grid grid-cols-7 gap-1 mt-1">
                     {renderCalendar(startMonth)}
                   </div>
                 </div>
@@ -256,58 +320,56 @@ const ProductInfo = ({ product }) => {
 
           {/* END DATE */}
           <div ref={endCalendarRef} className="relative">
-            <label className="text-gray-500 text-xs block mb-1">To</label>
+            <label className="text-gray-500 text-[10px] block mb-1">To</label>
+
             <div className="relative">
               <input
                 type="text"
                 value={formatDate(dateRange.end)}
                 readOnly
                 onClick={() => {
-                  setSelectingFor('end');
+                  setSelectingFor("end");
                   setShowEndCalendar(!showEndCalendar);
                   setShowStartCalendar(false);
                 }}
-                className="w-full px-2 py-2 border border-purple-300 rounded text-xs bg-white text-gray-900 cursor-pointer hover:border-purple-400 focus:ring-2 focus:ring-purple-200 focus:border-purple-500 transition-all"
-                placeholder="Select end date"
+                className="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-[11px] cursor-pointer hover:border-purple-400 transition"
               />
-              <button
-                onClick={() => {
-                  setSelectingFor('end');
-                  setShowEndCalendar(!showEndCalendar);
-                  setShowStartCalendar(false);
-                }}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple-600 hover:text-purple-700 transition-colors mt-1"
-              >
-                <Calendar className="w-4 h-4" />
-              </button>
-              
+
+              <Calendar className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7A1CA9] w-4 h-4" />
+
               {showEndCalendar && (
-                <div className="absolute top-16 left-0 bg-white border-2 border-purple-200 rounded-lg shadow-2xl p-3 z-50 w-64">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="absolute top-14 left-0 w-60 bg-white border shadow-xl rounded-xl p-3 z-50">
+                  <div className="flex justify-between items-center mb-2">
                     <button
-                      onClick={() => setEndMonth(new Date(endMonth.getFullYear(), endMonth.getMonth() - 1))}
-                      className="p-1 hover:bg-purple-50 rounded-full text-purple-600 transition-colors"
+                      onClick={() =>
+                        setEndMonth(
+                          new Date(endMonth.getFullYear(), endMonth.getMonth() - 1)
+                        )
+                      }
+                      className="p-1 rounded hover:bg-purple-50 text-[#7A1CA9]"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
-                    <span className="text-xs font-bold text-purple-900">{endMonthName}</span>
+
+                    <span className="text-xs font-semibold">{endMonthName}</span>
+
                     <button
-                      onClick={() => setEndMonth(new Date(endMonth.getFullYear(), endMonth.getMonth() + 1))}
-                      className="p-1 hover:bg-purple-50 rounded-full text-purple-600 transition-colors"
+                      onClick={() =>
+                        setEndMonth(
+                          new Date(endMonth.getFullYear(), endMonth.getMonth() + 1)
+                        )
+                      }
+                      className="p-1 rounded hover:bg-purple-50 text-[#7A1CA9]"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="grid grid-cols-7 gap-1 text-xs font-bold text-center mb-2 text-purple-700">
-                    <div>S</div>
-                    <div>M</div>
-                    <div>T</div>
-                    <div>W</div>
-                    <div>T</div>
-                    <div>F</div>
-                    <div>S</div>
+
+                  <div className="grid grid-cols-7 gap-1 text-[10px] font-bold text-[#7A1CA9] text-center">
+                    <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
                   </div>
-                  <div className="grid grid-cols-7 gap-1">
+
+                  <div className="grid grid-cols-7 gap-1 mt-1">
                     {renderCalendar(endMonth)}
                   </div>
                 </div>
@@ -316,17 +378,18 @@ const ProductInfo = ({ product }) => {
           </div>
         </div>
 
-        {/* Period Buttons */}
+        {/* QUICK SELECT */}
         <div className="flex gap-2">
-          {['Today', 'This Week', 'This Month'].map((period) => (
+          {["Today", "This Week", "This Month"].map((period) => (
             <button
               key={period}
               onClick={() => handleQuickDate(period)}
-              className={`px-3 py-1.5 rounded text-xs font-medium transition-all border shrink-0 ${
-                selectedPeriod === period
-                  ? 'bg-purple-600 text-white border-purple-600'
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-purple-400'
-              }`}
+              className={`px-3 py-1.5 text-[11px] border rounded-lg font-medium transition-all
+                ${
+                  selectedPeriod === period
+                    ? "bg-[#7A1CA9] text-white border-[#7A1CA9] shadow"
+                    : "bg-white text-gray-700 border-gray-300 hover:border-purple-400"
+                }`}
             >
               {period}
             </button>
@@ -334,39 +397,44 @@ const ProductInfo = ({ product }) => {
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2 pt-2">
-        <div className="flex items-center border border-gray-300 rounded shrink-0">
+      {/* QUANTITY + BOOK */}
+      <div className="flex items-center gap-2 pt-3">
+
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
           <button
             onClick={decrementQuantity}
-            className="px-3 py-1 text-gray-600 hover:bg-gray-50 transition-colors font-semibold text-sm"
+            className="px-3 py-1 text-gray-600 hover:bg-gray-100 font-semibold text-sm"
           >
             −
           </button>
-          <span className="px-4 py-1 font-bold bg-purple-600 text-white border-l border-r border-gray-300 min-w-[45px] text-center text-sm">
+
+          <span className="px-4 py-1 bg-[#7A1CA9] text-white font-bold min-w-[40px] text-center text-sm">
             {quantity}
           </span>
+
           <button
             onClick={incrementQuantity}
-            className="px-3 py-1 text-gray-600 hover:bg-gray-50 transition-colors font-semibold text-sm"
+            className="px-3 py-1 text-gray-600 hover:bg-gray-100 font-semibold text-sm"
           >
             +
           </button>
         </div>
 
-        <button className="flex-1 bg-purple-600 text-white px-4 py-2 rounded font-semibold text-xs hover:bg-purple-700 transition-colors">
-          Add to Cart
+        <button className="flex-1 bg-[#7A1CA9] text-white px-4 py-2 rounded-lg font-semibold text-xs shadow-md hover:bg-purple-800 transition">
+          Book Item
         </button>
 
-        <button className="p-2 border border-gray-300 rounded hover:border-purple-600 hover:bg-purple-50 transition-all">
+        <button className="p-2 border border-gray-300 rounded-lg hover:border-purple-600 hover:bg-purple-50">
           <Heart className="w-4 h-4 text-gray-600" />
         </button>
       </div>
 
-      {/* Total */}
-      <div className="flex items-center justify-between pt-3 border-t">
-        <span className="text-gray-900 font-medium text-xs shrink-0">Total:</span>
-        <span className="text-2xl font-bold text-purple-600 shrink-0">₱ {totalPrice.toFixed(2)}</span>
+      {/* TOTAL */}
+      <div className="flex items-center justify-between pt-4 border-t">
+        <span className="text-gray-900 font-medium text-xs">Total:</span>
+        <span className="text-2xl font-bold text-[#7A1CA9]">
+          ₱ {totalPrice.toFixed(2)}
+        </span>
       </div>
     </div>
   );
