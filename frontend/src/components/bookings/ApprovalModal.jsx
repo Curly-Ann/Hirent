@@ -8,11 +8,11 @@ export default function ApprovalModal({ booking, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white  text-purple-900   rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="px-8 py-6 border-b flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Approve Booking</h2>
+            <h2 className="text-2xl font-bold  text-gray-900 ">Approve Booking</h2>
             <p className="text-sm text-gray-500 mt-1">
               You are approving the booking for {booking.item}
             </p>
@@ -65,7 +65,7 @@ export default function ApprovalModal({ booking, onClose, onConfirm }) {
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-5 bg-gray-50 border-t flex justify-end gap-3">
+        <div className="px-8 py-5 bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-t flex justify-end gap-3">
           <button
             onClick={onClose}
             className="px-5 py-2 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-100 transition"

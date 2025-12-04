@@ -207,7 +207,7 @@ const CollectionPage = () => {
     const approvedGrandTotalWithDeposit = approvedGrandTotal + approvedSecurityDepositTotal;
 
     return (
-        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb]">
+        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb] dark:bg-gray-900">
             <div className="flex flex-1 ml-16">
                 <div className="flex-1 mb-15">
                     <div className="max-w-8xl mx-auto pt-8">
@@ -224,7 +224,7 @@ const CollectionPage = () => {
 
                                     {/* Text Group */}
                                     <div>
-                                        <h1 className="text-[24px] mt-1 font-bold text-gray-800">
+                                        <h1 className="text-[24px] mt-1 font-bold text-purple-900">
                                             Your Collection
                                         </h1>
                                         <p className="text-gray-500 text-[15px]">
@@ -248,13 +248,13 @@ const CollectionPage = () => {
                                 </button>
                                 <button
                                     onClick={() => setFilter("approved")}
-                                    className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "approved" ? "bg-[#7A1CA9] text-white" : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"}`}
+                                    className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "approved" ? "bg-[#7A1CA9] text-white" : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"}`}
                                 >
                                     Approved ({collectionItems.filter(item => item.status === "approved").length})
                                 </button>
                                 <button
                                     onClick={() => setFilter("pending")}
-                                    className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "pending" ? "bg-[#7A1CA9] text-white" : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"}`}
+                                    className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "pending" ? "bg-[#7A1CA9] text-white" : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"}`}
                                 >
                                     Pending ({waitingCount})
                                 </button>
@@ -279,7 +279,7 @@ const CollectionPage = () => {
                                     </p>
                                     <button
                                         onClick={() => navigate("/browse")}
-                                        className="bg-white border border-[#7A1CA9] text-[#7A1CA9] px-3 py-1.5 text-sm rounded-lg shadow hover:bg-gray-50"
+                                        className="bg-white border border-[#7A1CA9]/20  text-[#7A1CA9] px-3 py-1.5 text-sm rounded-lg shadow hover:bg-gray-50"
                                     >
                                         Go to Shop ➔
                                     </button>
@@ -332,7 +332,7 @@ const CollectionPage = () => {
                                                                     : item.status === "pending"
                                                                         ? "bg-yellow-200 text-yellow-800"
                                                                         : !item.bookedFrom && !item.bookedTo
-                                                                            ? "bg-gray-200 text-gray-800"
+                                                                            ? "bg-gray-200 text-gray-900"
                                                                             : "bg-yellow-200 text-yellow-800"
                                                                     }`}
                                                             >
@@ -386,7 +386,7 @@ const CollectionPage = () => {
                                                         <div className="mt-0">
                                                             <hr className="my-2" />
                                                             <div className="flex justify-between items-center">
-                                                                <p className="text-gray-800 text-[17px] font-bold mt-1.5">₱{item.price.toFixed(2)}/day</p>
+                                                                <p className="text-purple-900 text-[17px] font-bold mt-1.5">₱{item.price.toFixed(2)}/day</p>
 
                                                                 {(item.status === "approved" || item.status === "pending") && (() => {
                                                                     const itemTotals = calculateItemTotal(item);
@@ -407,7 +407,7 @@ const CollectionPage = () => {
                                                                 {item.status === "approved" ? (
                                                                     <button
                                                                         onClick={() => alert(`Contacting owner: ${item.owner}`)}
-                                                                        className="px-3 py-1.5 mt-2 text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50"
+                                                                        className="px-3 py-1.5 mt-2 text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                                                                     >
                                                                         <MessageCircle className="w-4 h-4 mr-0.5" />
                                                                         Message Owner
@@ -415,7 +415,7 @@ const CollectionPage = () => {
                                                                 ) : item.status === "pending" ? (
                                                                     <button
                                                                         onClick={() => navigate(`/edit-booking/${item.id}`)}
-                                                                        className="px-3 py-1.5 mt-2  text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50"
+                                                                        className="px-3 py-1.5 mt-2  text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                                                                     >
                                                                         <Pencil className="w-4 h-4 mr-0.5" />
                                                                         Edit Booking Details
@@ -423,7 +423,7 @@ const CollectionPage = () => {
                                                                 ) : (
                                                                     <button
                                                                         onClick={() => navigate(`/booking/${item.id}`)}
-                                                                        className="px-3 py-1.5 mt-2  text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50"
+                                                                        className="px-3 py-1.5 mt-2  text-[13px] border rounded-lg flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                                                                     >
                                                                         <CalendarPlus className="w-4 h-4 mr-0.5" />
                                                                         Continue to Booking
@@ -441,7 +441,7 @@ const CollectionPage = () => {
                                     {/* RIGHT — RENTAL SUMMARY */}
                                     <div className="w-full md:w-1/3">
                                         <div className="sticky top-20 space-y-3">
-                                            <div className="bg-white p-4 rounded-lg border shadow-sm space-y-2">
+                                            <div className="bg-white   p-4 rounded-lg border shadow-sm space-y-2">
                                                 <h2 className="font-semibold text-[16px]">Rental Summary</h2>
 
                                                 <div className="flex items-center text-gray-600 gap-1.5">
@@ -504,7 +504,7 @@ const CollectionPage = () => {
                                                     </div>
                                                     <div className="flex justify-between font-bold text-lg">
                                                         <span>Total</span>
-                                                        <span className="text-gray-900">₱{approvedGrandTotalWithDeposit.toFixed(2)}</span>
+                                                        <span className=" text-gray-900 ">₱{approvedGrandTotalWithDeposit.toFixed(2)}</span>
                                                     </div>
 
                                                 </div>

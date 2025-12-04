@@ -3,8 +3,8 @@ import { MapPin, Tag } from "lucide-react";
 
 const ItemSummary = ({ product, days, coupon }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-[16px] text-gray-800 mb-4">Item Summary</h2>
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
+      <h2 className="text-[16px] text-purple-900 mb-4">Item Summary</h2>
 
       <div className="flex gap-4">
         
@@ -30,7 +30,7 @@ const ItemSummary = ({ product, days, coupon }) => {
             <div className="text-sm text-gray-600">
               <span className="font-light text-gray-500 mb-2">Listed by</span>
               <br />
-              <span className=" text-gray-800 ">{product.owner}</span>
+              <span className=" text-purple-900 ">{product.owner}</span>
             </div>
           </div>
 
@@ -41,7 +41,7 @@ const ItemSummary = ({ product, days, coupon }) => {
               <span className="text-gray-500 text-sm">per day</span>
             </div>
 
-            <div className="flex items-center gap-1 ml-5 text-gray-800 text-sm">
+            <div className="flex items-center gap-1 ml-5 text-purple-900 text-sm">
               <MapPin className="w-4 h-4" />
               {product.location}
             </div>

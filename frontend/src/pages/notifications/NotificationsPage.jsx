@@ -278,7 +278,7 @@ const NotificationsPage = () => {
 
               {/* Text Group */}
               <div>
-                <h1 className="text-[24px] mt-1 font-bold text-gray-800">
+                <h1 className="text-[24px] mt-1 font-bold text-purple-900">
                   Notifications
                 </h1>
                 <p className="text-gray-500 text-[15px]">
@@ -295,7 +295,7 @@ const NotificationsPage = () => {
           {notifications.some((n) => n.unread) && (
             <button
               onClick={markAllAsRead}
-              className="px-4 py-1.5 rounded-full text-sm bg-purple-50 text-[#8417bb] border border-[#7A1CA9]/30 hover:bg-[#7A1CA9]/20 transition"
+              className="px-4 py-1.5 rounded-full text-sm bg-purple-50 text-[#8417bb] border border-[#7A1CA9]/20 /30 hover:bg-[#7A1CA9]/20 transition"
             >
               Mark All Read
             </button>
@@ -321,7 +321,7 @@ const NotificationsPage = () => {
             onClick={() => setFilter(cat)}
             className={`px-3 py-1 rounded-full text-[13px] transition ${filter === cat
               ? "bg-[#7A1CA9] text-white shadow-md"
-              : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+              : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
               }`}
           >
             {cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -344,7 +344,7 @@ const NotificationsPage = () => {
             <div
               key={notif.id}
               onClick={() => markAsRead(notif.id, notif.redirect)}
-              className={`w-full px-5 py-4 rounded-2xl bg-white shadow-md cursor-pointer transform transition hover:scale-[1.01] ${notif.unread ? "border-l-4 border-[#7A1CA9]" : "opacity-90"
+              className={`w-full px-5 py-4 rounded-2xl bg-white  text-purple-900   shadow-md cursor-pointer transform transition hover:scale-[1.01] ${notif.unread ? "border-l-4 border-[#7A1CA9] " : "opacity-90"
                 }`}
             >
               <div className="flex items-start gap-4">

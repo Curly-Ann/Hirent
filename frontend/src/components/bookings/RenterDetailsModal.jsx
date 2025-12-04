@@ -48,10 +48,10 @@ export default function RenterDetailsModal({ booking, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-3 p-0">
+      <div className="bg-white  text-purple-900   rounded-2xl shadow-2xl w-full max-w-md mx-3 p-0">
         {/* Header */}
         <div className="flex justify-between items-center px-7 pt-7 pb-3 border-b border-gray-100">
-          <div className="text-xl font-bold text-gray-900 tracking-wide">Renter Details</div>
+          <div className="text-xl font-bold  text-gray-900  tracking-wide">Renter Details</div>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-purple-700 transition"
@@ -82,7 +82,7 @@ export default function RenterDetailsModal({ booking, onClose }) {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold text-gray-900">{renter.name}</span>
+              <span className="text-lg font-semibold  text-gray-900 ">{renter.name}</span>
               {renter.verified && (
                 <HiOutlineCheckCircle className="w-5 h-5 text-green-500" title="Verified account" />
               )}

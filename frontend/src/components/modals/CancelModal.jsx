@@ -5,7 +5,7 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md py-6 px-7">
+            <div className="bg-white  text-purple-900   rounded-lg shadow-lg w-full max-w-md py-6 px-7">
                 <h2 className="text-[16px] font-semibold mb-2">Cancel Booking</h2>
 
                 <p className="text-gray-600 mb-6 text-[13px]">
@@ -15,7 +15,7 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="text-[12px] px-2.5 py-1.5 font-medium  border rounded-lg hover:bg-gray-50"
+                        className="text-[12px] px-2.5 py-1.5 font-medium  border rounded-lg hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                     >
                         Keep Booking
                     </button>

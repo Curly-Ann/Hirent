@@ -7,15 +7,15 @@ const RelatedItems = ({ products }) => {
       {/* Section Header */}
       <div className="flex items-center gap-2 mb-10 mt-8">
         <div className="w-2 h-5 bg-[#7A1CA9] rounded-sm"></div>
-        <h2 className="text-lg font-semibold text-gray-800">Related Items</h2>
+        <h2 className="text-lg font-semibold text-purple-900">Related Items</h2>
       </div>
 
       {/* Products Grid - Removed extra padding */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -ml-px">
         {products.map((product) => (
-          <div key={product.id} className="group relative bg-white rounded-lg overflow-hidden  shadow-lg transition-shadow">
+          <div key={product.id} className="group relative bg-white  text-purple-900   rounded-lg overflow-hidden  shadow-lg transition-shadow">
             {/* Product Image Container */}
-            <div className="relative bg-gray-50 aspect-square flex items-center justify-center p-5 mb-2 rounded-lg overflow-hidden">
+            <div className="relative bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 aspect-square flex items-center justify-center p-5 mb-2 rounded-lg overflow-hidden">
               {/* Discount Badge */}
               {product.discount && (
                 <div className="absolute top-3 left-3 bg-[#7A1CA9] text-white px-2.5 py-1 rounded text-xs font-bold z-10">
@@ -25,10 +25,10 @@ const RelatedItems = ({ products }) => {
 
               {/* Action Buttons */}
               <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                <button className="p-2 bg-white rounded-full shadow-md hover:bg-[#7A1CA9] hover:text-white transition-all">
+                <button className="p-2 bg-white  text-purple-900   rounded-full shadow-md hover:bg-[#7A1CA9] hover:text-white transition-all">
                   <Heart className="w-4 h-4" />
                 </button>
-                <button className="p-2 bg-white rounded-full shadow-md hover:bg-[#7A1CA9] hover:text-white transition-all">
+                <button className="p-2 bg-white  text-purple-900   rounded-full shadow-md hover:bg-[#7A1CA9] hover:text-white transition-all">
                   <Eye className="w-4 h-4" />
                 </button>
               </div>
@@ -48,7 +48,7 @@ const RelatedItems = ({ products }) => {
 
             {/* Product Info */}
             <div className="px-4 pb-4 space-y-2">
-              <h3 className="font-semibold text-gray-900 text-xs line-clamp-2">{product.name}</h3>
+              <h3 className="font-semibold  text-gray-900  text-xs line-clamp-2">{product.name}</h3>
               
               {/* Price */}
               <div className="flex items-center gap-2">

@@ -20,7 +20,7 @@ const Footer = () => {
                         Get 10% off your first order
                     </p>
 
-                    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-52 bg-white">
+                    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-52 bg-white  text-purple-900  ">
                         <input
                             type="email"
                             placeholder="Enter your email"

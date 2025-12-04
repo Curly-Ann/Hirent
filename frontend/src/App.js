@@ -52,6 +52,8 @@ import OwnerProfile from "./pages/owner/OwnerProfile";
 //map css
 import "leaflet/dist/leaflet.css";
 
+import { ThemeProvider } from "./context/ThemeContext";
+
 import { motion } from "framer-motion";
 
 if (!localStorage.getItem("fakeToken")) {
@@ -112,6 +114,7 @@ function App() {
   return (
 
     <AuthProvider>
+      <ThemeProvider>
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -142,6 +145,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

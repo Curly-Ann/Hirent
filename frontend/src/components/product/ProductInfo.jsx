@@ -161,7 +161,7 @@ const ProductInfo = ({ product }) => {
     <div className="w-[400px] space-y-3">
 
       {/* TITLE */}
-      <h1 className="text-lg font-semibold text-gray-900 tracking-tight">
+      <h1 className="text-lg font-semibold  text-gray-900  tracking-tight">
         {product.name}
       </h1>
 
@@ -222,7 +222,7 @@ const ProductInfo = ({ product }) => {
       <div className="border-b pb-3 space-y-3 text-xs text-gray-700">
         <div className="flex justify-between items-center">
           <span>Refundable Deposit:</span>
-          <span className="font-semibold text-gray-900">₱{DEPOSIT_FEE}</span>
+          <span className="font-semibold  text-gray-900 ">₱{DEPOSIT_FEE}</span>
         </div>
 
         <div className="flex justify-between items-center">
@@ -238,10 +238,10 @@ const ProductInfo = ({ product }) => {
               />
 
               <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-purple-600 transition-all" />
-              <div className="absolute left-1 top-1 w-3.5 h-3.5 bg-white rounded-full transition-all peer-checked:translate-x-5 shadow" />
+              <div className="absolute left-1 top-1 w-3.5 h-3.5 bg-white  text-purple-900   rounded-full transition-all peer-checked:translate-x-5 shadow" />
             </label>
 
-            <span className="font-semibold text-gray-900 text-xs">+₱{DAMAGE_FEE}</span>
+            <span className="font-semibold  text-gray-900  text-xs">+₱{DAMAGE_FEE}</span>
           </div>
         </div>
       </div>
@@ -249,7 +249,7 @@ const ProductInfo = ({ product }) => {
       {/* DATE RANGE */}
       <div className="border-t pt-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-900 font-medium text-[11px]">Date Range</span>
+          <span className=" text-gray-900  font-medium text-[11px]">Date Range</span>
           <button
             onClick={() => setDateRange({ start: null, end: null })}
             className="text-purple-600 text-[11px] hover:text-[#7A1CA9]"
@@ -279,7 +279,7 @@ const ProductInfo = ({ product }) => {
               <Calendar className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7A1CA9] w-4 h-4" />
 
               {showStartCalendar && (
-                <div className="absolute top-14 left-0 w-60 bg-white border shadow-xl rounded-xl p-3 z-50">
+                <div className="absolute top-14 left-0 w-60 bg-white  text-purple-900   border shadow-xl rounded-xl p-3 z-50">
                   <div className="flex justify-between items-center mb-2">
                     <button
                       onClick={() =>
@@ -338,7 +338,7 @@ const ProductInfo = ({ product }) => {
               <Calendar className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7A1CA9] w-4 h-4" />
 
               {showEndCalendar && (
-                <div className="absolute top-14 left-0 w-60 bg-white border shadow-xl rounded-xl p-3 z-50">
+                <div className="absolute top-14 left-0 w-60 bg-white  text-purple-900   border shadow-xl rounded-xl p-3 z-50">
                   <div className="flex justify-between items-center mb-2">
                     <button
                       onClick={() =>
@@ -387,8 +387,8 @@ const ProductInfo = ({ product }) => {
               className={`px-3 py-1.5 text-[11px] border rounded-lg font-medium transition-all
                 ${
                   selectedPeriod === period
-                    ? "bg-[#7A1CA9] text-white border-[#7A1CA9] shadow"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-purple-400"
+                    ? "bg-[#7A1CA9] text-white border-[#7A1CA9]  shadow"
+                    : "bg-white  text-purple-900   text-gray-700 border-gray-300 hover:border-purple-400"
                 }`}
             >
               {period}
@@ -431,7 +431,7 @@ const ProductInfo = ({ product }) => {
 
       {/* TOTAL */}
       <div className="flex items-center justify-between pt-4 border-t">
-        <span className="text-gray-900 font-medium text-xs">Total:</span>
+        <span className=" text-gray-900  font-medium text-xs">Total:</span>
         <span className="text-2xl font-bold text-[#7A1CA9]">
           ₱ {totalPrice.toFixed(2)}
         </span>

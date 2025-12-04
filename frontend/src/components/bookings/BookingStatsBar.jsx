@@ -16,7 +16,7 @@ export default function BookingStatsBar({ stats }) {
         <div
           key={card.label}
           className="
-            bg-white
+            bg-white  text-purple-900  
             rounded-xl
             border border-gray-200
             shadow-sm

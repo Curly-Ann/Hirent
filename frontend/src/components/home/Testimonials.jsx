@@ -111,7 +111,7 @@ const Testimonials = () => {
       'div',
       { 
         key: index, 
-        className: 'bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition flex-shrink-0',
+        className: 'bg-white  text-purple-900   rounded-xl p-6 shadow-sm hover:shadow-lg transition flex-shrink-0',
         style: { minWidth: '380px', width: '380px', minHeight: '150px' }
       },
       
@@ -137,7 +137,7 @@ const Testimonials = () => {
         React.createElement(
           'div',
           null,
-          React.createElement('h4', { className: 'font-inter font-semibold text-[14px] text-gray-900' }, testimonial.name),
+          React.createElement('h4', { className: 'font-inter font-semibold text-[14px]  text-gray-900 ' }, testimonial.name),
           React.createElement('p', { className: 'text-[13px] font-inter text-gray-600' }, testimonial.role)
         )
       )
@@ -146,7 +146,7 @@ const Testimonials = () => {
 
   return React.createElement(
     'section',
-    { className: 'py-20 px-12 md:px-16 lg:px-42 bg-gray-50 justify-center overflow-hidden' },
+    { className: 'py-20 px-12 md:px-16 lg:px-42 bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 justify-center overflow-hidden' },
     React.createElement(
       'div',
       { className: 'max-w-7xl mx-auto' },
@@ -155,7 +155,7 @@ const Testimonials = () => {
       React.createElement(
         'div',
         { className: 'text-center mb-12' },
-        React.createElement('h3', { className: 'text-[28px] mb-1 font-semibold text-gray-900' }, 'Our Happy Customers'),
+        React.createElement('h3', { className: 'text-[28px] mb-1 font-semibold  text-gray-900 ' }, 'Our Happy Customers'),
         React.createElement('p', { className: 'text-gray-600 text-[16px] mb-1' }, 'Real stories from real members who transformed their lives with Hirent')
       ),
       

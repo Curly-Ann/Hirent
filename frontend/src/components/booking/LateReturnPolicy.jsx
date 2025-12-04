@@ -2,7 +2,7 @@ import React from 'react';
 
 const LateReturnPolicy = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Late Return Policy</h2>
       
       <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
@@ -29,7 +29,7 @@ const LateReturnPolicy = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="font-medium text-[15px] text-gray-900">Need to extend your rental?</p>
+            <p className="font-medium text-[15px]  text-gray-900 ">Need to extend your rental?</p>
             <p className="text-sm text-gray-600">Contact the owner before your rental period ends to request an extension.</p>
           </div>
         </div>
@@ -39,7 +39,7 @@ const LateReturnPolicy = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="font-medium text-[15px] text-gray-900">Emergency situations</p>
+            <p className="font-medium text-[15px]  text-gray-900 ">Emergency situations</p>
             <p className="text-sm text-gray-600">In case of emergencies preventing timely return, contact support immediately to avoid penalties.</p>
           </div>
         </div>

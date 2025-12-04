@@ -117,7 +117,7 @@ const AuthForm = ({ mode }) => {
             >
                 {/* Container */}
                 <div
-                    className={`z-10 cursor-default bg-white ${mode === "signup" ? "w-[480px]  h-[650px]" : "w-[450px] h-[550px]"
+                    className={`z-10 cursor-default bg-white  text-purple-900   ${mode === "signup" ? "w-[480px]  h-[650px]" : "w-[450px] h-[550px]"
                         } rounded-2xl shadow-2xl flex flex-row overflow-hidden hover:shadow-2xl hover:scale-[1.01] transition-all duration-300`}
                 >
 
@@ -137,7 +137,7 @@ const AuthForm = ({ mode }) => {
                                     Be an Owner <span className="text-[13px]">➔</span>
                                 </Link>
                             )}
-                            <h2 className="text-[23px] font-bold text-gray-800">
+                            <h2 className="text-[23px] font-bold text-purple-900">
                                 {mode === "signup" ? "Get started with Hirent" : "Log In"}
                             </h2>
                             <p className="text-[14.5px] font-medium text-gray-600 mb-4">
@@ -155,7 +155,7 @@ const AuthForm = ({ mode }) => {
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         placeholder=" "
-                                        className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px] text-gray-900 bg-[#f9f9f9] border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
+                                        className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900  bg-[#f9f9f9] border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
                                     />
                                     <label
                                         htmlFor="name"
@@ -175,7 +175,7 @@ const AuthForm = ({ mode }) => {
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     placeholder=" "
-                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900 bg-[#f9f9f9]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
+                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]   text-gray-900  bg-[#f9f9f9]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
                                 />
                                 <label
                                     htmlFor="email"
@@ -195,7 +195,7 @@ const AuthForm = ({ mode }) => {
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     placeholder=" "
                                     autoComplete="current-password"
-                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900 bg-[#f9f9f9]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
+                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]   text-gray-900  bg-[#f9f9f9]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
                                 />
 
                                 <label
@@ -223,10 +223,10 @@ const AuthForm = ({ mode }) => {
                             <div className="flex flex-col gap-2">
                                 <button
                                     type="submit"
-                                    className="relative w-full mx-auto border border-[#7A1CA9] bg-[#7A1CA9] text-white py-3 text-[14px] font-medium rounded-md overflow-hidden group transition-all duration-300 hover:bg-[#65188a] mt-2"
+                                    className="relative w-full mx-auto border border-[#7A1CA9]  bg-[#7A1CA9] text-white py-3 text-[14px] font-medium rounded-md overflow-hidden group transition-all duration-300 hover:bg-[#65188a] mt-2"
                                 >
                                     <span className="absolute inset-0 bg-gradient-to-r from-pink-700 to-purple-600 opacity-0 group-hover:opacity-100 translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-700 ease-in-out"></span>
-                                    <span className="absolute inset-0 bg-white opacity-20 rotate-45 translate-x-[-150%] group-hover:translate-x-[150%] blur-sm transition-transform duration-700 ease-in-out"></span>
+                                    <span className="absolute inset-0 bg-white  text-purple-900   opacity-20 rotate-45 translate-x-[-150%] group-hover:translate-x-[150%] blur-sm transition-transform duration-700 ease-in-out"></span>
                                     <span className="relative z-10">
                                         {"Continue with email"}
                                     </span>

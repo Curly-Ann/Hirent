@@ -108,7 +108,7 @@ const MyRentalsPage = () => {
     });
 
     return (
-        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb]">
+        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb] dark:bg-gray-900">
             {/* MAIN FLEX */}
             <div className="flex flex-1 ml-16">
 
@@ -127,7 +127,7 @@ const MyRentalsPage = () => {
 
                                 {/* Text Group */}
                                 <div>
-                                    <h1 className="text-[22px] mt-1.5 font-bold text-gray-800">
+                                    <h1 className="text-[22px] mt-1.5 font-bold text-purple-900">
                                         My Rentals
                                     </h1>
                                     <p className="text-gray-500 mt-0.5 text-[15px]">
@@ -148,7 +148,7 @@ const MyRentalsPage = () => {
                             onClick={() => setFilter("all")}
                             className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "all"
                                 ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                 }`}>
                             All ({rentals.length})
                         </button>
@@ -157,7 +157,7 @@ const MyRentalsPage = () => {
                             onClick={() => setFilter("approved")}
                             className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "approved"
                                 ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                 }`}>
                             Approved (
                             {rentals.filter((r) => r.status === "approved").length}
@@ -168,7 +168,7 @@ const MyRentalsPage = () => {
                             onClick={() => setFilter("pending")}
                             className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "pending"
                                 ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                 }`}>
                             Pending (
                             {rentals.filter((r) => r.status === "pending").length}
@@ -179,7 +179,7 @@ const MyRentalsPage = () => {
                             onClick={() => setFilter("cancelled")}
                             className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "cancelled"
                                 ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                 }`}>
                             Cancelled ({rentals.filter((r) => r.status === "cancelled").length})
                         </button>
@@ -188,7 +188,7 @@ const MyRentalsPage = () => {
                             onClick={() => setFilter("completed")}
                             className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "completed"
                                 ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                 }`}>
                             Completed ({rentals.filter((r) => r.status === "completed").length})
                         </button>
@@ -214,7 +214,7 @@ const MyRentalsPage = () => {
                         {sorted.map((item) => (
                             <div
                                 key={item.id}
-                                className="relative bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
+                                className="relative bg-white  border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
                             >
                                 <span
                                     className={`absolute top-4 right-4 px-2 py-1 rounded-full text-[12.5px] font-medium flex items-center gap-1 ${item.status === "approved"
@@ -253,7 +253,7 @@ const MyRentalsPage = () => {
 
                                         <p className="text-sm text-gray-600">Listed by {item.owner}</p>
 
-                                        <div className="mt-3 mb-3 flex items-center gap-20 text-sm text-gray-800">
+                                        <div className="mt-3 mb-3 flex items-center gap-20 text-sm text-purple-900">
                                             <div className="flex flex-col gap-1">
                                                 <div className="flex items-center gap-1">
                                                     <Calendar className="w-4 h-4 mr-1 opacity-60" />
@@ -303,13 +303,13 @@ const MyRentalsPage = () => {
                                             <div className="flex items-center gap-12">
                                                 <div>
                                                     <p className="text-sm text-gray-500">Rent per day</p>
-                                                    <p className="font-medium text-[18px] text-gray-800">₱{item.price}</p>
+                                                    <p className="text-[18px] font-bold text-purple-900">₱{item.price}</p>
                                                 </div>
 
                                                 {item.status !== "cancelled" && (
                                                     <div>
                                                         <p className="text-sm text-gray-500">Total amount</p>
-                                                        <p className="font-semibold text-[18px] text-[#7A1CA9]">
+                                                        <p className="font-bold text-[18px] text-[#7A1CA9]">
                                                             {(() => {
                                                                 const listing = mockListings.find(l => l.id === item.id);
                                                                 const pricePerDay = listing
@@ -354,13 +354,13 @@ const MyRentalsPage = () => {
                                                     setSelectedRentalId(item.id);
                                                     setDetailsModalOpen(true);
                                                 }}
-                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50"
+                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                                             >
                                                 <Eye className="w-4 h-4 mr-1" />
                                                 View More Details
                                             </button>
 
-                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50">
+                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
                                                 <MessageCircle className="w-4 h-4 mr-1" />
                                                 Message Owner
                                             </button>
@@ -380,13 +380,13 @@ const MyRentalsPage = () => {
                                         <>
                                             <button
                                                 onClick={() => alert(`Re-renting ${item.name}`)}
-                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50"
+                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
                                             >
                                                 <CalendarPlus className="w-4 h-4 mr-1" />
                                                 Book Again
                                             </button>
 
-                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50">
+                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
                                                 <MessageCircle className="w-4 h-4 mr-1" />
                                                 Message Owner
                                             </button>

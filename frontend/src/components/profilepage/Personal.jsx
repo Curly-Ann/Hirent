@@ -15,14 +15,14 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] mr-16 ml-4 gap-8">
 
             {/* LEFT: Form container */}
-            <div className="bg-white collection-scale rounded-2xl shadow-lg p-8">
+            <div className="bg-white   collection-scale rounded-2xl shadow-lg p-8">
                 <div className="flex items-start gap-4">
                     <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
                         <User className="w-10 h-10 text-[#7A1CA9]" />
                     </div>
 
                     <div>
-                        <h1 className="text-[26px] font-bold mt-1">Personal Information</h1>
+                        <h1 className="text-[26px] font-bold text-purple-900  mt-1">Personal Information</h1>
                         <p className="text-[16px] text-gray-500">
                             Update your account details.
                         </p>
@@ -116,7 +116,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                     onClick={() => handleGender(g.id)}
                                     className={`flex-1 p-6 rounded-xl border shadow-sm flex items-center justify-center gap-2 ${form.gender === g.id
                                         ? "bg-gradient-to-r from-[#a052db] to-[#7A1CA9] text-white"
-                                        : "bg-white"
+                                        : "bg-white  text-purple-900  "
                                         }`}
                                 >
                                     <g.icon size={22} /> {g.id === "na" ? "Prefer not to say" : g.id.charAt(0).toUpperCase() + g.id.slice(1)}
@@ -126,8 +126,8 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex gap-3 justify-end pt-5">
-                        <button type="submit" className="px-6 py-1 border bg-purple-50 border-purple-300 rounded-lg shadow-sm text-sm text-purple-600 hover:bg-purple-50">
+                    <div className="flex gap-2 justify-end pt-5">
+                        <button type="submit" className="px-6 py-1 text-[15px] border bg-purple-50 border-purple-300 rounded-lg shadow-sm text-purple-600 hover:bg-purple-50">
                             Save
                         </button>
                         <button type="button" onClick={() => window.location.reload()} className="px-6 py-2 rounded-lg text-[15px] border">

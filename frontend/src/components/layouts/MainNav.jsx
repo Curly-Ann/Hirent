@@ -67,13 +67,13 @@ const MainNav = () => {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate("/login")}
-              className="w-20 h-8 bg-white/5 border border-white/70 text-white rounded-md font-inter font-semibold hover:bg-white/20 transition text-[13px]"
+              className="w-20 h-8 bg-white  text-white/5 border border-white/70 text-white rounded-md font-inter font-semibold hover:bg-white  text-white/20 transition text-[13px]"
             >
               Login
             </button>
             <button
               onClick={() => navigate("/signup")}
-              className="w-24 h-8 bg-white rounded-md font-inter font-semibold hover:bg-gray-100 transition text-[13px]"
+              className="w-24 h-8 bg-white  text-white rounded-md font-inter font-semibold hover:bg-gray-100 transition text-[13px]"
               style={{ color: "#743593" }}
             >
               Register

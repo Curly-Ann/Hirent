@@ -19,7 +19,7 @@ export default function RentalHistoryPanel({ open, onClose, item }) {
             animate={{ x: 0 }}
             exit={{ x: 500 }}
             transition={{ type: "spring", stiffness: 160, damping: 22 }}
-            className="w-[500px] h-full bg-white shadow-xl border-l px-6 py-6 overflow-y-auto"
+            className="w-[500px] h-full bg-white  text-purple-900   shadow-xl border-l px-6 py-6 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -41,7 +41,7 @@ export default function RentalHistoryPanel({ open, onClose, item }) {
                 {item.history.map((record, i) => (
                   <div
                     key={i}
-                    className="border rounded-lg p-4 shadow-sm bg-white"
+                    className="border rounded-lg p-4 shadow-sm bg-white  text-purple-900  "
                   >
                     {/* User */}
                     <div className="flex items-center gap-2 mb-1">

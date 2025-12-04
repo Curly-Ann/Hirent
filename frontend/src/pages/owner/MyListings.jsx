@@ -242,7 +242,7 @@ export default function MyListings() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 min-h-screen">
       <OwnerSidebar />
 
       <main className="collection-scale flex-1 mt-12">
@@ -257,7 +257,7 @@ export default function MyListings() {
 
         {/* Search + Sort */}
         <div className="flex gap-3 mb-6">
-          <div className="flex items-center border bg-white rounded-lg px-3 py-2 w-full">
+          <div className="flex items-center border bg-white  text-purple-900   rounded-lg px-3 py-2 w-full">
             <Search size={16} className="text-gray-400" />
             <input
               className="ml-2 w-full text-sm outline-none"
@@ -268,7 +268,7 @@ export default function MyListings() {
           </div>
 
           <select
-            className="border rounded-lg px-3 py-2 text-sm bg-white"
+            className="border rounded-lg px-3 py-2 text-sm bg-white  text-purple-900  "
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
@@ -280,9 +280,9 @@ export default function MyListings() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+        <div className="bg-white  text-purple-900   rounded-xl border shadow-sm overflow-hidden">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-b">
               <tr className="text-sm text-gray-600">
                 <th className="py-3 px-4 font-semibold">Item</th>
                 <th className="py-3 px-4 font-semibold">Price</th>
@@ -299,7 +299,7 @@ export default function MyListings() {
                 <React.Fragment key={item.id}>
                   {/* MAIN ROW */}
                   <tr
-                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    className="border-b hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 cursor-pointer"
                     onClick={() =>
                       setExpanded(expanded === item.id ? null : item.id)
                     }
@@ -354,7 +354,7 @@ export default function MyListings() {
 
                   {/* EXPANDED DETAILS */}
                   {expanded === item.id && (
-                    <tr className="bg-gray-50">
+                    <tr className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
                       <td colSpan="5" className="p-6">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
@@ -399,10 +399,10 @@ export default function MyListings() {
                           </div>
 
                           {/* Renter Status */}
-                          <div className="col-span-2 mt-4 p-3 bg-white border rounded-lg shadow-sm">
+                          <div className="col-span-2 mt-4 p-3 bg-white  text-purple-900   border rounded-lg shadow-sm">
                             {item.rented ? (
                               <>
-                                <p className="text-gray-800 font-medium">
+                                <p className="text-purple-900 font-medium">
                                   Rented by {item.renter}
                                 </p>
                                 <p className="flex items-center gap-1 text-sm text-gray-600 mt-1">

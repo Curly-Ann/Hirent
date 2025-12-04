@@ -15,7 +15,7 @@ export default function EditItemModal({ open, onClose, item }) {
           onClick={onClose}
         >
           <motion.div
-            className="w-[420px] bg-white rounded-xl shadow-xl p-6"
+            className="w-[420px] bg-white  text-purple-900   rounded-xl shadow-xl p-6"
             initial={{ scale: 0.85 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.85 }}

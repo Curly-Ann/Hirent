@@ -15,7 +15,7 @@ const AboutPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white  text-purple-900  ">
         {/* Hero Section */}
         <section className="relative h-[400px] bg-gradient-to-br from-purple-900 to-purple-700 overflow-hidden">
           <div 
@@ -55,11 +55,11 @@ const AboutPage = () => {
         </section>
 
         {/* Who We Are Section */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white  text-purple-900  ">
           <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">Who we are</h2>
+                <h2 className="text-4xl font-bold  text-gray-900  mb-6">Who we are</h2>
                 <p className="text-gray-700 leading-relaxed">
                   We are a collective of visionaries, and problem-solvers dedicated to creating a smarter way to share and rent. 
                   Bound by common values and a shared vision, we work together to make access equitable and sustainability achievable for everyone.
@@ -78,32 +78,32 @@ const AboutPage = () => {
         </section>
 
         {/* Values Grid Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Our people & leadership</h3>
+                <h3 className="text-lg font-bold  text-gray-900  mb-3">Our people & leadership</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   We are defined by collaboration, innovation, and trust, creating a platform built by people for people.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Purpose, mission & values</h3>
+                <h3 className="text-lg font-bold  text-gray-900  mb-3">Purpose, mission & values</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   We value affordability, accessibility, and sustainability, shaping a sharing economy that benefits everyone.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Our aspiration</h3>
+                <h3 className="text-lg font-bold  text-gray-900  mb-3">Our aspiration</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   To empower users to save money, reduce waste, and create new income opportunities through smart renting.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Our governance</h3>
+                <h3 className="text-lg font-bold  text-gray-900  mb-3">Our governance</h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   We are committed to transparency, fairness, and ethical practices in every rental and partnership.
                 </p>
@@ -113,7 +113,7 @@ const AboutPage = () => {
         </section>
 
         {/* How We Work Section */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white  text-purple-900  ">
           <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
@@ -125,7 +125,7 @@ const AboutPage = () => {
               </div>
 
               <div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-8">How we work</h2>
+                <h2 className="text-4xl font-bold  text-gray-900  mb-8">How we work</h2>
                 <p className="text-gray-700 leading-relaxed mb-8">
                   From individuals to businesses, we partner with our users to help them find, rent, and manage what they need, 
                   all while fostering trust, safety, and convenience.
@@ -133,28 +133,28 @@ const AboutPage = () => {
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">From idea to impact</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">From idea to impact</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We turn ideas into action, building smarter, faster, and more secure rental experiences for everyone.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Innovation & technology</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Innovation & technology</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       Our platform uses modern tools to ensure real-time availability, secure payments, and seamless experiences.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Client Capabilities Network</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Client Capabilities Network</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We empower users with data-driven insights and smart tools to manage rentals efficiently.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Case studies</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Case studies</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       Every successful rental is proof that sharing can be both practical and powerful.
                     </p>
@@ -166,39 +166,39 @@ const AboutPage = () => {
         </section>
 
         {/* Our Commitments Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-8">Our commitments</h2>
+                <h2 className="text-4xl font-bold  text-gray-900  mb-8">Our commitments</h2>
                 <p className="text-gray-700 leading-relaxed mb-8">
                   We are dedicated to promoting a responsible rental culture that benefits people, communities, and the planet.
                 </p>
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Our diverse meritocracy</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Our diverse meritocracy</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We believe in equal opportunity and inclusivity, empowering everyone to contribute and thrive.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Social Responsibility</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Social Responsibility</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We invest in communities through meaningful collaborations, supporting programs that create real, long-term change.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">Environmental sustainability</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">Environmental sustainability</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We work toward reducing waste and carbon footprint across every rental.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-2">2025 Sustainable Growth</h3>
+                    <h3 className="text-base font-bold  text-gray-900  mb-2">2025 Sustainable Growth</h3>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       We're building toward a future where smart renting means a cleaner, greener, and more inclusive world.
                     </p>

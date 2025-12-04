@@ -52,7 +52,7 @@ const Sidebar = ({ onExpand }) => {
             className={`relative transition-all border-l-4 transform-gpu ${
               isActive(item.link)
                 ? "bg-purple-50 text-[#7A1CA9] border-l-[#7A1CA9]"
-                : "text-gray-700 hover:bg-purple-50 hover:text-[#7A1CA9] hover:scale-105"
+                : "text-gray-700 hover:bg-purple-50  hover:text-[#7A1CA9] hover:scale-105"
             }`}
           >
             <div className="flex items-center gap-3 px-4 py-2">

@@ -9,7 +9,7 @@ function SectionHeader({ title }) {
     <div className="mb-5">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-2 h-4 bg-[#7A1CA9] rounded-md"></div>
-        <h2 className="text-lg font-medium text-gray-900">{title}</h2>
+        <h2 className="text-lg font-medium  text-gray-900 ">{title}</h2>
       </div>
       <div className="border-b border-gray-200"></div>
     </div>
@@ -19,14 +19,14 @@ function SectionHeader({ title }) {
 function Input({ label, required, ...props }) {
   return (
     <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-800">
+      <label className="text-sm font-medium text-purple-900">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       <input
         {...props}
-        className="w-full px-3 py-2 border bg-gray-50 border-gray-300 rounded-md text-sm 
+        className="w-full px-3 py-2 border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-300 rounded-md text-sm 
           focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
       />
     </div>
@@ -36,14 +36,14 @@ function Input({ label, required, ...props }) {
 function Textarea({ label, required, ...props }) {
   return (
     <div className="space-y-1">
-      <label className="text-sm font-medium  text-gray-800">
+      <label className="text-sm font-medium  text-purple-900">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       <textarea
         {...props}
-        className="w-full px-3 py-2 border bg-gray-50 border-gray-300 rounded-md text-sm resize-none 
+        className="w-full px-3 py-2 border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-300 rounded-md text-sm resize-none 
         focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
       ></textarea>
     </div>
@@ -53,13 +53,13 @@ function Textarea({ label, required, ...props }) {
 function Select({ label, options, required, ...props }) {
   return (
     <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-800">
+      <label className="text-sm font-medium text-purple-900">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <select
         {...props}
-        className="w-full px-3 py-2 border bg-gray-50 border-gray-300 rounded-md text-sm 
+        className="w-full px-3 py-2 border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-300 rounded-md text-sm 
           focus:ring-2 focus:ring-purple-500 transition"
       >
         <option value="">Select {label}</option>
@@ -234,7 +234,7 @@ export default function AddNewItemForm() {
         <button
           onClick={clearAllFields}
           disabled={!isFormDirty}
-          className="px-3 py-1.5 border border-gray-400 rounded-md text-sm text-gray-800 bg-white hover:bg-gray-100
+          className="px-3 py-1.5 border border-gray-400 rounded-md text-sm text-purple-900 bg-white  text-purple-900   hover:bg-gray-100
             transition disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-95"
         >
           Clear All
@@ -242,7 +242,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* GENERAL INFORMATION */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
         <SectionHeader title="General Information" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -284,7 +284,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* PRICING */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
         <SectionHeader title="Pricing & Deposit" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -328,7 +328,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* LOCATION & DELIVERY */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
         <SectionHeader title="Location & Delivery" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -359,7 +359,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* AVAILABILITY */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 mb-5">
         <SectionHeader title="Availability" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -388,7 +388,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* OPTIONAL DETAILS */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-6 mb-5">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 space-y-6 mb-5">
         <SectionHeader title="Optional Details" />
 
         {/* COLOR SWATCHES */}
@@ -515,7 +515,7 @@ export default function AddNewItemForm() {
       </div>
 
       {/* UPLOAD IMAGES */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+      <div className="bg-white  text-purple-900   p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
         <SectionHeader title="Upload Images" />
 
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center 
@@ -590,8 +590,8 @@ export default function AddNewItemForm() {
         </button>
 
         <button
-          className="flex-1 bg-white border border-gray-300 py-2 rounded-lg text-gray-700 font-medium 
-            hover:bg-gray-50 transition"
+          className="flex-1 bg-white  text-purple-900   border border-gray-300 py-2 rounded-lg text-gray-700 font-medium 
+            hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition"
         >
           Cancel
         </button>

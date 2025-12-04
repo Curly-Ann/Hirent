@@ -78,15 +78,15 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
         <>
             <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
             <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-20">
-                <div className="bg-white collection-scale rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-y-auto" onClick={e => e.stopPropagation()}>
+                <div className="bg-white  text-purple-900   collection-scale rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-y-auto" onClick={e => e.stopPropagation()}>
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b rounded-t-2xl border-gray-200 px-6 py-4 z-20 flex items-center justify-between">
+                    <div className="sticky top-0 bg-white  text-purple-900   border-b rounded-t-2xl border-gray-200 px-6 py-4 z-20 flex items-center justify-between">
                         <div className="flex items-center gap-4 flex-1">
                             <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                                 <ImageWithFallback src={rental.image} alt={rental.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h2 className="text-gray-900 font-medium truncate text-[16px]">{rental.name}</h2>
+                                <h2 className=" text-gray-900  font-medium truncate text-[16px]">{rental.name}</h2>
                                 <p className="text-gray-500 text-[14px]">{rental.category}</p>
                             </div>
                         </div>
@@ -96,16 +96,16 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                     <div className="overflow-y-auto flex-1 p-6 space-y-6">
                         {/* Rental Details */}
                         <div className="space-y-2">
-                            <h3 className="text-gray-900 text-[15px]">Rental Details</h3>
-                            <div className="bg-gray-50 rounded-xl p-4 space-y-4">
+                            <h3 className=" text-gray-900  text-[15px]">Rental Details</h3>
+                            <div className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-4 space-y-4">
                                 {/* Date Booked */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <div className="w-9 h-9 bg-white  text-purple-900   rounded-lg flex items-center justify-center flex-shrink-0">
                                         <CalendarCheck className="w-5 h-5 text-[#7A1CA9]" />
                                     </div>
                                     <div>
                                         <p className="text-gray-500 text-[13px] mb-0.5">Date booked by you</p>
-                                        <p className="text-gray-900 text-sm mb-0.5">
+                                        <p className=" text-gray-900  text-sm mb-0.5">
                                             {rental.dateBooked
                                                 ? new Date(rental.dateBooked).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
                                                 : "-"}
@@ -117,12 +117,12 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
 
                                 {/* Rental Period */}
                                 <div className="mt-4 flex items-center gap-3">
-                                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <div className="w-9 h-9 bg-white  text-purple-900   rounded-lg flex items-center justify-center flex-shrink-0">
                                         <CalendarClock className="w-5 h-5 text-[#7A1CA9]" />
                                     </div>
                                     <div>
                                         <p className="text-gray-500 text-[13px] mb-0.5">Rental Period</p>
-                                        <p className="text-gray-900 text-sm mb-0.5">
+                                        <p className=" text-gray-900  text-sm mb-0.5">
                                             {new Date(rental.bookedFrom).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} - {" "}
                                             {new Date(rental.bookedTo).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                                         </p>
@@ -147,14 +147,14 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
 
                                 {/* Shipping / Pickup */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <div className="w-9 h-9 bg-white  text-purple-900   rounded-lg flex items-center justify-center flex-shrink-0">
                                         <MapPin className="w-5 h-5 text-[#7A1CA9]" />
                                     </div>
                                     <div>
                                         <p className="text-gray-500 text-[13px] mb-0.5">
                                             {rental.delivery?.deliveryType === "shipping" ? "Shipping / Pickup Address" : "Pickup Location"}
                                         </p>
-                                        <p className="text-gray-900 text-sm flex items-center gap-1">
+                                        <p className=" text-gray-900  text-sm flex items-center gap-1">
                                             {/* Original item location */}
                                             {mockListings.find(l => l.id === rental.id)?.location || "Unknown"}
 
@@ -176,12 +176,12 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
 
                                 {/* Payment */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <div className="w-9 h-9 bg-white  text-purple-900   rounded-lg flex items-center justify-center flex-shrink-0">
                                         <CreditCard className="w-5 h-5 text-[#7A1CA9]" />
                                     </div>
                                     <div>
                                         <p className="text-gray-500 text-[13px] mb-0.5">Payment Method</p>
-                                        <p className="text-gray-900 text-sm">{rental.paymentMethod || "Not Provided"}</p>
+                                        <p className=" text-gray-900  text-sm">{rental.paymentMethod || "Not Provided"}</p>
                                     </div>
                                 </div>
                             </div>
@@ -189,9 +189,9 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
 
                         {/* Price Summary */}
                         <div className="space-y-2">
-                            <h3 className="text-gray-900 text-[15px]">Price Summary</h3>
+                            <h3 className=" text-gray-900  text-[15px]">Price Summary</h3>
 
-                            <div className="bg-gray-50 rounded-xl p-4 space-y-1.5">
+                            <div className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-4 space-y-1.5">
                                 {(() => {
                                     const listing = mockListings.find(l => l.id === rental.id);
 
@@ -233,7 +233,7 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                                                         Subtotal ({daysCount} days × ₱{pricePerDay})
                                                     </div>
                                                 </span>
-                                                <span className="text-gray-900">
+                                                <span className=" text-gray-900 ">
                                                     ₱{subtotal.toFixed(2)}
                                                 </span>
                                             </div>
@@ -256,7 +256,7 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                                                 </div>
 
                                                 {/* Discount Amount */}
-                                                <span className={discountPercent > 0 ? "text-green-600" : "text-gray-900"}>
+                                                <span className={discountPercent > 0 ? "text-green-600" : " text-gray-900 "}>
                                                     -₱{discountAmount.toFixed(2)}
                                                 </span>
                                             </div>
@@ -269,9 +269,9 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                                                 </div>
 
                                                 {shippingFee > 0 ? (
-                                                    <span className="text-gray-900">+₱{shippingFee.toFixed(2)}</span>
+                                                    <span className=" text-gray-900 ">+₱{shippingFee.toFixed(2)}</span>
                                                 ) : (
-                                                    <span className="text-gray-900">Free</span>
+                                                    <span className=" text-gray-900 ">Free</span>
                                                 )}
                                             </div>
 
@@ -303,8 +303,8 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                         {/* Delivery Status for Approved & Pending */}
                         {(rental.status === "approved" || rental.status === "pending") && rental.delivery && (
                             <div className="space-y-2">
-                                <h3 className="text-gray-900 text-[15px]">Delivery Status</h3>
-                                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                                <h3 className=" text-gray-900  text-[15px]">Delivery Status</h3>
+                                <div className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-4 space-y-2">
                                     {steps.map((step, index) => {
                                         const isCompleted = rental.status === "approved" && index < currentStepIndex;
                                         const isCurrent = rental.status === "approved" && index === currentStepIndex;
@@ -322,7 +322,7 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
                                                     <Icon className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className={`${isCompleted || isCurrent ? "text-gray-900" : "text-gray-500"}`}>{step.label}</p>
+                                                    <p className={`${isCompleted || isCurrent ? " text-gray-900 " : "text-gray-500"}`}>{step.label}</p>
 
                                                     {/* Pending items note */}
                                                     {rental.status === "pending" && step.key === "pending" && (
@@ -341,7 +341,7 @@ export function ViewDetailsModal({ isOpen, onClose, itemId, rentalData }) {
 
 
                                     {rental.delivery.trackingNumber && rental.delivery.deliveryType === "shipping" && (
-                                        <div className="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-900">
+                                        <div className="mt-4 pt-4 border-t border-gray-200 text-sm  text-gray-900 ">
                                             <span className="text-gray-500 block mb-1">Tracking Number</span>
                                             <span className="block">{rental.delivery.trackingNumber}</span>
                                         </div>

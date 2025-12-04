@@ -40,7 +40,7 @@ const HeroSection = () => {
               </button>
 
               <button
-                className="px-3 py-1.5 bg-white rounded-md font-inter font-medium hover:bg-black hover:bg-opacity-5 transition text-[13px]"
+                className="px-3 py-1.5 bg-white  text-purple-900   rounded-md font-inter font-medium hover:bg-black hover:bg-opacity-5 transition text-[13px]"
                 style={{ border: '1px solid #000000', color: '#000000' }}
                 onClick={() => navigate('/how-it-works')} // Navigate to How It Works
               >

@@ -128,8 +128,8 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-[16px] text-gray-800">Rental Period</h2>
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
+      <h2 className="text-[16px] text-purple-900">Rental Period</h2>
       <p className="text-[15px] text-gray-600 mb-6">
         Start date must be scheduled 1–2 days after booking.
       </p>
@@ -161,7 +161,7 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
 
             <Calendar
               onClick={() => openPicker(startRef)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-800 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-900 cursor-pointer"
             />
           </div>
         </div>
@@ -191,7 +191,7 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
 
             <Calendar
               onClick={() => openPicker(endRef)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-800 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-900 cursor-pointer"
             />
           </div>
         </div>

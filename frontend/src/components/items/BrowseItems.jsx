@@ -43,12 +43,12 @@ const BrowseItems = () => {
   };
 
   return (
-    <section className="py-5 pb-12 px-8 md:px-16 lg:px-36 bg-white">
+    <section className="py-5 pb-12 px-8 md:px-16 lg:px-36 bg-white  text-purple-900  ">
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mt-5">Browse Items</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold  text-gray-900  mt-5">Browse Items</h2>
           <p className="text-gray-500 text-[16px] mt-1">Browse through our popular items and find exactly what you need</p>
         </div>
 
@@ -64,7 +64,7 @@ const BrowseItems = () => {
               return (
                 <div
                   key={item.id}
-                  className={`rounded-2xl shadow-md bg-white p-3 flex-shrink-0 transition-all duration-500 ${isCenter ? "scale-100 blur-0 opacity-100" : "scale-95 blur-sm opacity-50"}`}
+                  className={`rounded-2xl shadow-md bg-white  text-purple-900   p-3 flex-shrink-0 transition-all duration-500 ${isCenter ? "scale-100 blur-0 opacity-100" : "scale-95 blur-sm opacity-50"}`}
                   style={{ width: `calc(25% - 18px)` }}
                 >
                   <div className="relative bg-gray-100 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden">
@@ -78,14 +78,14 @@ const BrowseItems = () => {
                     )}
 
                     <div className="absolute top-3 right-3 flex gap-1 z-50">
-                      <button onClick={() => toggleWishlist(item.id)} className="bg-white rounded-full shadow p-1 hover:bg-gray-200 transition">
+                      <button onClick={() => toggleWishlist(item.id)} className="bg-white  text-purple-900   rounded-full shadow p-1 hover:bg-gray-200 transition">
                         <Heart
                           size={18}
                           strokeWidth={1.5}
                           className={`${wishlist.includes(item.id) ? "fill-[#ec0b0b] stroke-[#ec0b0b]" : "stroke-[#af50df]"}`}
                         />
                       </button>
-                      <button className="bg-white rounded-full shadow p-1 hover:bg-gray-200 transition">
+                      <button className="bg-white  text-purple-900   rounded-full shadow p-1 hover:bg-gray-200 transition">
                         <Eye className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
                       </button>
                     </div>
@@ -107,7 +107,7 @@ const BrowseItems = () => {
                       </button>
                       <button
                         onClick={() => handleAddTocollection(item)}
-                        className={`flex-[1] border border-[#7A1CA9] rounded-br-2xl font-medium py-2.5 flex justify-center items-center gap-1 transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
+                        className={`flex-[1] border border-[#7A1CA9]  rounded-br-2xl font-medium py-2.5 flex justify-center items-center gap-1 transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
                             ? "bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
                             : "text-[#7A1CA9] hover:bg-purple-100"
                           }`}
@@ -126,7 +126,7 @@ const BrowseItems = () => {
                   </div>
 
                   <div className="text-left mt-3">
-                    <p className="text-gray-800 font-semibold text-sm mt-2 mb-1">{item.name}</p>
+                    <p className="text-purple-900 font-semibold text-sm mt-2 mb-1">{item.name}</p>
                     <p className="text-[#7A1CA9] font-bold text-sm mb-1">{item.price}</p>
 
                     {item.rating && (
@@ -151,7 +151,7 @@ const BrowseItems = () => {
         <div className=" flex justify-center">
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 border-2 rounded-lg font-inter font-semibold text-sm inline-flex items-center gap-2 text-[#7A1CA9] border-[#7A1CA9] hover:bg-purple-50 transition-colors "
+            className="px-4 py-2 border-2 rounded-lg font-inter font-semibold text-sm inline-flex items-center gap-2 text-[#7A1CA9] border-[#7A1CA9]  hover:bg-purple-50 transition-colors "
           >
             Login to see more
           </button>

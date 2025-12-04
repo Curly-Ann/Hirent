@@ -15,11 +15,11 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm px-6 py-3 border border-gray-200">
+    <div className="bg-white  text-purple-900   rounded-xl shadow-sm px-6 py-3 border border-gray-200">
 
       {/* HEADER */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-[16px] text-gray-800">Payment Method</h2>
+        <h2 className="text-[16px] text-purple-900">Payment Method</h2>
         <img
           src="/assets/icons/paymentMethod.png"
           alt="Payment Methods"
@@ -31,7 +31,7 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
       <div className="mb-4">
         <label
   className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition 
-    border ${paymentMethod === "cod" ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300"}`}
+    border ${paymentMethod === "cod" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300"}`}
 >
           <input
             type="radio"
@@ -59,7 +59,7 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
       <div className="mb-4">
         <label
   className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition 
-    border ${paymentMethod === "card" ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300"}`}
+    border ${paymentMethod === "card" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300"}`}
 >
           <input
             type="radio"
@@ -83,12 +83,12 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
               <input
                 type="text"
                 placeholder="Card Number"
-                className="px-4 py-2 text-[15px] text-black border bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-4 py-2 text-[15px] text-black border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <input
                 type="text"
                 placeholder="CVV"
-                className="px-4 py-2 text-[15px] border bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-4 py-2 text-[15px] border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
 
@@ -96,12 +96,12 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
               <input
                 type="text"
                 placeholder="Cardholder Name"
-                className="px-4 py-2 text-[15px] border bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-4 py-2 text-[15px] border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <input
                 type="text"
                 placeholder="Expiry (MM/YY)"
-                className="px-4 py-2  text-[15px] border bg-gray-50 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-4 py-2  text-[15px] border bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
 
@@ -125,7 +125,7 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
       <div className="mb-3">
         <label
   className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition 
-    border ${paymentMethod === "ewallet" ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300"}`}
+    border ${paymentMethod === "ewallet" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300"}`}
 >
           <input
             type="radio"
@@ -149,8 +149,8 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
               <label
                 className={`flex items-center gap-3 flex-1 px-4 py-2.5 rounded-full cursor-pointer transition
                   ${ewalletSelected === "gcash"
-                    ? "border border-[#7A1CA9] bg-purple-50"
-                    : "border border-gray-300 bg-white"
+                    ? "border border-[#7A1CA9]  bg-purple-50"
+                    : "border border-gray-300 bg-white  text-purple-900  "
                   }`}
                 onClick={() => setEwalletSelected("gcash")}
               >
@@ -169,8 +169,8 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod }) => {
               <label
                 className={`flex items-center gap-3 flex-1 px-4 py-2.5 rounded-full cursor-pointer transition
                   ${ewalletSelected === "maya"
-                    ? "border border-[#7A1CA9] bg-purple-50"
-                    : "border border-gray-300 bg-white"
+                    ? "border border-[#7A1CA9]  bg-purple-50"
+                    : "border border-gray-300 bg-white  text-purple-900  "
                   }`}
                 onClick={() => setEwalletSelected("maya")}
               >

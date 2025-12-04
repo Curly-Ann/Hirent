@@ -19,7 +19,7 @@ export default function DropdownPortal({ open, buttonRef, children }) {
   return ReactDOM.createPortal(
     <div
       style={{ position: "absolute", top: position.top, left: position.left, zIndex: 999 }}
-      className="bg-white shadow-lg rounded-lg border"
+      className="bg-white  text-purple-900   shadow-lg rounded-lg border"
     >
       {children}
     </div>,

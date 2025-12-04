@@ -88,7 +88,7 @@ const OwnerSignup = () => {
                           <img src={logo} alt="Hirent Logo" className="w-8 h-auto" />
                         </div>
                 <div
-                    className="z-10 cursor-default bg-white w-[480px] h-[650px] rounded-2xl shadow-2xl flex flex-row overflow-hidden hover:shadow-2xl hover:scale-[1.01] transition-all duration-300"
+                    className="z-10 cursor-default bg-white  text-purple-900   w-[480px] h-[650px] rounded-2xl shadow-2xl flex flex-row overflow-hidden hover:shadow-2xl hover:scale-[1.01] transition-all duration-300"
                 >
                     <div className="flex flex-col justify-center items-center w-full p-5">
                         <div className="flex flex-col items-start justify-start ml-12 w-full">
@@ -96,7 +96,7 @@ const OwnerSignup = () => {
                         </div>
 
                         <div className="w-full flex flex-col items-start ml-14">
-                            <h2 className="text-[23px] font-bold text-gray-800">
+                            <h2 className="text-[23px] font-bold text-purple-900">
                                 Become an Owner
                             </h2>
 
@@ -115,7 +115,7 @@ const OwnerSignup = () => {
                                         setFormData({ ...formData, name: e.target.value })
                                     }
                                     placeholder=" "
-                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px] text-gray-900 bg-white 
+                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900  bg-white  text-purple-900   
                                     border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 
                                     focus:border-[#bb84d6] peer"
                                 />
@@ -138,8 +138,8 @@ const OwnerSignup = () => {
                                         setFormData({ ...formData, email: e.target.value })
                                     }
                                     placeholder=" "
-                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px] text-gray-900 
-                                    bg-white border-0 border-b-2 border-gray-200  appearance-none focus:outline-none 
+                                    className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900  
+                                    bg-white  text-purple-900   border-0 border-b-2 border-gray-200  appearance-none focus:outline-none 
                                     focus:ring-0 focus:border-[#bb84d6] peer"
                                 />
                                 <label
@@ -160,7 +160,7 @@ const OwnerSignup = () => {
                                                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                                                 placeholder=" "
                                                                 autoComplete="current-password"
-                                                                className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]  text-gray-900 bg-[#ffffff]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
+                                                                className="block rounded-t-lg px-2 pb-2 pt-4 w-full text-[14px]   text-gray-900  bg-[#ffffff]  border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-[#bb84d6] peer"
                                                             />
                             
                                                             <label
@@ -188,7 +188,7 @@ const OwnerSignup = () => {
                             <div className="flex flex-col gap-2">
                                 <button
                                     type="submit"
-                                    className="relative w-full mx-auto border border-[#7A1CA9] bg-[#7A1CA9] text-white py-3 text-[14px] font-medium rounded-md overflow-hidden group transition-all duration-300 hover:bg-[#65188a] mt-2"
+                                    className="relative w-full mx-auto border border-[#7A1CA9]  bg-[#7A1CA9] text-white py-3 text-[14px] font-medium rounded-md overflow-hidden group transition-all duration-300 hover:bg-[#65188a] mt-2"
                                 >
                                     <span className="relative z-10">
                                         Continue to email

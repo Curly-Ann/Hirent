@@ -43,7 +43,7 @@ const ImageGallery = ({ images }) => {
         {/* Prev Arrow */}
         <button
           onClick={prevImage}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white border shadow-md rounded-full p-1.5 hover:bg-purple-600 hover:text-white transition"
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white  text-purple-900   border shadow-md rounded-full p-1.5 hover:bg-purple-600 hover:text-white transition"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -57,7 +57,7 @@ const ImageGallery = ({ images }) => {
         {/* Next Arrow */}
         <button
           onClick={nextImage}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border shadow-md rounded-full p-1.5 hover:bg-purple-600 hover:text-white transition"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white  text-purple-900   border shadow-md rounded-full p-1.5 hover:bg-purple-600 hover:text-white transition"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

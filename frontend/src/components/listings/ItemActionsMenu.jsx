@@ -25,7 +25,7 @@ export default function ItemActionsMenu({
 
       {menuOpen === item.id && (
         <div
-          className="absolute right-0 mt-2 bg-white border shadow-xl rounded-lg w-48 z-50"
+          className="absolute right-0 mt-2 bg-white  text-purple-900   border shadow-xl rounded-lg w-48 z-50"
           onClick={(e) => e.stopPropagation()}
         >
           <button className="menu-btn" onClick={() => onEdit(item)}>

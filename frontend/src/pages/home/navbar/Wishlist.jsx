@@ -98,7 +98,7 @@ const WishlistPage = () => {
 
 
     return (
-        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb]">
+        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb] dark:bg-gray-900">
             <div className="flex flex-1 ml-16">
 
                 {/* MAIN CONTENT */}
@@ -118,7 +118,7 @@ const WishlistPage = () => {
 
                                         {/* Text Group */}
                                         <div>
-                                            <h1 className="text-[24px] mt-1 font-bold text-gray-800">
+                                            <h1 className="text-[24px] mt-1 font-bold text-purple-900">
                                                 Saved For Later
                                             </h1>
                                             <p className="text-gray-500 text-[15px]">
@@ -142,7 +142,7 @@ const WishlistPage = () => {
                                         onClick={() => setFilter(cat)}
                                         className={`px-2 py-1 rounded-full transition text-[13px] ${filter === cat
                                             ? "bg-[#7A1CA9] text-white"
-                                            : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                            : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
                                             }`}
                                     >
                                         {cat === "All"
@@ -184,7 +184,7 @@ const WishlistPage = () => {
 
                                         <button
                                             onClick={() => (window.location.href = "/browse")}
-                                            className="bg-white border border-[#7A1CA9] text-[#7A1CA9] px-3 py-1.5 text-sm rounded-lg shadow hover:bg-gray-50 transition"
+                                            className="bg-white  text-purple-900   border border-[#7A1CA9]/20  text-[#7A1CA9] px-3 py-1.5 text-sm rounded-lg shadow hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition"
                                         >
                                             Browse Items ➔
                                         </button>
@@ -197,7 +197,7 @@ const WishlistPage = () => {
                                     {wishlistItems.map((item) => (
                                         <div
                                             key={item.id}
-                                            className="rounded-2xl shadow-sm hover:shadow-lg p-5 transition-all bg-white w-full max-w-[350px] mx-auto"
+                                            className="rounded-2xl shadow-sm hover:shadow-lg p-5 transition-all bg-white  text-purple-900   w-full max-w-[350px] mx-auto"
 
                                         >
                                             <button
@@ -207,7 +207,7 @@ const WishlistPage = () => {
                                                 Remove
                                             </button>
 
-                                            <div className="relative w-full h-56 mx-auto rounded-xl flex items-center justify-center overflow-hidden bg-white">
+                                            <div className="relative w-full h-56 mx-auto rounded-xl flex items-center justify-center overflow-hidden bg-white  text-purple-900  ">
 
                                                 <img
                                                     src={item.image}

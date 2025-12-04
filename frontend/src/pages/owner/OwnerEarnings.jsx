@@ -36,7 +36,7 @@ const fallbackIcon = () => (
 const donutColors = ["#a78bfa", "#c4b5fd", "#ddd6fe"];
 
 // Soft block (Notion style)
-const block = "bg-white rounded-2xl border border-gray-200 shadow-sm p-8";
+const block = "bg-white  text-purple-900   rounded-2xl border border-gray-200 shadow-sm p-8";
 
 // Gradient pill tag — Section Header
 const SectionHeader = ({ title }) => (
@@ -175,7 +175,7 @@ export default function OwnerEarnings() {
         {/* ====================================================
                 PAGE TITLE
         ===================================================== */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-10">
+        <h1 className="text-3xl font-bold text-purple-900 mb-10">
           Earnings
         </h1>
 
@@ -188,7 +188,7 @@ export default function OwnerEarnings() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
             {/* Total Wallet */}
-            <div className="p-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div className="p-6 rounded-xl border border-gray-200 bg-white  text-purple-900   shadow-sm">
               <p className="text-gray-600 text-sm">Total Balance</p>
               <h2 className="text-3xl font-bold mt-2">
                 ₱{wallet.total.toLocaleString()}
@@ -196,7 +196,7 @@ export default function OwnerEarnings() {
             </div>
 
             {/* Pending */}
-            <div className="p-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div className="p-6 rounded-xl border border-gray-200 bg-white  text-purple-900   shadow-sm">
               <p className="text-gray-600 text-sm">Pending Earnings</p>
               <h2 className="text-3xl font-bold mt-2 text-orange-500">
                 ₱{wallet.pending.toLocaleString()}
@@ -204,7 +204,7 @@ export default function OwnerEarnings() {
             </div>
 
             {/* Available */}
-            <div className="p-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div className="p-6 rounded-xl border border-gray-200 bg-white  text-purple-900   shadow-sm">
               <p className="text-gray-600 text-sm">Available to Withdraw</p>
               <h2 className="text-3xl font-bold mt-2 text-green-600">
                 ₱{wallet.available.toLocaleString()}
@@ -243,7 +243,7 @@ export default function OwnerEarnings() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
 
             {/* This Month */}
-            <div className="p-6 rounded-xl bg-white border border-gray-200 shadow-sm">
+            <div className="p-6 rounded-xl bg-white  text-purple-900   border border-gray-200 shadow-sm">
               <p className="text-gray-600 text-sm">This Month</p>
               <h1 className="text-3xl font-bold mt-2">
                 ₱{summary.monthEarnings.toLocaleString()}
@@ -259,7 +259,7 @@ export default function OwnerEarnings() {
             </div>
 
             {/* Lifetime */}
-            <div className="p-6 rounded-xl bg-white border border-gray-200 shadow-sm">
+            <div className="p-6 rounded-xl bg-white  text-purple-900   border border-gray-200 shadow-sm">
               <p className="text-gray-600 text-sm">Lifetime Earnings</p>
               <h1 className="text-3xl font-bold mt-2">
                 ₱{summary.totalEarnings.toLocaleString()}
@@ -268,7 +268,7 @@ export default function OwnerEarnings() {
             </div>
 
             {/* Growth */}
-            <div className="p-6 rounded-xl bg-white border border-gray-200 shadow-sm">
+            <div className="p-6 rounded-xl bg-white  text-purple-900   border border-gray-200 shadow-sm">
               <p className="text-gray-600 text-sm">Monthly Growth</p>
               <h1
                 className={`text-3xl font-bold mt-2 ${
@@ -426,10 +426,10 @@ export default function OwnerEarnings() {
                   return (
                     <div
                       key={i}
-                      className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm flex items-center justify-between"
+                      className="p-4 border border-gray-200 rounded-xl bg-white  text-purple-900   shadow-sm flex items-center justify-between"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-xl bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 flex items-center justify-center">
                           {img ? (
                             <img
                               src={img}
@@ -441,7 +441,7 @@ export default function OwnerEarnings() {
                           )}
                         </div>
 
-                        <p className="text-gray-800 font-medium">{t.item}</p>
+                        <p className="text-purple-900 font-medium">{t.item}</p>
                       </div>
 
                       <p className="text-xl font-bold text-green-600">
@@ -466,10 +466,10 @@ export default function OwnerEarnings() {
                   return (
                     <div
                       key={i}
-                      className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm flex items-center justify-between"
+                      className="p-4 border border-gray-200 rounded-xl bg-white  text-purple-900   shadow-sm flex items-center justify-between"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-xl bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 flex items-center justify-center">
                           {img ? (
                             <img
                               src={img}
@@ -481,7 +481,7 @@ export default function OwnerEarnings() {
                           )}
                         </div>
 
-                        <p className="text-gray-800 font-medium">{t.item}</p>
+                        <p className="text-purple-900 font-medium">{t.item}</p>
                       </div>
 
                       <p className="text-xl font-bold text-red-600">
@@ -514,7 +514,7 @@ export default function OwnerEarnings() {
               {recent.map((e) => (
                 <tr
                   key={e.id}
-                  className="border-b border-gray-200/70 hover:bg-gray-50 transition"
+                  className="border-b border-gray-200/70 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition"
                 >
                   <td className="py-3 font-medium">{e.item}</td>
                   <td className="py-3">₱{e.net.toLocaleString()}</td>
@@ -535,13 +535,13 @@ export default function OwnerEarnings() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
 
           <div
-            className="bg-white rounded-2xl p-8 w-[400px] shadow-xl border border-gray-200 transition-all"
+            className="bg-white  text-purple-900   rounded-2xl p-8 w-[400px] shadow-xl border border-gray-200 transition-all"
             style={{
               transform: "scale(1)",
               animation: "fadeScale 0.2s ease-out",
             }}
           >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-xl font-semibold text-purple-900 mb-4">
               Withdraw Funds
             </h2>
 
@@ -556,7 +556,7 @@ export default function OwnerEarnings() {
               type="number"
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
-              className="w-full p-3 border rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-purple-400"
+              className="w-full p-3 border rounded-xl bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 outline-none focus:ring-2 focus:ring-purple-400"
               placeholder="Enter amount"
             />
 

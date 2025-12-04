@@ -229,7 +229,7 @@ const BrowseRentals = () => {
     };
 
     return (
-        <div className="flex flex-col ml-16 min-h-screen bg-white">
+        <div className="flex flex-col ml-16 min-h-screen bg-white  text-purple-900  ">
             {/* Navbar */}
             <Navbar onSearch={(query) => setSearchQuery(query)} />
 
@@ -239,7 +239,7 @@ const BrowseRentals = () => {
             <div className="mt-32"></div>
 
             {/* Content */}
-            <div className=" flex flex-1 overflow-hidden px-6 py-6 gap-6 bg-[#fbfbfb]">
+            <div className=" flex flex-1 overflow-hidden px-6 py-6 gap-6 bg-[#fbfbfb] dark:bg-gray-900">
 
                 {/* Filter Sidebar */}
                 <FilterSidebar onApplyFilters={handleApplyFilters} />
@@ -247,7 +247,7 @@ const BrowseRentals = () => {
                 {/* Listings Section */}
                 <main className="flex-1 overflow-y-auto p-4 md:p-5 lg:p-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-[18px] font-medium text-gray-800 flex items-center gap-1">
+                        <h2 className="text-[18px] font-medium text-purple-900 flex items-center gap-1">
                             <span className="inline-block w-3 h-6 bg-[#7A1CA9] rounded mr-2"></span>
                             {filters.category || "All Rentals"}{" "}
                             <span className="text-[#9129c5] font-normal ml-1">
@@ -286,13 +286,13 @@ const BrowseRentals = () => {
                             {filteredListings.map((item) => (
                                 <div
                                     key={item.id}
-                                    className="rounded-2xl shadow-sm hover:shadow-lg transition-all bg-white p-3"
+                                    className="rounded-2xl shadow-sm hover:shadow-lg transition-all bg-white  text-purple-900   p-3"
                                 >
                                     <div className="relative bg-gray-100 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden">
                                         <div className="absolute top-3 right-3 flex gap-1 z-50">
                                             <button
                                                 onClick={() => toggleWishlist(item.id)}
-                                                className="bg-white rounded-full shadow p-1 hover:bg-gray-200 transition"
+                                                className="bg-white  text-purple-900   rounded-full shadow p-1 hover:bg-gray-200 transition"
                                             >
                                                 <Bookmark
                                                     size={18}
@@ -326,7 +326,7 @@ const BrowseRentals = () => {
 
                                             <button
                                                 onClick={() => handleAddToCollection(item)}
-                                                className={`flex-[1] border border-[#7A1CA9] rounded-br-2xl font-medium py-2.5 flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
+                                                className={`flex-[1] border border-[#7A1CA9]  rounded-br-2xl font-medium py-2.5 flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
                                                     ? "bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
                                                     : "text-[#7A1CA9] hover:bg-purple-100"
                                                     }`}
@@ -348,7 +348,7 @@ const BrowseRentals = () => {
                                     {/* Product Info */}
                                     <div className="text-left mt-3">
                                         <div className="flex justify-between items-center">
-                                            <p className="text-gray-800 font-semibold text-sm mt-2 mb-1">
+                                            <p className="text-purple-900 font-semibold text-sm mt-2 mb-1">
                                                 {item.name}
                                             </p>
 

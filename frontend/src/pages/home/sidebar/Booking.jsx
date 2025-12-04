@@ -53,7 +53,7 @@ const Booking = () => {
   const pricing = calculatePricing();
 
   return (
-    <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb]">
+    <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb] dark:bg-gray-900">
       {/* MAIN FLEX */}
       <div className="flex flex-1 ml-16">
 
@@ -63,7 +63,7 @@ const Booking = () => {
           <div className="flex-1 lg:w-2/3 space-y-5">
 
             {/* Container */}
-            <div className="p-6 bg-white rounded-xl shadow-sm">
+            <div className="p-6 bg-white  text-purple-900   rounded-xl shadow-sm">
               <div className="flex items-start gap-5">
 
                 {/* Gradient Icon Box */}
@@ -76,7 +76,7 @@ const Booking = () => {
 
                   {/* Text Group */}
                   <div>
-                    <h1 className="text-[22px] mt-1 font-bold text-gray-800">
+                    <h1 className="text-[22px] mt-1 font-bold text-purple-900">
                       Complete Your Booking
                     </h1>
                     <p className="text-gray-500 mt-0.5 text-[15px]">

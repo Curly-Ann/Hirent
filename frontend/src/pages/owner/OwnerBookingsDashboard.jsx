@@ -73,7 +73,7 @@ export default function OwnerBookingsDashboard() {
   }, [debouncedSearch]);
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 min-h-screen">
       <Sidebar />
 
       <div className="flex-1 mt-12 px-6">
@@ -81,7 +81,7 @@ export default function OwnerBookingsDashboard() {
         <div className="flex justify-between items-start mb-10">
           <div className="flex flex-col w-full max-w-md">
             <h2 className="text-gray-500 text-[13px] mb-1">Bookings</h2>
-            <h1 className="text-2xl font-semibold text-gray-900 mb-1">
+            <h1 className="text-2xl font-semibold  text-gray-900  mb-1">
               Hello, <span className="text-[#7A1CA9]">Genlord!</span>
             </h1>
             <p className="text-gray-600 text-[15px] mb-4">
@@ -95,7 +95,7 @@ export default function OwnerBookingsDashboard() {
                 placeholder="Search items or renters..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-6 py-2 border border-gray-200 shadow-sm rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full pl-10 pr-6 py-2 border border-gray-200 shadow-sm rounded-xl bg-white  text-purple-900   text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>

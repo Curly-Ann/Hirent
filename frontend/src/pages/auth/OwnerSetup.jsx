@@ -208,7 +208,7 @@ const OwnerSetup = () => {
         <div className="flex flex-col items-center mt-2">
           <CheckCircleIcon className="w-44 h-44 text-[#4CE976] mb-6 mt-6" />
 
-          <h1 className="text-[24px] font-bold text-gray-900 mb-1 text-center">
+          <h1 className="text-[24px] font-bold  text-gray-900  mb-1 text-center">
             Submitted Successfully!
           </h1>
 
@@ -241,7 +241,7 @@ const OwnerSetup = () => {
           {/* Scrollable Terms Section */}
           <div className="p-10 overflow-y-auto max-h-[400px]">
 
-            <h1 className="text-[18px] font-bold text-gray-900 mb-4">
+            <h1 className="text-[18px] font-bold  text-gray-900  mb-4">
               Terms & Conditions
             </h1>
 
@@ -252,7 +252,7 @@ const OwnerSetup = () => {
             </p>
 
             {/* Section 1 */}
-            <h2 className="font-semibold text-gray-900 text-[16px] mt-4">
+            <h2 className="font-semibold  text-gray-900  text-[16px] mt-4">
               1. Item Responsibility
             </h2>
             <p className="text-gray-700 text-[14px] mb-3">
@@ -261,7 +261,7 @@ const OwnerSetup = () => {
             </p>
 
             {/* Section 2 */}
-            <h2 className="font-semibold text-gray-900 text-[16px] mt-4">
+            <h2 className="font-semibold  text-gray-900  text-[16px] mt-4">
               2. Accurate Listings
             </h2>
             <p className="text-gray-700 text-[14px] mb-3">
@@ -270,7 +270,7 @@ const OwnerSetup = () => {
             </p>
 
             {/* Section 3 */}
-            <h2 className="font-semibold text-gray-900 text-[16px] mt-4">
+            <h2 className="font-semibold  text-gray-900  text-[16px] mt-4">
               3. Security Deposits
             </h2>
             <p className="text-gray-700 text-[14px] mb-3">
@@ -279,7 +279,7 @@ const OwnerSetup = () => {
             </p>
 
             {/* Section 4 */}
-            <h2 className="font-semibold text-gray-900 text-[16px] mt-4">
+            <h2 className="font-semibold  text-gray-900  text-[16px] mt-4">
               4. Damage Disputes
             </h2>
             <p className="text-gray-700 text-[14px] mb-3">
@@ -287,7 +287,7 @@ const OwnerSetup = () => {
             </p>
 
             {/* Section 5 */}
-            <h2 className="font-semibold text-gray-900 text-[16px] mt-4">
+            <h2 className="font-semibold  text-gray-900  text-[16px] mt-4">
               5. Platform Compliance
             </h2>
             <p className="text-gray-700 text-[14px] mb-8">
@@ -306,7 +306,7 @@ const OwnerSetup = () => {
               />
               <label
                 htmlFor="agree"
-                className="text-gray-800 font-medium text-[15px]"
+                className="text-purple-900 font-medium text-[15px]"
               >
                 I have read and agree to the Terms & Conditions.
               </label>
@@ -315,7 +315,7 @@ const OwnerSetup = () => {
           </div>
 
           {/* Sticky Actions */}
-          <div className="mt-auto px-10 py-6 bg-white flex justify-end gap-3">
+          <div className="mt-auto px-10 py-6 bg-white  text-purple-900   flex justify-end gap-3">
 
 
             <button
@@ -358,7 +358,7 @@ const OwnerSetup = () => {
             Seller Type
           </label>
           <div className="flex gap-6">
-            <label className="flex items-center gap-2 text-[15px] text-gray-800">
+            <label className="flex items-center gap-2 text-[15px] text-purple-900">
               <input
                 type="radio"
                 name="sellerType"
@@ -370,7 +370,7 @@ const OwnerSetup = () => {
               Individual
             </label>
 
-            <label className="flex items-center gap-2 text-[15px] text-gray-800">
+            <label className="flex items-center gap-2 text-[15px] text-purple-900">
               <input
                 type="radio"
                 name="sellerType"
@@ -633,7 +633,7 @@ const OwnerSetup = () => {
           <img src={logo} alt="Hirent Logo" className="w-8 h-auto" />
         </div>
 
-        <div className=" relative z-10 bg-white w-100 md:w-[600px] lg:w-[800px] min-h-[500px] rounded-lg shadow-lg p-15 flex flex-col">
+        <div className=" relative z-10 bg-white  text-purple-900   w-100 md:w-[600px] lg:w-[800px] min-h-[500px] rounded-lg shadow-lg p-15 flex flex-col">
 
           <div
             className={`w-full flex flex-col items-center justify-center 

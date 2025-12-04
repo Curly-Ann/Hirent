@@ -53,14 +53,14 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
       <Sidebar />
 
       <main className="collection-scale flex-1 mt-12">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
+            <h1 className="text-2xl font-bold  text-gray-900 ">Profile Settings</h1>
             <p className="text-sm text-gray-600 mt-1">
               Manage your personal information and account settings
             </p>
@@ -82,7 +82,7 @@ export default function Profile() {
               </button>
               <button
                 onClick={handleCancel}
-                className="border border-gray-300 text-gray-700 px-6 py-2.5 rounded-lg hover:bg-gray-50 transition font-medium text-sm"
+                className="border border-gray-300 text-gray-700 px-6 py-2.5 rounded-lg hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition font-medium text-sm"
               >
                 Cancel
               </button>
@@ -93,7 +93,7 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
               <div className="flex flex-col items-center">
                 <div className="relative">
                   <div className="w-32 h-32 bg-[#7A1CA9]/10 rounded-full flex items-center justify-center overflow-hidden">
@@ -117,7 +117,7 @@ export default function Profile() {
                     </label>
                   )}
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mt-4">
+                <h2 className="text-xl font-bold  text-gray-900  mt-4">
                   {profileData.firstName} {profileData.lastName}
                 </h2>
                 <p className="text-sm text-gray-600">{profileData.businessName}</p>
@@ -138,8 +138,8 @@ export default function Profile() {
             </div>
 
             {/* Account Status */}
-            <div className="bg-white rounded-xl shadow-sm border p-6 mt-6">
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Account Status</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6 mt-6">
+              <h3 className="text-sm font-semibold  text-gray-900  mb-4">Account Status</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Email Verified</span>
@@ -160,8 +160,8 @@ export default function Profile() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Personal Information */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Personal Information</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
+              <h3 className="text-lg font-semibold  text-gray-900  mb-6">Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
@@ -172,7 +172,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -185,7 +185,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -198,7 +198,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -224,7 +224,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -237,7 +237,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -250,7 +250,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -258,8 +258,8 @@ export default function Profile() {
             </div>
 
             {/* Business Information */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Business Information</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
+              <h3 className="text-lg font-semibold  text-gray-900  mb-6">Business Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
@@ -270,7 +270,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -282,7 +282,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   >
                     <option value="Individual">Individual</option>
@@ -300,7 +300,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -308,8 +308,8 @@ export default function Profile() {
             </div>
 
             {/* Payment Information - Bank Account */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Bank Account Information</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
+              <h3 className="text-lg font-semibold  text-gray-900  mb-6">Bank Account Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
@@ -319,7 +319,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   >
                     <option value="">Select Bank</option>
@@ -342,7 +342,7 @@ export default function Profile() {
                     disabled={!isEditing}
                     placeholder="1234567890"
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -356,7 +356,7 @@ export default function Profile() {
                     disabled={!isEditing}
                     placeholder="Genlord Loubot"
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -364,8 +364,8 @@ export default function Profile() {
             </div>
 
             {/* E-Wallet Information */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">E-Wallet Information</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
+              <h3 className="text-lg font-semibold  text-gray-900  mb-6">E-Wallet Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">E-Wallet Provider</label>
@@ -375,7 +375,7 @@ export default function Profile() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   >
                     <option value="">Select E-Wallet</option>
@@ -394,7 +394,7 @@ export default function Profile() {
                     disabled={!isEditing}
                     placeholder="+63 912 345 6789"
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -408,7 +408,7 @@ export default function Profile() {
                     disabled={!isEditing}
                     placeholder="Genlord Loubot"
                     className={`w-full px-3 py-2.5 border rounded-lg text-sm ${
-                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 border-gray-200'
+                      isEditing ? 'border-gray-300 focus:ring-2 focus:ring-[#7A1CA9]' : 'bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-gray-200'
                     }`}
                   />
                 </div>
@@ -416,16 +416,16 @@ export default function Profile() {
             </div>
 
             {/* Security Settings */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Security Settings</h3>
+            <div className="bg-white  text-purple-900   rounded-xl shadow-sm border p-6">
+              <h3 className="text-lg font-semibold  text-gray-900  mb-6">Security Settings</h3>
               <div className="space-y-4">
-                <button className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition">
                   <span className="text-sm font-medium text-gray-700">Change Password</span>
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-                <button className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition">
                   <span className="text-sm font-medium text-gray-700">Two-Factor Authentication</span>
                   <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded">Disabled</span>
                 </button>

@@ -5,11 +5,11 @@ const RentalTerms = () => {
   const [showFullTerms, setShowFullTerms] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Rental Terms & Conditions</h2>
       
       <div className="border border-gray-200 rounded-lg p-4 mb-4">
-        <h3 className="font-medium text-gray-900 mb-3">Key Terms Summary</h3>
+        <h3 className="font-medium  text-gray-900  mb-3">Key Terms Summary</h3>
         <ul className="space-y-2 text-sm text-gray-700">
           <li className="flex items-start gap-2">
             <span className="text-[16px] text-[#7A1CA9]">•</span>
@@ -39,8 +39,8 @@ const RentalTerms = () => {
       </div>
       
       {showFullTerms && (
-        <div className="border border-gray-200 rounded-lg p-4 mb-4 max-h-60 overflow-y-auto bg-gray-50">
-          <h4 className="font-medium text-gray-900 mb-2">Full Terms and Conditions</h4>
+        <div className="border border-gray-200 rounded-lg p-4 mb-4 max-h-60 overflow-y-auto bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
+          <h4 className="font-medium  text-gray-900  mb-2">Full Terms and Conditions</h4>
           <div className="text-sm text-gray-700 space-y-3">
             <p>
               <strong>1. Rental Agreement:</strong> By confirming this booking, you enter into a legally binding rental agreement with the item owner. You agree to use the rented item responsibly and return it on time in its original condition.

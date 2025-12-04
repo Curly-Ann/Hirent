@@ -35,7 +35,7 @@ const OwnerSidebar = () => {
 
     return (
         <div
-            className="bg-white border-r border-gray-200 flex flex-col min-h-screen w-64 z-20
+            className="bg-white  text-purple-900   border-r border-gray-200 flex flex-col min-h-screen w-64 z-20
              transition-shadow duration-300 hover:shadow-lg"
         >
 
@@ -70,7 +70,7 @@ const OwnerSidebar = () => {
             <div className="border-t border-gray-200">
                 <button
                     onClick={handleLogout}
-                    className="flex items-center gap-4 px-6 py-4 text-gray-700 hover:bg-gray-50 transition w-full"
+                    className="flex items-center gap-4 px-6 py-4 text-gray-700 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 transition w-full"
                 >
                     <LogOut className="w-5 h-5" />
                     <span className="text-[14px] font-medium">Logout</span>

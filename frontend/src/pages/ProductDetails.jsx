@@ -88,7 +88,7 @@ const ProductDetails = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white  text-purple-900  ">
       {/* Top Navigation */}
       <Navbar />
 
@@ -111,7 +111,7 @@ const ProductDetails = () => {
               <a href="/gadgets" className="text-gray-400 hover:text-gray-600 transition">Gadgets</a>
               <span className="text-gray-300">/</span>
 
-              <span className="text-gray-900 font-medium truncate max-w-[200px]">
+              <span className=" text-gray-900  font-medium truncate max-w-[200px]">
                 {product.name}
               </span>
             </div>

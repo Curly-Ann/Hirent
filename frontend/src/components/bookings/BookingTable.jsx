@@ -56,10 +56,10 @@ export default function BookingTable({
     });
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow overflow-hidden">
+    <div className="bg-white  text-purple-900   rounded-xl border border-gray-100 shadow overflow-hidden">
       <table className="w-full">
         <thead>
-          <tr className="bg-white text-[14px] font-semibold">
+          <tr className="bg-white  text-purple-900   text-[14px] font-semibold">
             {["Item", "Renter", "Price", "Booked Dates", "Actions"].map(
               (header) => (
                 <th key={header} className="px-7 py-4 text-left font-semibold">
@@ -168,7 +168,7 @@ export default function BookingTable({
                 </tr>
 
                 {/* 🔥 EXPANDED DETAILS WITH SMOOTH ANIMATION */}
-                <tr className="bg-gray-50 border-t">
+                <tr className="bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 border-t">
                   <td colSpan="6" className="px-7 py-0">
 
                     {/* 🔥 Smooth Expand Wrapper */}

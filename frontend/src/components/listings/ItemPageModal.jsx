@@ -15,7 +15,7 @@ export default function ItemPageModal({ open, onClose, item }) {
           onClick={onClose}
         >
           <motion.div
-            className="w-[500px] bg-white rounded-xl p-6 shadow-xl"
+            className="w-[500px] bg-white  text-purple-900   rounded-xl p-6 shadow-xl"
             initial={{ scale: 0.85 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.85 }}

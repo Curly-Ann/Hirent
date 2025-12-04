@@ -159,12 +159,12 @@ const FilterSidebar = ({ onApplyFilters }) => {
     };
     return (
         <>
-            <aside className="w-80 bg-white shadow-md border border-gray-200 rounded-2xl h-[815px] flex flex-col">
+            <aside className="w-80 bg-white  text-purple-900   shadow-md border border-gray-200 rounded-2xl h-[815px] flex flex-col">
                 <div className="flex-1 overflow-y-auto px-6 pt-6 space-y-3 pb-0">
 
                     {/* Header */}
                     <div className="flex justify-between items-center mb-5">
-                        <h2 className="text-[16px] font-semibold text-gray-800">Filter</h2>
+                        <h2 className="text-[16px] font-semibold text-purple-900">Filter</h2>
                         <button
                             onClick={handleClearAll}
                             className="text-[#7A1CA9] text-[12px] font-medium hover:text-purple-400 transition mt-1"
@@ -189,8 +189,8 @@ const FilterSidebar = ({ onApplyFilters }) => {
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
                                     className={`px-5 py-1.5 text-[12px] rounded-full whitespace-nowrap border transition ${selectedCategory === cat
-                                        ? "bg-[#7A1CA9] text-white border-[#7A1CA9]"
-                                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                                        ? "bg-[#7A1CA9] text-white border-[#7A1CA9] "
+                                        : "bg-white  text-purple-900   text-gray-600 border-gray-300 hover:bg-gray-100"
                                         }`}
                                 >
                                     {cat}
@@ -260,8 +260,8 @@ const FilterSidebar = ({ onApplyFilters }) => {
                                     key={range}
                                     onClick={() => handleDateRange(range)}
                                     className={`flex-1 text-[12px] px-4 py-2 rounded-lg border transition whitespace-nowrap ${selectedRange === range
-                                        ? "bg-[#7A1CA9] text-white border-[#7A1CA9]"
-                                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-200"
+                                        ? "bg-[#7A1CA9] text-white border-[#7A1CA9] "
+                                        : "bg-white  text-purple-900   text-gray-700 border-gray-300 hover:bg-gray-200"
                                         }`}
                                 >
                                     {range}
@@ -306,7 +306,7 @@ const FilterSidebar = ({ onApplyFilters }) => {
                                 <button
                                     key={r}
                                     onClick={() => setRating(r)}
-                                    className={`flex items-center justify-between gap-2 p-2 border rounded-lg hover:bg-gray-100 transition text-sm cursor-pointer ${rating === r ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300"
+                                    className={`flex items-center justify-between gap-2 p-2 border rounded-lg hover:bg-gray-100 transition text-sm cursor-pointer ${rating === r ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300"
                                         }`}
                                 >
                                     <div className="flex">
@@ -345,8 +345,8 @@ const FilterSidebar = ({ onApplyFilters }) => {
             {/* Map Modal */}
             {mapOpen && (
                 <div className="fixed inset-0 bg-black/50 z-[1000] flex justify-center items-center">
-                    <div className="bg-white rounded-lg shadow-lg p-4 w-[90%] max-w-md relative">
-                        <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                    <div className="bg-white  text-purple-900   rounded-lg shadow-lg p-4 w-[90%] max-w-md relative">
+                        <h3 className="text-lg font-semibold mb-2 text-purple-900">
                             Select Location
                         </h3>
                         <button

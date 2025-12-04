@@ -55,7 +55,7 @@ export function StepCard({
       <motion.div
         whileHover={{ y: -8, scale: 1.02 }}
         transition={{ duration: 0.3 }}
-        className="relative px-6 py-8 w-[240px] rounded-3xl shadow-xl border border-white/50 backdrop-blur-xl bg-white/40"
+        className="relative px-6 py-8 w-[240px] rounded-3xl shadow-xl border border-white/50 backdrop-blur-xl bg-white  text-purple-900  /40"
       >
         {/* Glow */}
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
@@ -96,7 +96,7 @@ export function StepCard({
                 duration: 0.4,
                 delay: index * 0.15 + i * 0.1 + 0.2,
               }}
-              className="flex items-start gap-2 text-gray-800"
+              className="flex items-start gap-2 text-purple-900"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mt-2" />
               <span className="text-sm">{feature}</span>

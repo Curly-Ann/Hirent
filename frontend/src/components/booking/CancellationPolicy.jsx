@@ -2,7 +2,7 @@ import React from 'react';
 
 const CancellationPolicy = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Cancellation Policy</h2>
       
       <div className="space-y-4">
@@ -21,12 +21,12 @@ const CancellationPolicy = () => {
         </div>
         
         <div className="border border-gray-200 rounded-lg p-4">
-          <h3 className="font-medium text-gray-900 mb-3">Cancellation Timeline & Refunds</h3>
+          <h3 className="font-medium  text-gray-900  mb-3">Cancellation Timeline & Refunds</h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">48+ hours before pickup</p>
+                <p className="text-sm font-medium  text-gray-900 ">48+ hours before pickup</p>
                 <p className="text-sm text-gray-600">100% refund (excluding processing fees)</p>
               </div>
             </div>
@@ -34,7 +34,7 @@ const CancellationPolicy = () => {
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">24-48 hours before pickup</p>
+                <p className="text-sm font-medium  text-gray-900 ">24-48 hours before pickup</p>
                 <p className="text-sm text-gray-600">50% refund</p>
               </div>
             </div>
@@ -42,7 +42,7 @@ const CancellationPolicy = () => {
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Less than 24 hours before pickup</p>
+                <p className="text-sm font-medium  text-gray-900 ">Less than 24 hours before pickup</p>
                 <p className="text-sm text-gray-600">No refund</p>
               </div>
             </div>

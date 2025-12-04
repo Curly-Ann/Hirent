@@ -11,8 +11,8 @@ const ApplyCoupon = ({ couponData, setCouponData }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-[16px] text-gray-800 mb-4">Apply Coupon</h2>
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
+      <h2 className="text-[16px] text-purple-900 mb-4">Apply Coupon</h2>
 
       <div className="flex flex-col gap-2">
         <label className="text-[15px] text-black font-medium">

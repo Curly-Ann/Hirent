@@ -87,7 +87,7 @@ export function HowItWorksSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 mb-6"
+            className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-[#7A1CA9]/20/30 mb-6"
           >
             <span className="bg-gradient-to-r from-[#7A1CA9] to-pink-600 bg-clip-text text-transparent">
               Simple & Seamless

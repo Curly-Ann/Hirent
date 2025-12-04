@@ -2,15 +2,15 @@ import React from 'react';
 
 const DeliveryMethod = ({ deliveryMethod, setDeliveryMethod }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Booking Details</h2>
 
-      <h3 className="text-[16px] text-gray-800 mb-3">Delivery Method</h3>
+      <h3 className="text-[16px] text-purple-900 mb-3">Delivery Method</h3>
 
       {/* Delivery Option */}
       <label
         className={`flex items-start mb-4 gap-3 p-5 rounded-xl cursor-pointer transition 
-    border ${deliveryMethod === "delivery" ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300 hover:bg-gray-50"}`}
+    border ${deliveryMethod === "delivery" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"}`}
       >
         <input
           type="radio"
@@ -32,7 +32,7 @@ const DeliveryMethod = ({ deliveryMethod, setDeliveryMethod }) => {
       {/* Pickup Option */}
       <label
         className={`flex items-start gap-3 p-5 rounded-xl cursor-pointer transition 
-    border ${deliveryMethod === "pickup" ? "border-[#7A1CA9] bg-purple-50" : "border-gray-300 hover:bg-gray-50"}`}
+    border ${deliveryMethod === "pickup" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"}`}
       >
         <input
           type="radio"
@@ -53,11 +53,11 @@ const DeliveryMethod = ({ deliveryMethod, setDeliveryMethod }) => {
 
       {/* Notes for Owner */}
       <div className="mt-6">
-        <h3 className=" text-[16px] text-gray-800 mb-2">Notes for Owner (Optional)</h3>
+        <h3 className=" text-[16px] text-purple-900 mb-2">Notes for Owner (Optional)</h3>
         <textarea
           placeholder="Any special requests or instructions for the owner..."
           rows="4"
-          className="w-full h-24 px-4 py-3 text-[15px] placeholder:text-gray-400 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+          className="w-full h-24 px-4 py-3 text-[15px] placeholder:text-gray-400 bg-gray-50 dark:bg-gray-900 dark:bg-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
           maxLength={500}
         />
         <p className="text-[15px] text-gray-500 mt-0.5">0/500 characters</p>

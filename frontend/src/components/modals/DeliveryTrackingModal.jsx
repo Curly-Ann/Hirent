@@ -12,12 +12,12 @@ export default function DeliveryTrackingModal({ isOpen, onClose, trackingData })
             {/* Modal */}
             <div className="fixed inset-0 z-50  flex items-center justify-center p-4">
                 <div
-                    className="bg-white rounded-2xl collection-scale shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-6"
+                    className="bg-white  text-purple-900   rounded-2xl collection-scale shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-6"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-gray-900 font-semibold text-[16px]">Delivery Tracking</h2>
+                        <h2 className=" text-gray-900  font-semibold text-[16px]">Delivery Tracking</h2>
                         <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100">
                             <X className="w-5 h-5 text-gray-600" />
                         </button>
@@ -39,7 +39,7 @@ export default function DeliveryTrackingModal({ isOpen, onClose, trackingData })
                                         <Icon className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <p className={`${isCompleted || isCurrent ? "text-gray-900" : "text-gray-500"}`}>
+                                        <p className={`${isCompleted || isCurrent ? " text-gray-900 " : "text-gray-500"}`}>
                                             {step.label}
                                         </p>
 
@@ -67,13 +67,13 @@ export default function DeliveryTrackingModal({ isOpen, onClose, trackingData })
                     <div className="mt-5 space-y-2 text-[14px] text-gray-700">
                         <div>
                             <p className="text-gray-500 mb-0.5">Current Location</p>
-                            <p className="text-gray-800">{trackingData.currentLocation}</p>
+                            <p className="text-purple-900">{trackingData.currentLocation}</p>
                         </div>
                         <hr />
                         {trackingData.courier && (
                             <div>
                                 <p className="text-gray-500 mb-0.5">Courier</p>
-                                <p className="text-gray-800">{trackingData.courier}</p>
+                                <p className="text-purple-900">{trackingData.courier}</p>
                             </div>
                         )}
                     </div>
