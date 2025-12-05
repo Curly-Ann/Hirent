@@ -26,7 +26,7 @@ const SortDropdown = ({ onSortChange, options = ["Popular", "Newest", "Lowest Pr
   };
 
   return (
-    <div className="flex items-center border border-gray-400 rounded-lg px-0.5 py-1.5 text-sm text-gray-400 relative">
+    <div className="flex items-center border bg-white border-gray-400 rounded-lg px-0.5 py-1.5 text-sm text-gray-400 relative">
       {/* Icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"

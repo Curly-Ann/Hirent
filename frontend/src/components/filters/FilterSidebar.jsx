@@ -190,7 +190,7 @@ const FilterSidebar = ({ onApplyFilters }) => {
                                     onClick={() => setSelectedCategory(cat)}
                                     className={`px-5 py-1.5 text-[12px] rounded-full whitespace-nowrap border transition ${selectedCategory === cat
                                         ? "bg-[#7A1CA9] text-white border-[#7A1CA9] "
-                                        : "bg-white  text-purple-900   text-gray-600 border-gray-300 hover:bg-gray-100"
+                                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
                                         }`}
                                 >
                                     {cat}

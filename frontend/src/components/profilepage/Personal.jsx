@@ -41,7 +41,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                     name="firstName"
                                     value={form.firstName}
                                     onChange={handleChange}
-                                    className="w-full border rounded-lg px-10 py-2"
+                                    className="w-full border bg-gray-50 rounded-lg px-10 py-2"
                                 />
                             </div>
                         </div>
@@ -54,7 +54,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                     name="lastName"
                                     value={form.lastName}
                                     onChange={handleChange}
-                                    className="w-full border rounded-lg px-10 py-2"
+                                    className="w-full border bg-gray-50 rounded-lg px-10 py-2"
                                 />
                             </div>
                         </div>
@@ -69,7 +69,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                className="w-full border rounded-lg px-10 py-2"
+                                className="w-full border bg-gray-50 rounded-lg px-10 py-2"
                             />
                         </div>
                     </div>
@@ -85,7 +85,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                     name="phone"
                                     value={form.phone}
                                     onChange={handleChange}
-                                    className="w-full border rounded-lg px-10 py-2"
+                                    className="w-full border bg-gray-50 rounded-lg px-10 py-2"
                                 />
                             </div>
                         </div>
@@ -98,7 +98,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
                                     name="address"
                                     value={form.address}
                                     onChange={handleChange}
-                                    className="w-full border rounded-lg px-10 py-2"
+                                    className="w-full border bg-gray-50 rounded-lg px-10 py-2"
                                 />
                             </div>
                         </div>

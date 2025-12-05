@@ -344,7 +344,7 @@ const NotificationsPage = () => {
             <div
               key={notif.id}
               onClick={() => markAsRead(notif.id, notif.redirect)}
-              className={`w-full px-5 py-4 rounded-2xl bg-white  text-purple-900   shadow-md cursor-pointer transform transition hover:scale-[1.01] ${notif.unread ? "border-l-4 border-[#7A1CA9] " : "opacity-90"
+              className={`w-full px-5 py-4 rounded-2xl bg-white shadow-md cursor-pointer transform transition hover:scale-[1.01] ${notif.unread ? "border-l-4 border-[#7A1CA9] " : "opacity-90"
                 }`}
             >
               <div className="flex items-start gap-4">

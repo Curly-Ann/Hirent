@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Star, MapPin, Bookmark, Eye, Check, ShoppingBag } from "lucide-react";
-import SortDropdown from "../../../components/filters/SortDropdown";
+import SortDropdown from "../../../components/dropdown/SortDropdown";
 import FilterSidebar from "../../../components/filters/FilterSidebar";
 import Navbar from "../../../components/layouts/MainNav";
 import BannerCarousel from "../../../components/carousels/BannerCarousel";
@@ -239,13 +239,13 @@ const BrowseRentals = () => {
             <div className="mt-32"></div>
 
             {/* Content */}
-            <div className=" flex flex-1 overflow-hidden px-6 py-6 gap-6 bg-[#fbfbfb] dark:bg-gray-900">
+            <div className=" flex flex-1 overflow-hidden px-4 py-8 gap-4 bg-[#fbfbfb] dark:bg-gray-900">
 
                 {/* Filter Sidebar */}
                 <FilterSidebar onApplyFilters={handleApplyFilters} />
 
                 {/* Listings Section */}
-                <main className="flex-1 overflow-y-auto p-4 md:p-5 lg:p-6">
+                <main className="flex-1 overflow-y-auto p-2 md:p-5 lg:p-2">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-[18px] font-medium text-purple-900 flex items-center gap-1">
                             <span className="inline-block w-3 h-6 bg-[#7A1CA9] rounded mr-2"></span>

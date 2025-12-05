@@ -37,7 +37,7 @@ const Navbar = ({ onSearch }) => {
         className="px-2 md:px-4 lg:px-6 fixed top-0 left-0 w-full z-50 shadow-sm"
         style={{
           background: "linear-gradient(180deg, #7A1CA9 0%, #A01FC9 100%)",
-          height: "60px"
+          height: "64px"
         }}
       >
 
@@ -68,7 +68,7 @@ const Navbar = ({ onSearch }) => {
                   to={link.path}
                   className={`px-5 flex items-center h-full transition-colors relative 
   after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 
-  after:bottom-0 after:w-full after:h-[4px] after:bg-white  text-white 
+  after:bottom-0 after:w-full after:h-[4px] after:bg-white rounded-t-lg after:rounded-full text-white 
   after:origin-center after:transition-transform after:duration-300
   ${active
                             ? "bg-[#59087f] text-white after:scale-x-100"
@@ -86,7 +86,7 @@ const Navbar = ({ onSearch }) => {
             {isLoggedIn ? (
               <>
                 {/* Search Bar */}
-                <div className="flex items-center bg-white  text-white rounded-full px-4 py-1.5 text-gray-700 w-64">
+                <div className="flex items-center bg-white rounded-full px-4 py-1.5 text-gray-700 w-64">
                   <input
                     type="text"
                     placeholder="What are you looking for?"

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, CalendarPlus, MapPin, Eye, MessageCircle, CircleOff, BadgeCheck, CircleCheckBig, ClockFading, Package } from "lucide-react";
+import { ArrowLeft, Clock, CircleCheckBig, CircleOff, Package } from "lucide-react";
 import mockListings from "../../../data/mockData";
 import sampleUsercollection from "../../../data/sampleUsercollection";
 import CancelConfirmationModal from "../../../components/modals/CancelModal";
 import { ViewDetailsModal } from "../../../components/modals/ViewDetailsModal";
-import SortDropdown from "../../../components/filters/SortDropdown";
+import SortDropdown from "../../../components/dropdown/SortDropdown";
 import { getFakeUser, generateFakeToken } from "../../../utils/fakeAuth";
+import RentalCard from "../../../components/cards/RentalCard";
 
 const MyRentalsPage = () => {
+    const navigate = useNavigate();
 
     const [showModal, setShowModal] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -108,303 +110,242 @@ const MyRentalsPage = () => {
     });
 
     return (
-        <div className="flex flex-col min-h-screen pt-5 px-10 md:px-20 lg:px-42 pb-20 bg-[#fbfbfb] dark:bg-gray-900">
-            {/* MAIN FLEX */}
-            <div className="flex flex-1 ml-16">
+        <div className="flex min-h-screen px-4 md:px-6 lg:px-8">
 
-                {/* MAIN CONTENT */}
-                <div className="flex-1 pt-12 mb-15">
-                    <div className="p-1 mb-6">
-                        <div className="flex items-start gap-5">
+            {/* LEFT STATIC COLUMN */}
+            <div className="w-[560px] pl-16 flex-shrink-0 sticky top-10 self-start h-fit bg-gray-50 border-r border-gray-200">
 
-                            {/* Gradient Icon Box */}
-                            <div className="p-3 rounded-xl bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
-                                <Package className="w-10 h-10 text-[#a12fda]" />
-                            </div>
+                {/* Back + Sort in one row */}
+                <div className="flex items-center justify-between mb-3 mt-10">
 
-                            {/* Line + Text */}
-                            <div className="flex items-start gap-4">
+                    {/* Back Button */}
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center text-[#7A1CA9] text-sm font-medium hover:underline"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        Go back
+                    </button>
 
-                                {/* Text Group */}
-                                <div>
-                                    <h1 className="text-[22px] mt-1.5 font-bold text-purple-900">
-                                        My Rentals
-                                    </h1>
-                                    <p className="text-gray-500 mt-0.5 text-[15px]">
-                                        View and manage the items you have booked.
-                                    </p>
-                                </div>
 
-                            </div>
+                </div>
 
-                        </div>
+
+                {/* MY RENTALS TITLE */}
+                <div className="flex items-start gap-4 mb-5">
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
+                        <Package className="w-8 h-8 text-[#a12fda]" />
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-bold text-purple-900 mt-1 ">
+                            My Rentals
+                        </h1>
+                        <p className="text-gray-500 text-sm mr-4">View and manage your booked items</p>
                     </div>
 
-
-
-                    {/* FILTER + SORT */}
-                    <div className="flex items-center mb-4 gap-2">
-                        <button
-                            onClick={() => setFilter("all")}
-                            className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "all"
-                                ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
-                                }`}>
-                            All ({rentals.length})
-                        </button>
-
-                        <button
-                            onClick={() => setFilter("approved")}
-                            className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "approved"
-                                ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
-                                }`}>
-                            Approved (
-                            {rentals.filter((r) => r.status === "approved").length}
-                            )
-                        </button>
-
-                        <button
-                            onClick={() => setFilter("pending")}
-                            className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "pending"
-                                ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
-                                }`}>
-                            Pending (
-                            {rentals.filter((r) => r.status === "pending").length}
-                            )
-                        </button>
-
-                        <button
-                            onClick={() => setFilter("cancelled")}
-                            className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "cancelled"
-                                ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
-                                }`}>
-                            Cancelled ({rentals.filter((r) => r.status === "cancelled").length})
-                        </button>
-
-                        <button
-                            onClick={() => setFilter("completed")}
-                            className={`px-2 py-1 rounded-full transition text-[13px] ${filter === "completed"
-                                ? "bg-[#7A1CA9] text-white"
-                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 /20 hover:bg-[#7A1CA9]/20"
-                                }`}>
-                            Completed ({rentals.filter((r) => r.status === "completed").length})
-                        </button>
-
-
-                        {/* SORT DROPDOWN */}
-                        <div className="ml-auto">
-                            <SortDropdown
-                                options={["Latest", "Oldest"]}
-                                onSortChange={(value) => setSortOrder(value.toLowerCase())}
-                            />
-                        </div>
-                    </div>
-
-                    {/* EMPTY STATE */}
-                    {sorted.length === 0 && (
-                        <div className="text-center mt-20 text-gray-500">
-                            <p>No rentals found.</p>
-                        </div>
-                    )}
-
-                    <div className="grid grid-cols-1 gap-4">
-                        {sorted.map((item) => (
-                            <div
-                                key={item.id}
-                                className="relative bg-white  border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
-                            >
-                                <span
-                                    className={`absolute top-4 right-4 px-2 py-1 rounded-full text-[12.5px] font-medium flex items-center gap-1 ${item.status === "approved"
-                                        ? "bg-purple-100 text-purple-700"
-                                        : item.status === "pending"
-                                            ? "bg-yellow-100 text-yellow-700"
-                                            : item.status === "cancelled"
-                                                ? "bg-red-100 text-red-700"
-                                                : "bg-green-100 text-green-700"
-                                        }`}
-                                >
-                                    {item.status === "approved" && <BadgeCheck className="w-4 h-4" />}
-                                    {item.status === "pending" && <ClockFading className="w-4 h-4" />}
-                                    {item.status === "cancelled" && <CircleOff className="w-4 h-4" />}
-                                    {item.status === "completed" && <CircleCheckBig className="w-4 h-4" />}
-
-                                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                                </span>
-
-                                <div className="flex gap-5">
-                                    <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                                        <img
-                                            src={item.image}
-                                            className="w-28 h-28 rounded-6xl object-cover"
-                                            alt={item.name}
-                                        />
-                                    </div>
-
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 flex-wrap mb-1">
-                                            <h2 className="font-semibold text-[18px]">{item.name}</h2>
-                                            <span className="text-xs px-1 bg-gray-200 text-gray-700 rounded-md border">
-                                                {item.category}
-                                            </span>
-                                        </div>
-
-                                        <p className="text-sm text-gray-600">Listed by {item.owner}</p>
-
-                                        <div className="mt-3 mb-3 flex items-center gap-20 text-sm text-purple-900">
-                                            <div className="flex flex-col gap-1">
-                                                <div className="flex items-center gap-1">
-                                                    <Calendar className="w-4 h-4 mr-1 opacity-60" />
-                                                    {item.bookedFrom
-                                                        ? new Date(item.bookedFrom).toLocaleDateString("en-US", {
-                                                            month: "long",
-                                                            day: "numeric",
-                                                            year: "numeric",
-                                                        })
-                                                        : "-"}{" "}
-                                                    –{" "}
-                                                    {item.bookedTo
-                                                        ? new Date(item.bookedTo).toLocaleDateString("en-US", {
-                                                            month: "long",
-                                                            day: "numeric",
-                                                            year: "numeric",
-                                                        })
-                                                        : "-"}
-                                                </div>
-
-                                                {item.bookedFrom && item.bookedTo && (
-                                                    <div className="flex items-center gap-1 text-gray-600">
-                                                        <ClockFading className="w-4 h-4 mr-1 opacity-65" />
-                                                        {(() => {
-                                                            let daysCount = item.days || 1;
-                                                            if (item.bookedFrom && item.bookedTo) {
-                                                                const from = new Date(item.bookedFrom);
-                                                                const to = new Date(item.bookedTo);
-                                                                const msPerDay = 1000 * 60 * 60 * 24;
-                                                                const diff = Math.floor((to - from) / msPerDay) + 1;
-                                                                daysCount = diff > 0 ? diff : daysCount;
-                                                            }
-                                                            return `${daysCount} day${daysCount > 1 ? "s" : ""}`;
-                                                        })()}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            <div className="flex items-center gap-1">
-                                                <MapPin className="w-4 h-4 mr-1 opacity-60" />
-                                                {mockListings.find(l => l.id === item.id)?.location || "Unknown"}
-                                            </div>
-                                        </div>
-
-                                        {/* PRICE INFO */}
-                                        <div className="mt-5 flex items-center justify-between">
-                                            <div className="flex items-center gap-12">
-                                                <div>
-                                                    <p className="text-sm text-gray-500">Rent per day</p>
-                                                    <p className="text-[18px] font-bold text-purple-900">₱{item.price}</p>
-                                                </div>
-
-                                                {item.status !== "cancelled" && (
-                                                    <div>
-                                                        <p className="text-sm text-gray-500">Total amount</p>
-                                                        <p className="font-bold text-[18px] text-[#7A1CA9]">
-                                                            {(() => {
-                                                                const listing = mockListings.find(l => l.id === item.id);
-                                                                const pricePerDay = listing
-                                                                    ? Number((listing.price || "₱0").toString().replace(/[^\d.]/g, ""))
-                                                                    : 0;
-                                                                let daysCount = item.days || 1;
-                                                                if (item.bookedFrom && item.bookedTo) {
-                                                                    const from = new Date(item.bookedFrom);
-                                                                    const to = new Date(item.bookedTo);
-                                                                    const msPerDay = 1000 * 60 * 60 * 24;
-                                                                    const diff = Math.floor((to - from) / msPerDay) + 1;
-                                                                    daysCount = diff > 0 ? diff : daysCount;
-                                                                }
-                                                                const shippingFee = typeof item.shipping === "number"
-                                                                    ? item.shipping
-                                                                    : listing?.shipping || 0;
-                                                                const discountPercent =
-                                                                    typeof item.couponDiscount === "number"
-                                                                        ? item.couponDiscount
-                                                                        : listing?.couponDiscount || 0;
-                                                                const securityDeposit = item.securityDeposit || 0;
-                                                                const subtotal = pricePerDay * daysCount;
-                                                                const discountAmount = (subtotal * discountPercent) / 100;
-                                                                const total = subtotal - discountAmount + shippingFee + securityDeposit;
-
-                                                                return `₱${total.toFixed(2)}`;
-                                                            })()}
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* BUTTONS */}
-                                <div className="flex items-center gap-2 justify-end w-full mt-3">
-                                    {(item.status === "approved" || item.status === "pending") && (
-                                        <>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedRentalId(item.id);
-                                                    setDetailsModalOpen(true);
-                                                }}
-                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
-                                            >
-                                                <Eye className="w-4 h-4 mr-1" />
-                                                View More Details
-                                            </button>
-
-                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
-                                                <MessageCircle className="w-4 h-4 mr-1" />
-                                                Message Owner
-                                            </button>
-                                        </>
-                                    )}
-
-                                    {item.status === "cancelled" && (
-                                        <button
-                                            onClick={() => setRentals(prev => prev.filter(r => r.id !== item.id))}
-                                            className="px-3 py-1.5 text-sm border rounded-lg text-red-500 border-red-300 bg-red-50 hover:bg-red-100"
-                                        >
-                                            Remove
-                                        </button>
-                                    )}
-
-                                    {item.status === "completed" && (
-                                        <>
-                                            <button
-                                                onClick={() => alert(`Re-renting ${item.name}`)}
-                                                className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"
-                                            >
-                                                <CalendarPlus className="w-4 h-4 mr-1" />
-                                                Book Again
-                                            </button>
-
-                                            <button className="px-3 py-1.5 text-sm border rounded-lg font-medium flex items-center gap-1 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
-                                                <MessageCircle className="w-4 h-4 mr-1" />
-                                                Message Owner
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-
+                    <div className="mt-4">
+                        <SortDropdown
+                            options={["Latest", "Oldest"]}
+                            onSortChange={(value) => setSortOrder(value.toLowerCase())}
+                        />
                     </div>
 
                 </div>
+
+                {/* CATEGORY FILTER BUTTONS */}
+                <div className="flex flex-wrap gap-2 mb-4 mr-5">
+                    {["all", "approved", "pending", "cancelled", "completed"].map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setFilter(cat)}
+                            className={`px-2 py-1 rounded-full text-[13px] transition ${filter === cat
+                                ? "bg-[#7A1CA9] text-white"
+                                : "bg-[#7A1CA9]/10 text-[#7A1CA9] border border-[#7A1CA9]/20 hover:bg-[#7A1CA9]/20"
+                                }`}
+                        >
+                            {cat.charAt(0).toUpperCase() + cat.slice(1)} (
+                            {rentals.filter(r => cat === "all" ? true : r.status === cat).length})
+                        </button>
+                    ))}
+                </div>
+
+                {/* RENTAL SUMMARY BOX */}
+                <div className="bg-white px-4 py-3 rounded-lg shadow-sm space-y-1 mr-5">
+                    <h2 className="font-semibold text-[16px] mb-2">Rental Summary</h2>
+
+                    <div className="flex items-center text-gray-600 mb-1 gap-1.5">
+                        <Package className="w-4 h-4" />
+
+                        <p className="text-[13px]">
+                            {rentals.filter(r => r.status === "completed").length}{" "}
+                            item
+                            {rentals.filter(r => r.status === "completed").length > 1 ? "s" : ""} rented
+                        </p>
+                    </div>
+
+
+                    {/* Status Breakdown */}
+                    <div className="flex flex-col gap-1 ml-4  text-[13px]">
+
+                        {rentals.filter(r => r.status === "approved").length > 0 && (
+                            <div className="flex items-center gap-1.5 text-green-700">
+                                <CircleCheckBig className="w-3 h-3" />
+                                <span>{rentals.filter(r => r.status === "approved").length} approved</span>
+                            </div>
+                        )}
+
+                        {rentals.filter(r => r.status === "pending").length > 0 && (
+                            <div className="flex items-center gap-1.5 text-yellow-700">
+                                <Clock className="w-3 h-3" />
+                                <span>{rentals.filter(r => r.status === "pending").length} pending</span>
+                            </div>
+                        )}
+
+                        {rentals.filter(r => r.status === "cancelled").length > 0 && (
+                            <div className="flex items-center gap-1.5 text-red-700">
+                                <CircleOff className="w-3 h-3" />
+                                <span>{rentals.filter(r => r.status === "cancelled").length} cancelled</span>
+                            </div>
+                        )}
+
+                    </div>
+
+
+                    <hr className="my-3" />
+                    {/* Approved Items */}
+                    {rentals.filter(r => r.status === "approved").length > 0 && (
+                        <div className="text-[13px] space-y-1 pb-2">
+                            <p className="font-semibold mt-3 mb-2">Approved Rentals</p>
+                            {rentals
+                                .filter(r => r.status === "approved")
+                                .map((item) => (
+                                    <div key={item.id} className="flex justify-between">
+                                        <span>{item.name}</span>
+                                        <span>₱{item.price}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    )}
+
+                    {rentals.filter(r => r.status === "pending").length > 0 && (
+                        <div className="text-[13px] space-y-1 pb-2">
+                            <p className="font-semibold mt-3 mb-2">Pending Rentals</p>
+                            {rentals
+                                .filter(r => r.status === "pending")
+                                .map((item) => (
+                                    <div key={item.id} className="flex justify-between">
+                                        <span>{item.name}</span>
+                                        <span>₱{item.price}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    )}
+
+                    {/* Totals Section */}
+                    <div className="text-[13px] space-y-1 pt-3  border-t border-gray-200">
+
+                        {/** Calculate totals for completed rentals */}
+                        {(() => {
+                            const completedRentals = rentals.filter(r => r.status === "completed");
+
+                            const subtotal = completedRentals.reduce((sum, item) => {
+                                const pricePerDay = Number((item.price || 0));
+                                const days = item.days || 1;
+                                return sum + pricePerDay * days;
+                            }, 0);
+
+                            const totalShipping = completedRentals.reduce((sum, item) => {
+                                return sum + (item.shipping || 0);
+                            }, 0);
+
+                            const totalCoupon = completedRentals.reduce((sum, item) => {
+                                const discountPercent = item.couponDiscount || 0;
+                                const pricePerDay = Number((item.price || 0));
+                                const days = item.days || 1;
+                                return sum + (pricePerDay * days * discountPercent) / 100;
+                            }, 0);
+
+                            const totalSecurity = completedRentals.reduce((sum, item) => sum + (item.securityDeposit || 0), 0);
+
+                            const total = subtotal + totalShipping + totalSecurity - totalCoupon;
+
+                            return (
+                                <div className="space-y-1">
+                                    <div className="flex justify-between">
+                                        <span>Subtotal of Completed Items</span>
+                                        <span>₱{subtotal.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Total Coupon Discounts Used</span>
+                                        <span>-₱{totalCoupon.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Security Deposit Used</span>
+                                        <span>₱{totalSecurity.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between font-bold text-lg border-t border-gray-200 pt-2 pb-2">
+                                        <span>Total Expense</span>
+                                        <span>₱{total.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </div>
+
+
+                    {/* Info Box */}
+                    <div className="space-y-3">
+                        <div className="bg-blue-50 text-blue-700 border border-blue-200 p-3 rounded-md text-[13px]">
+                            Your rental status updates appear here.
+                        </div>
+                    </div>
+                </div>
+
+                {/* FOOTER INFO */}
+                <div className="bg-purple-100 p-4 mt-3 mb-10 mr-5 rounded-lg text-purple-700 text-[13px]">
+                    <ul className="space-y-1">
+                        <li>✓ View and manage all your booked items in one place</li>
+                        <li>✓ Keep track of rental status (pending, approved, completed, cancelled)</li>
+                        <li>✓ Get notified of updates and messages from owners</li>
+                        <li>✓ Re-book completed rentals easily</li>
+                    </ul>
+                </div>
+
+
             </div>
+
+            {/* RIGHT COLUMN — RENTALS LIST */}
+            <div className="flex-1 pl-6 pb-20 pt-10">
+
+                {/* RENTAL CARDS */}
+                <div className="grid grid-cols-1 gap-4">
+                    {sorted.map((item) => (
+                        <RentalCard
+                            key={item.id}
+                            item={item}
+                            onViewDetails={(id) => {
+                                setSelectedRentalId(id);
+                                setDetailsModalOpen(true);
+                            }}
+                            onRemove={(id) =>
+                                setRentals((prev) => prev.filter((r) => r.id !== id))
+                            }
+                            onCancel={(id) => {
+                                setSelectedId(id);
+                                setShowModal(true);
+                            }}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* MODALS */}
             <CancelConfirmationModal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 onConfirm={confirmCancel}
             />
+
             <ViewDetailsModal
                 isOpen={detailsModalOpen}
                 onClose={() => setDetailsModalOpen(false)}
@@ -413,6 +354,7 @@ const MyRentalsPage = () => {
             />
         </div>
     );
+
 };
 
 export default MyRentalsPage;

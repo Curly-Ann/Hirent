@@ -33,8 +33,8 @@ const Sidebar = ({ onExpand }) => {
     <div
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className={`fixed left-0 top-0 h-full bg-[#ffffff] rounded-r-xl transition-all duration-300 
-                 ${expanded ? "w-64" : "w-16"} overflow-hidden`} // <-- prevent overflow
+      className={`fixed left-0 top-0 h-full bg-[#ffffff] rounded-r-sm transition-all duration-300 
+                 ${expanded ? "w-64" : "w-16"} overflow-hidden`}
       style={{ zIndex: 2000 }}
     >
       {/* Top Logo + Menu */}
@@ -52,7 +52,7 @@ const Sidebar = ({ onExpand }) => {
             className={`relative transition-all border-l-4 transform-gpu ${
               isActive(item.link)
                 ? "bg-purple-50 text-[#7A1CA9] border-l-[#7A1CA9]"
-                : "text-gray-700 hover:bg-purple-50  hover:text-[#7A1CA9] hover:scale-105"
+                : "text-gray-700 border-l-[#ffffff] hover:bg-purple-50  hover:text-[#7A1CA9] hover:scale-105"
             }`}
           >
             <div className="flex items-center gap-3 px-4 py-2">

@@ -2,7 +2,7 @@ import React from 'react';
 
 const DeliveryMethod = ({ deliveryMethod, setDeliveryMethod }) => {
   return (
-    <div className="bg-white  text-purple-900   rounded-lg shadow-sm p-6">
+    <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Booking Details</h2>
 
       <h3 className="text-[16px] text-purple-900 mb-3">Delivery Method</h3>
@@ -10,7 +10,7 @@ const DeliveryMethod = ({ deliveryMethod, setDeliveryMethod }) => {
       {/* Delivery Option */}
       <label
         className={`flex items-start mb-4 gap-3 p-5 rounded-xl cursor-pointer transition 
-    border ${deliveryMethod === "delivery" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:bg-gray-900"}`}
+    border ${deliveryMethod === "delivery" ? "border-[#7A1CA9]  bg-purple-50" : "border-gray-300 hover:bg-gray-50"}`}
       >
         <input
           type="radio"

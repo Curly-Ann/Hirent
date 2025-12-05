@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import Footer from "./Footer";
 
 const MainLayout = () => {
   const [blur, setBlur] = useState(false);
@@ -24,9 +23,6 @@ const MainLayout = () => {
         <div className="relative z-0 flex-1">
           <Outlet />
         </div>
-
-        {/* Footer BELOW the page content */}
-        <Footer />
       </div>
     </>
   );
