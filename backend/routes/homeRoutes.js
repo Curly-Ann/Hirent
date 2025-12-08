@@ -1,21 +1,10 @@
-﻿const express = require("express");
+const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/homepageController");
-const auth = require("../middleware/authMiddleware");
 
-// GET featured categories (public)
 router.get("/categories/featured", controller.getFeaturedCategories);
-
-// GET items under a specific category (public)
 router.get("/categories/:slug/items", controller.getItemsByCategory);
-
-// GET featured items (public)
 router.get("/items/featured", controller.getFeaturedItems);
-
-// Global search (public)
 router.get("/search", controller.searchItems);
-
-// Personalized homepage (authenticated users only)
-router.get("/personalized", auth, controller.getPersonalizedHomepage);
 
 module.exports = router;

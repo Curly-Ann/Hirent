@@ -1,31 +1,28 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useContext } from "react";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { motion } from "framer-motion";
+
+// ===== PROTECTED ROUTES =====
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// ===== LAYOUT COMPONENTS =====
 import MainLayout from "./components/layouts/MainLayout";
+import MainNav from "./components/layouts/MainNav";
+import Navbar from "./components/layouts/Navbar";
+import Footer from "./components/layouts/Footer";
 
-//fake user
-import { generateFakeToken } from "./utils/fakeAuth";
-
-//auth
+// ===== AUTHENTICATION PAGES =====
 import Signup from "./pages/auth/Signup";
 import Login from "./pages/auth/Login";
+import GoogleCallback from "./pages/auth/GoogleCallback";
 import OwnerSignup from "./pages/auth/OwnerSignup";
 import OwnerSetup from "./pages/auth/OwnerSetup";
 import AdminLogin from "./pages/auth/AdminLogin";
 import AdminSignup from "./pages/auth/AdminSignup";
 
-//main layout
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
-import MainNav from "./components/layouts/MainNav";
-import Navbar from "./components/layouts/Navbar";
-import Footer from "./components/layouts/Footer";
-
-//homepage
+// ===== HOMEPAGE SECTIONS =====
 import HeroSection from "./components/home/HeroSection";
 import FeaturedCategories from "./components/home/FeaturedCategories";
 import HowItWorks from "./components/home/HowItWorks";
@@ -33,24 +30,23 @@ import BrowseItems from "./components/items/BrowseItems";
 import WhyChoose from "./components/home/WhyChoose";
 import Testimonials from "./components/home/Testimonials";
 
-//main pages from navbar
+// ===== NAVBAR PAGES =====
 import BrowseRentals from "./pages/home/navbar/BrowseRentals";
 import Collection from "./pages/home/navbar/Collection";
 import Wishlist from "./pages/home/navbar/Wishlist";
 import AboutPage from "./pages/home/navbar/AboutPage";
 import { HowItWorksSection } from "./pages/home/navbar/HowItWorks";
 import NotificationsPage from "./pages/notifications/NotificationsPage";
-
 import ProductDetails from "./pages/ProductDetails";
 
-//pages from sidebar
+// ===== SIDEBAR PAGES =====
 import MyRentals from "./pages/home/sidebar/MyRentals";
 import Booking from "./pages/home/sidebar/Booking";
 import Messages from "./pages/home/sidebar/Messages";
 import Returns from "./pages/home/sidebar/Returns";
 import Account from "./pages/home/sidebar/Account";
 
-// owner dashboard
+// ===== OWNER DASHBOARD =====
 import OwnerDashboard from "./pages/owner/OwnerDashboard";
 import AddItem from "./pages/owner/AddItem";
 import MyListings from "./pages/owner/MyListings";
@@ -61,23 +57,14 @@ import OwnerEarnings from "./pages/owner/OwnerEarnings";
 import OwnerProfile from "./pages/owner/OwnerProfile";
 import OwnerSettings from "./pages/owner/OwnerSettings";
 
-//admin
+// ===== ADMIN DASHBOARD =====
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSettings from "./pages/admin/AdminSettings";
 
-//map css
+// ===== STYLES & IMPORTS =====
 import "leaflet/dist/leaflet.css";
 
-import { ThemeProvider } from "./context/ThemeContext";
-
-import { motion } from "framer-motion";
-
-if (!localStorage.getItem("fakeToken")) {
-  const token = generateFakeToken();
-  localStorage.setItem("fakeToken", token);
-  console.log("Fake token generated for dev:", token);
-}
-
+// ===== LANDING PAGE COMPONENT =====
 function LandingPage() {
   const { isLoggedIn } = useContext(AuthContext);
 
@@ -92,9 +79,10 @@ function LandingPage() {
 
   return (
     <div className="App">
-      {/* Switch navbar based on login state */}
+      {/* Navbar switches based on login state */}
       {isLoggedIn ? <Navbar /> : <MainNav />}
 
+      {/* Hero Section */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -104,7 +92,7 @@ function LandingPage() {
         <HeroSection />
       </motion.section>
 
-      {/* Other landing page sections */}
+      {/* Featured Categories */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -114,6 +102,7 @@ function LandingPage() {
         <FeaturedCategories />
       </motion.section>
 
+      {/* Browse Items */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -123,6 +112,7 @@ function LandingPage() {
         <BrowseItems />
       </motion.section>
 
+      {/* How It Works */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -132,6 +122,7 @@ function LandingPage() {
         <HowItWorks />
       </motion.section>
 
+      {/* Why Choose */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -141,6 +132,7 @@ function LandingPage() {
         <WhyChoose />
       </motion.section>
 
+      {/* Testimonials */}
       <motion.section
         variants={sectionVariants}
         initial="hidden"
@@ -155,47 +147,134 @@ function LandingPage() {
   );
 }
 
+// ===== MAIN APP COMPONENT =====
 function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
         <Router>
           <Routes>
+            {/* ===== PUBLIC ROUTES ===== */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/auth-callback" element={<GoogleCallback />} />
+
+            {/* ===== OWNER ROUTES ===== */}
             <Route path="/ownersignup" element={<OwnerSignup />} />
             <Route path="/ownersetup" element={<OwnerSetup />} />
+
+            {/* ===== ADMIN ROUTES (PROTECTED) ===== */}
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-signup" element={<AdminSignup />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminSettings />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
+            {/* ===== OWNER DASHBOARD (PROTECTED) ===== */}
+            <Route
+              path="/owner/dashboard"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/add-item"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <AddItem />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/my-listings"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <MyListings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/bookings"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerBookings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/returns"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerReturns />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/messages"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerMessages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/earnings"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerEarnings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/profile"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/settings"
+              element={
+                <ProtectedRoute requiredRole="owner">
+                  <OwnerSettings />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/owner/dashboard" element={<OwnerDashboard />} />
-            <Route path="/owner/add-item" element={<AddItem />} />
-            <Route path="/owner/my-listings" element={<MyListings />} />
-            <Route path="/owner/bookings" element={<OwnerBookings />} />
-            <Route path="/owner/returns" element={<OwnerReturns />} />
-            <Route path="/owner/messages" element={<OwnerMessages />} />
-            <Route path="/owner/earnings" element={<OwnerEarnings />} />
-            <Route path="/owner/profile" element={<OwnerProfile />} />
-            <Route path="/owner/settings" element={<OwnerSettings />} />
-
+            {/* ===== MAIN LAYOUT ROUTES (with navbar and sidebar) ===== */}
             <Route element={<MainLayout />}>
+              {/* Navbar Pages */}
               <Route path="/browse" element={<BrowseRentals />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/how-it-works" element={<HowItWorksSection />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/collection" element={<Collection />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
 
+              {/* Sidebar Pages */}
               <Route path="/my-rentals" element={<MyRentals />} />
               <Route path="/booking" element={<Booking />} />
               <Route path="/returns" element={<Returns />} />
               <Route path="/chat" element={<Messages />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/collection" element={<Collection />} />
             </Route>
           </Routes>
         </Router>

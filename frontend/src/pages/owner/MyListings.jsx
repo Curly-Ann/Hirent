@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OwnerSidebar from "../../components/layouts/OwnerSidebar";
+
 import {
   Search,
   MapPin,
@@ -17,15 +18,162 @@ import {
 
 import { CircleCheck, CheckCheck, Ban } from "lucide-react";
 
-// Components
 import RentalHistoryPanel from "../../components/listings/RentalHistoryPanel";
 import EditItemModal from "../../components/listings/EditItemModal";
 import DeleteConfirmModal from "../../components/listings/DeleteConfirmModal";
 import ItemPageModal from "../../components/listings/ItemPageModal";
 import ItemActionsMenu from "../../components/listings/ItemActionsMenu";
+import { API_URL, ENDPOINTS } from "../../config/api";
+
+// ---------------------------------------------------------------------------
+//  HARD CODED LISTINGS (original sample data preserved)
+// ---------------------------------------------------------------------------
+const HARD_CODED_LISTINGS = [
+  {
+    id: 1,
+    productId: "PRD-2024-001",
+    name: "RGB Gaming Keyboard",
+    category: "Electronics",
+    price: 150,
+    availability: "Rented",
+    status: "Active",
+    image: "/assets/items/Keyboard.png",
+    rented: true,
+    renter: "Jonathan Reyes",
+    dates: "Feb 20–25, 2025",
+    location: "Davao City",
+    condition: "Good",
+    description: "Mechanical RGB keyboard with hot-swappable switches.",
+    securityDeposit: 300,
+    itemOptions: ["USB Cable", "High Resolution"],
+    views: 234,
+    totalBookings: 12,
+    revenue: 1800,
+    history: [
+      { renter: "Jonathan Reyes", dates: "Feb 20–25, 2025", status: "Returned", notes: "Smooth transaction." },
+      { renter: "Carla Mendez", dates: "Jan 10–15, 2025", status: "Returned" },
+    ],
+  },
+
+  {
+    id: 2,
+    productId: "PRD-2024-002",
+    name: "Gucci Duffle Bag",
+    category: "Bags",
+    price: 250,
+    availability: "Available",
+    status: "Active",
+    image: "/assets/items/gucci_duffle_bag.png",
+    rented: false,
+    location: "Tagum City",
+    condition: "Like New",
+    description: "Luxury duffle bag made of premium leather.",
+    securityDeposit: 500,
+    itemOptions: ["Waterproof"],
+    views: 456,
+    totalBookings: 8,
+    revenue: 2000,
+    history: [
+      { renter: "Maria Santos", dates: "Mar 3–6, 2025", status: "Returned" },
+    ],
+  },
+
+  {
+    id: 3,
+    productId: "PRD-2024-003",
+    name: "IPS LCD Monitor",
+    category: "Electronics",
+    price: 200,
+    availability: "Unavailable",
+    status: "Inactive",
+    image: "/assets/items/IPS_lcd.png",
+    rented: false,
+    neverRented: true,
+    location: "Panabo City",
+    condition: "Fair",
+    description: "Color-accurate IPS panel monitor perfect for editing.",
+    securityDeposit: 200,
+    itemOptions: ["Extra Battery"],
+    views: 89,
+    totalBookings: 0,
+    revenue: 0,
+    history: [],
+  },
+
+  {
+    id: 4,
+    productId: "PRD-2024-004",
+    name: "Gaming Laptop i7",
+    category: "Computers",
+    price: 350,
+    availability: "Available",
+    status: "Active",
+    image: "/assets/items/laptop.png",
+    rented: false,
+    location: "Davao City",
+    condition: "Like New",
+    description: "High-performance gaming laptop with RTX graphics.",
+    securityDeposit: 700,
+    itemOptions: ["Charger Included"],
+    views: 678,
+    totalBookings: 15,
+    revenue: 5250,
+    history: [
+      { renter: "Alex Torres", dates: "Jan 2–6, 2025", status: "Returned" },
+      { renter: "Ralph Lim", dates: "Dec 15–18, 2024", status: "Overdue", notes: "Late by 1 day." },
+    ],
+  },
+
+  {
+    id: 5,
+    productId: "PRD-2024-005",
+    name: "Havit Gaming Headset",
+    category: "Electronics",
+    price: 120,
+    availability: "Rented",
+    status: "Active",
+    image: "/assets/items/havit_hv.png",
+    rented: true,
+    renter: "Maria Santos",
+    dates: "Mar 3–6, 2025",
+    location: "Davao del Norte",
+    condition: "Good",
+    description: "Surround-sound RGB gaming headset with mic.",
+    securityDeposit: 200,
+    itemOptions: ["USB Cable"],
+    views: 345,
+    totalBookings: 10,
+    revenue: 1200,
+    history: [
+      { renter: "Maria Santos", dates: "Mar 3–6, 2025", status: "Returned" },
+      { renter: "Darren Lum", dates: "Feb 1–4, 2025", status: "Returned" },
+    ],
+  },
+
+  {
+    id: 6,
+    productId: "PRD-2024-006",
+    name: "RGB Liquid CPU Cooler",
+    category: "PC Parts",
+    price: 180,
+    availability: "Available",
+    status: "Active",
+    image: "/assets/items/RGB_liquid_CPU.png",
+    rented: false,
+    location: "Tagum City",
+    condition: "Like New",
+    description: "High-end liquid cooler for gaming PCs.",
+    securityDeposit: 400,
+    itemOptions: ["Mount Kit Included"],
+    views: 123,
+    totalBookings: 0,
+    revenue: 0,
+    history: [],
+  },
+];
 
 export default function MyListings() {
-  // UI state
+  // UI states
   const [expanded, setExpanded] = useState(null);
   const [menuOpen, setMenuOpen] = useState(null);
 
@@ -34,202 +182,86 @@ export default function MyListings() {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterAvailability, setFilterAvailability] = useState("All");
 
-  // Modals + Slide Panel
+  // Modals & panels
   const [editModal, setEditModal] = useState(null);
   const [deleteModal, setDeleteModal] = useState(null);
   const [viewPageModal, setViewPageModal] = useState(null);
   const [historyPanel, setHistoryPanel] = useState(null);
 
-  // Listings with unique rental histories per item
-  const [listings, setListings] = useState([
-    {
-      id: 1,
-      productId: "PRD-2024-001",
-      name: "RGB Gaming Keyboard",
-      category: "Electronics",
-      price: 150,
-      availability: "Rented",
-      status: "Active",
-      image: "/assets/items/Keyboard.png",
-      rented: true,
-      renter: "Jonathan Reyes",
-      dates: "Feb 20–25, 2025",
-      location: "Davao City",
-      condition: "Good",
-      description: "Mechanical RGB keyboard with hot-swappable switches.",
-      securityDeposit: 300,
-      itemOptions: ["USB Cable", "High Resolution"],
-      views: 234,
-      totalBookings: 12,
-      revenue: 1800,
+  // Listings = Merged (hardcoded + backend)
+  const [listings, setListings] = useState(HARD_CODED_LISTINGS);
 
-      history: [
-        {
-          renter: "Jonathan Reyes",
-          dates: "Feb 20–25, 2025",
-          status: "Returned",
-          notes: "Smooth transaction.",
-        },
-        {
-          renter: "Carla Mendez",
-          dates: "Jan 10–15, 2025",
-          status: "Returned",
-        },
-      ],
-    },
+  // ---------------------------------------------------------------------------
+  // LOAD BACKEND DATA + MERGE WITH HARDCODED FALLBACK
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    async function loadBackendListings() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return; // no token → stay with hardcoded
 
-    {
-      id: 2,
-      productId: "PRD-2024-002",
-      name: "Gucci Duffle Bag",
-      category: "Bags",
-      price: 250,
-      availability: "Available",
-      status: "Active",
-      image: "/assets/items/gucci_duffle_bag.png",
-      rented: false,
-      location: "Tagum City",
-      condition: "Like New",
-      description: "Luxury duffle bag made of premium leather.",
-      securityDeposit: 500,
-      itemOptions: ["Waterproof"],
-      views: 456,
-      totalBookings: 8,
-      revenue: 2000,
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const ownerId = payload?.id;
 
-      history: [
-        {
-          renter: "Maria Santos",
-          dates: "Mar 3–6, 2025",
-          status: "Returned",
-        },
-      ],
-    },
+        const res = await fetch(`${API_URL}/items/owner/${ownerId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    {
-      id: 3,
-      productId: "PRD-2024-003",
-      name: "IPS LCD Monitor",
-      category: "Electronics",
-      price: 200,
-      availability: "Unavailable",
-      status: "Inactive",
-      image: "/assets/items/IPS_lcd.png",
-      rented: false,
-      neverRented: true,
-      location: "Panabo City",
-      condition: "Fair",
-      description: "Color-accurate IPS panel monitor perfect for editing.",
-      securityDeposit: 200,
-      itemOptions: ["Extra Battery"],
-      views: 89,
-      totalBookings: 0,
-      revenue: 0,
+        const data = await res.json();
+        if (!data.success) return;
 
-      history: [],
-    },
+        // Merge backend items with fallback values
+        const merged = data.items.map((item) => ({
+          ...item,
 
-    {
-      id: 4,
-      productId: "PRD-2024-004",
-      name: "Gaming Laptop i7",
-      category: "Computers",
-      price: 350,
-      availability: "Available",
-      status: "Active",
-      image: "/assets/items/laptop.png",
-      rented: false,
-      location: "Davao City",
-      condition: "Like New",
-      description: "High-performance gaming laptop with RTX graphics.",
-      securityDeposit: 700,
-      itemOptions: ["Charger Included"],
-      views: 678,
-      totalBookings: 15,
-      revenue: 5250,
+          // Normalize field names for UI compatibility
+          id: item._id,
+          productId: item.productId ?? `PRD-${item._id.slice(-6)}`,
+          name: item.title,
+          category: item.category?.name ?? "Uncategorized",
+          price: item.pricePerDay,
 
-      history: [
-        {
-          renter: "Alex Torres",
-          dates: "Jan 2–6, 2025",
-          status: "Returned",
-        },
-        {
-          renter: "Ralph Lim",
-          dates: "Dec 15–18, 2024",
-          status: "Overdue",
-          notes: "Late by 1 day.",
-        },
-      ],
-    },
+          // Fallbacks for fields backend doesn't provide yet
+          availability: item.available ? "Available" : "Unavailable",
+          status: item.active ? "Active" : "Inactive",
 
-    {
-      id: 5,
-      productId: "PRD-2024-005",
-      name: "Havit Gaming Headset",
-      category: "Electronics",
-      price: 120,
-      availability: "Rented",
-      status: "Active",
-      image: "/assets/items/havit_hv.png",
-      rented: true,
-      renter: "Maria Santos",
-      dates: "Mar 3–6, 2025",
-      location: "Davao del Norte",
-      condition: "Good",
-      description: "Surround-sound RGB gaming headset with mic.",
-      securityDeposit: 200,
-      itemOptions: ["USB Cable"],
-      views: 345,
-      totalBookings: 10,
-      revenue: 1200,
+          image: item.images?.[0] ?? "/assets/items/placeholder.png",
 
-      history: [
-        {
-          renter: "Maria Santos",
-          dates: "Mar 3–6, 2025",
-          status: "Returned",
-        },
-        {
-          renter: "Darren Lum",
-          dates: "Feb 1–4, 2025",
-          status: "Returned",
-        },
-      ],
-    },
+          views: item.views ?? 0,
+          totalBookings: item.totalBookings ?? 0,
+          revenue: item.revenue ?? 0,
+          history: item.history ?? [],
 
-    {
-      id: 6,
-      productId: "PRD-2024-006",
-      name: "RGB Liquid CPU Cooler",
-      category: "PC Parts",
-      price: 180,
-      availability: "Available",
-      status: "Active",
-      image: "/assets/items/RGB_liquid_CPU.png",
-      rented: false,
-      location: "Tagum City",
-      condition: "Like New",
-      description: "High-end liquid cooler for gaming PCs.",
-      securityDeposit: 400,
-      itemOptions: ["Mount Kit Included"],
-      views: 123,
-      totalBookings: 0,
-      revenue: 0,
+          description: item.description ?? "",
+          condition: item.condition ?? "Good",
+          location: item.location?.city ?? "Unknown",
+          securityDeposit: item.securityDeposit ?? 0,
+          itemOptions: item.itemOptions ?? [],
+        }));
 
-      history: [],
-    },
-  ]);
+        // Replace hardcoded listings with backend items
+        if (merged.length > 0) setListings(merged);
+      } catch (err) {
+        console.warn("Backend not ready → using hardcoded sample items");
+      }
+    }
 
-  // Calculate stats
+    loadBackendListings();
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // STATS
+  // ---------------------------------------------------------------------------
   const stats = {
     total: listings.length,
     active: listings.filter((i) => i.status === "Active").length,
-    rented: listings.filter((i) => i.rented).length,
-    totalRevenue: listings.reduce((sum, i) => sum + i.revenue, 0),
+    rented: listings.filter((i) => i.availability === "Rented").length,
+    totalRevenue: listings.reduce((sum, i) => sum + (i.revenue || 0), 0),
   };
 
-  // Sorting logic
+  // ---------------------------------------------------------------------------
+  // SORTING
+  // ---------------------------------------------------------------------------
   const sortedListings = [...listings].sort((a, b) => {
     if (sortBy === "price") return a.price - b.price;
     if (sortBy === "category") return a.category.localeCompare(b.category);
@@ -239,7 +271,9 @@ export default function MyListings() {
     return a.name.localeCompare(b.name);
   });
 
-  // Search + Filter
+  // ---------------------------------------------------------------------------
+  // SEARCH + FILTER
+  // ---------------------------------------------------------------------------
   const filteredListings = sortedListings.filter((i) => {
     const matchesSearch =
       i.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -247,58 +281,40 @@ export default function MyListings() {
       i.category.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus = filterStatus === "All" || i.status === filterStatus;
-
     const matchesAvailability =
       filterAvailability === "All" || i.availability === filterAvailability;
 
     return matchesSearch && matchesStatus && matchesAvailability;
   });
 
-  // Badges
+  // ---------------------------------------------------------------------------
+  // BADGES
+  // ---------------------------------------------------------------------------
   const availabilityBadge = {
-    Available: {
-      bg: "bg-green-100",
-      text: "text-green-600",
-      icon: CircleCheck,
-    },
+    Available: { bg: "bg-green-100", text: "text-green-600", icon: CircleCheck },
     Rented: { bg: "bg-pink-100", text: "text-pink-600", icon: CheckCheck },
     Unavailable: { bg: "bg-gray-100", text: "text-gray-500", icon: Ban },
   };
-  // Status indicator function
+
   const statusIndicator = (status) => {
     const colorMap = {
       Active: { circle: "bg-green-500", text: "text-green-600" },
       Inactive: { circle: "bg-gray-400", text: "text-gray-500" },
     };
 
-    const colors = colorMap[status] || {
-      circle: "bg-gray-300",
-      text: "text-gray-600",
-    };
+    const colors = colorMap[status] || { circle: "bg-gray-300", text: "text-gray-600" };
 
     return (
-      <div
-        className={`flex items-center gap-2 text-[13px] font-medium ${colors.text}`}
-      >
+      <div className={`flex items-center gap-2 text-[13px] font-medium ${colors.text}`}>
         <span className={`w-2 h-2 rounded-full ${colors.circle}`} />
         <span>{status}</span>
       </div>
     );
   };
 
-  const badge = (text, styles) => {
-    const Icon = styles.icon;
-    return (
-      <span
-        className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${styles.bg} ${styles.text}`}
-      >
-        <Icon className="w-3 h-3 flex-shrink-0" />
-        {text}
-      </span>
-    );
-  };
-
-  // Action handlers
+  // ---------------------------------------------------------------------------
+  // ACTION HANDLERS
+  // ---------------------------------------------------------------------------
   const handleDuplicate = (item) => {
     const newItem = {
       ...item,
@@ -314,16 +330,13 @@ export default function MyListings() {
 
   const handleToggleStatus = (item) => {
     setListings((prev) =>
-      prev.map((i) =>
-        i.id === item.id
-          ? { ...i, status: i.status === "Active" ? "Inactive" : "Active" }
-          : i
-      )
+      prev.map((i) => (i.id === item.id ? { ...i, status: i.status === "Active" ? "Inactive" : "Active" } : i))
     );
   };
 
-  const handleDelete = (id) => {
-    setListings((prev) => prev.filter((i) => i.id !== id));
+  const handleDelete = (item) => {
+    setDeleteModal(null);
+    setListings((prev) => prev.filter((i) => i.id !== item.id));
   };
 
   const handleExport = () => {
@@ -339,96 +352,92 @@ export default function MyListings() {
       Revenue: item.revenue,
     }));
     console.log("Exporting:", data);
-    // Implement CSV export logic here
   };
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <div className="flex bg-gray-50 min-h-screen">
       <OwnerSidebar />
 
-      {/* Main Content */}
       <div className="flex-1 p-8 ml-60">
+        {/* HEADER */}
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="text-3xl font-bold mb-1">My Listings</h1>
             <p className="text-gray-500">Manage all your rental items</p>
           </div>
+
           <div className="flex gap-3">
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+              className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               <Download size={16} />
               Export
             </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-[#7A1CA9] text-white rounded-xl text-sm font-medium hover:bg-[#6a1894] transition">
+
+            <button className="flex items-center gap-2 px-3 py-2 bg-[#7A1CA9] text-white rounded-xl text-sm font-medium hover:bg-[#6a1894]">
               <Plus size={16} />
               Add New Item
             </button>
           </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* STATS */}
         <div className="grid grid-cols-4 gap-4 mb-4">
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-5 rounded-xl border shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Package className="w-8 h-8 text-[#7A1CA9]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">
-                  {stats.total}
-                </p>
+                <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
                 <p className="text-xs text-gray-500">Total Listings</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-5 rounded-xl border shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 rounded-lg">
-                <TrendingUp className="w-8 h-8  text-green-600" />
+                <TrendingUp className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">
-                  {stats.active}
-                </p>
+                <p className="text-2xl font-bold text-gray-800">{stats.active}</p>
                 <p className="text-xs text-gray-500">Active Items</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-5 rounded-xl border shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Clock className="w-8 h-8 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">
-                  {stats.rented}
-                </p>
+                <p className="text-2xl font-bold text-gray-800">{stats.rented}</p>
                 <p className="text-xs text-gray-500">Currently Rented</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-5 rounded-xl border shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <TrendingUp className="w-8 h-8 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">
-                  ₱{stats.totalRevenue.toLocaleString()}
-                </p>
+                <p className="text-2xl font-bold text-gray-800">₱{stats.totalRevenue.toLocaleString()}</p>
                 <p className="text-xs text-gray-500">Total Revenue</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Search + Sort + Filters */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-4">
+        {/* SEARCH & SORT */}
+        <div className="bg-white rounded-xl border shadow-sm p-4 mb-4">
           <div className="flex gap-3 mb-3">
             <div className="flex items-center border bg-white rounded-lg px-3 py-2 flex-1">
               <Search size={16} className="text-gray-400" />
@@ -454,7 +463,7 @@ export default function MyListings() {
             </select>
           </div>
 
-          {/* Filter Pills */}
+          {/* FILTERS */}
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-gray-400" />
             <span className="text-xs text-gray-500">Filters:</span>
@@ -497,12 +506,12 @@ export default function MyListings() {
           </div>
         </div>
 
-        {/* Results Count */}
+        {/* COUNT */}
         <p className="text-sm text-gray-500 mb-2">
           Showing {filteredListings.length} of {listings.length} listings
         </p>
 
-        {/* Table */}
+        {/* TABLE */}
         <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-gray-50 border-b">
@@ -529,20 +538,13 @@ export default function MyListings() {
               ) : (
                 filteredListings.map((item) => (
                   <React.Fragment key={item.id}>
-                    {/* MAIN ROW */}
                     <tr
                       className="border-b hover:bg-gray-50 cursor-pointer"
-                      onClick={() =>
-                        setExpanded(expanded === item.id ? null : item.id)
-                      }
+                      onClick={() => setExpanded(expanded === item.id ? null : item.id)}
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-14 h-14 object-cover rounded-lg border"
-                          />
+                          <img src={item.image} className="w-14 h-14 object-cover rounded-lg border" />
                           <div>
                             <p className="font-semibold">{item.name}</p>
                             <p className="text-xs text-gray-500 flex items-center gap-1">
@@ -574,21 +576,23 @@ export default function MyListings() {
                       </td>
 
                       <td className="py-3 px-12">
-                        {badge(
-                          item.availability,
-                          availabilityBadge[item.availability]
-                        )}
+                        {(() => {
+                          const badgeStyle = availabilityBadge[item.availability];
+                          const Icon = badgeStyle.icon;
+                          return (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${badgeStyle.bg} ${badgeStyle.text}`}
+                            >
+                              <Icon className="w-3 h-3" />
+                              {item.availability}
+                            </span>
+                          );
+                        })()}
                       </td>
 
-                      <td className="py-3 px-12">
-                        {statusIndicator(item.status)}
-                      </td>
+                      <td className="py-3 px-12">{statusIndicator(item.status)}</td>
 
-                      {/* ACTIONS MENU */}
-                      <td
-                        className="py-3 px-12 text-right relative"
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <td className="py-3 px-12 text-right relative" onClick={(e) => e.stopPropagation()}>
                         <ItemActionsMenu
                           item={item}
                           menuOpen={menuOpen}
@@ -603,112 +607,75 @@ export default function MyListings() {
                       </td>
                     </tr>
 
-                    {/* EXPANDED DETAILS */}
                     {expanded === item.id && (
                       <tr className="bg-gray-50">
                         <td colSpan="6" className="p-6">
+                          {/* DETAILS */}
                           <div className="grid grid-cols-3 gap-4 text-sm">
-                            {/* Product Info */}
+
+                            {/* Column 1 */}
                             <div className="bg-white p-4 rounded-xl">
                               <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                 <Package size={16} className="text-[#7A1CA9]" />
                                 Product Details
                               </h4>
-                              <div className="space-y-2 text-sm">
-                                <div>
-                                  <p className="text-gray-500">Product ID</p>
-                                  <p className="font-mono text-gray-800">
-                                    {item.productId}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-500">Description</p>
-                                  <p className="text-gray-800">
-                                    {item.description}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-500">Condition</p>
-                                  <p className="text-gray-800">
-                                    {item.condition}
-                                  </p>
-                                </div>
-                              </div>
+                              <p className="text-gray-500">Product ID</p>
+                              <p className="font-mono">{item.productId}</p>
+
+                              <p className="text-gray-500 mt-2">Description</p>
+                              <p>{item.description}</p>
+
+                              <p className="text-gray-500 mt-2">Condition</p>
+                              <p>{item.condition}</p>
                             </div>
 
-                            {/* Location & Pricing */}
+                            {/* Column 2 */}
                             <div className="bg-white p-4 rounded-xl">
                               <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                 <MapPin size={16} className="text-[#7A1CA9]" />
                                 Location & Pricing
                               </h4>
-                              <div className="space-y-2 text-sm">
-                                <div>
-                                  <p className="text-gray-500">Location</p>
-                                  <p className="flex items-center gap-1 text-gray-800">
-                                    {item.location}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-500">
-                                    Security Deposit
-                                  </p>
-                                  <p className="text-gray-800 font-semibold">
-                                    ₱{item.securityDeposit}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-500">Options</p>
-                                  <div className="flex gap-2 mt-1 flex-wrap">
-                                    {item.itemOptions.map((opt, i) => (
-                                      <span
-                                        key={i}
-                                        className="px-2 py-1 bg-gray-100 rounded-full text-xs"
-                                      >
-                                        {opt}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
+
+                              <p className="text-gray-500">Location</p>
+                              <p>{item.location}</p>
+
+                              <p className="text-gray-500 mt-2">Security Deposit</p>
+                              <p className="font-semibold">₱{item.securityDeposit}</p>
+
+                              <p className="text-gray-500 mt-2">Options</p>
+                              <div className="flex gap-2 flex-wrap mt-1">
+                                {item.itemOptions.map((opt, i) => (
+                                  <span key={i} className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                    {opt}
+                                  </span>
+                                ))}
                               </div>
                             </div>
 
-                            {/* Rental Status */}
+                            {/* Column 3 */}
                             <div className="bg-white p-4 rounded-xl">
                               <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                <CalendarDays
-                                  size={16}
-                                  className="text-[#7A1CA9]"
-                                />
+                                <CalendarDays size={16} className="text-[#7A1CA9]" />
                                 Rental Status
                               </h4>
+
                               {item.rented ? (
-                                <div className="space-y-2 text-sm">
-                                  <div>
-                                    <p className="text-gray-500">Rented By</p>
-                                    <p className="text-gray-800 font-medium">
-                                      {item.renter}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-500">Duration</p>
-                                    <p className="text-gray-800">
-                                      {item.dates}
-                                    </p>
-                                  </div>
-                                </div>
+                                <>
+                                  <p className="text-gray-500">Rented By</p>
+                                  <p className="font-medium">{item.renter}</p>
+
+                                  <p className="text-gray-500 mt-2">Duration</p>
+                                  <p>{item.dates}</p>
+                                </>
                               ) : item.neverRented ? (
-                                <p className="text-gray-600 text-sm">
-                                  Never rented before
-                                </p>
+                                <p className="text-gray-600">Never rented before</p>
                               ) : (
-                                <p className="text-gray-600 text-sm">
-                                  Available for rent
-                                </p>
+                                <p className="text-gray-600">Available for rent</p>
                               )}
                             </div>
                           </div>
 
+                          {/* HIDE DETAILS */}
                           <button
                             className="text-sm text-purple-600 mt-4 flex items-center gap-1 hover:text-purple-700"
                             onClick={() => setExpanded(null)}
@@ -727,12 +694,8 @@ export default function MyListings() {
         </div>
       </div>
 
-      {/* MODALS + PANEL */}
-      <EditItemModal
-        open={!!editModal}
-        onClose={() => setEditModal(null)}
-        item={editModal}
-      />
+      {/* MODALS */}
+      <EditItemModal open={!!editModal} onClose={() => setEditModal(null)} item={editModal} />
 
       <DeleteConfirmModal
         open={!!deleteModal}
@@ -741,17 +704,9 @@ export default function MyListings() {
         item={deleteModal}
       />
 
-      <ItemPageModal
-        open={!!viewPageModal}
-        onClose={() => setViewPageModal(null)}
-        item={viewPageModal}
-      />
+      <ItemPageModal open={!!viewPageModal} onClose={() => setViewPageModal(null)} item={viewPageModal} />
 
-      <RentalHistoryPanel
-        open={!!historyPanel}
-        onClose={() => setHistoryPanel(null)}
-        item={historyPanel}
-      />
+      <RentalHistoryPanel open={!!historyPanel} onClose={() => setHistoryPanel(null)} item={historyPanel} />
     </div>
   );
 }

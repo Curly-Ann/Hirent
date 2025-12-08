@@ -1,38 +1,75 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const Item = require('../models/Items');
 
-exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+// GET ALL ITEMS
+const getAllItems = async (req, res) => {
   try {
-    let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: 'User already exists' });
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    user = new User({ name, email, password: hashedPassword });
-    await user.save();
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (err) {
-    res.status(500).send('Server error');
+    const items = await Item.find().limit(50);
+    res.status(200).json({ success: true, count: items.length, items });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+// CREATE NEW ITEM (OWNER)
+const createItem = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+    const itemData = {
+      ...req.body,
+      ownerId: req.user.id      // Important!
+    };
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+    const newItem = new Item(itemData);
+    await newItem.save();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (err) {
-    res.status(500).send('Server error');
+    res.status(201).json({ success: true, item: newItem });
+  } catch (error) {
+    res.status(400).json({ success: false, message: "Failed to create item" });
   }
+};
+
+// GET ITEMS BY OWNER
+const getItemsByOwner = async (req, res) => {
+  try {
+    const ownerId = Number(req.params.ownerId);
+
+    const items = await Item.find({ ownerId });
+
+    res.status(200).json({ success: true, items });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to fetch owner items" });
+  }
+};
+
+// UPDATE ITEM
+const updateItem = async (req, res) => {
+  try {
+    const updated = await Item.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, item: updated });
+  } catch (error) {
+    res.status(400).json({ success: false, message: "Failed to update item" });
+  }
+};
+
+// DELETE ITEM
+const deleteItem = async (req, res) => {
+  try {
+    await Item.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Item deleted" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: "Failed to delete item" });
+  }
+};
+
+module.exports = {
+  getAllItems,
+  createItem,
+  searchItems,
+  getItemsByOwner,
+  updateItem,
+  deleteItem
 };

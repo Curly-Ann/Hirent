@@ -1,0 +1,67 @@
+[1mdiff --git a/frontend/src/index.css b/frontend/src/index.css[m
+[1mindex adce71a..18a5408 100644[m
+[1m--- a/frontend/src/index.css[m
+[1m+++ b/frontend/src/index.css[m
+[36m@@ -1,61 +1,31 @@[m
+[31m-<<<<<<< HEAD[m
+[31m-=======[m
+[31m-<<<<<<< HEAD[m
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');[m
+ [m
+[31m-=======[m
+[31m->>>>>>> origin[m
+[31m->>>>>>> fb5b9551f50f26dd278c1ec027b4cfebe2206411[m
+ @tailwind base;[m
+ @tailwind components;[m
+ @tailwind utilities;[m
+ [m
+[31m-<<<<<<< HEAD[m
+[31m-body {[m
+[31m-  margin: 0;[m
+[31m-=======[m
+[31m-<<<<<<< HEAD[m
+ * {[m
+   margin: 0;[m
+   padding: 0;[m
+   box-sizing: border-box;[m
+ }[m
+ [m
+[31m-body {[m
+[31m-=======[m
+[31m-[m
+ body {[m
+   margin: 0;[m
+[31m->>>>>>> origin[m
+[31m->>>>>>> fb5b9551f50f26dd278c1ec027b4cfebe2206411[m
+   font-family: 'Inter', sans-serif;[m
+   -webkit-font-smoothing: antialiased;[m
+   -moz-osx-font-smoothing: grayscale;[m
+[31m-}[m
+[31m-/* Hide horizontal scrollbar globally */[m
+[31m-body {[m
+   overflow-x: hidden;[m
+[31m-  margin: 0;[m
+[31m-  padding: 0;[m
+ }[m
+ [m
+[31m-<<<<<<< HEAD[m
+[31m-=======[m
+[31m-<<<<<<< HEAD[m
+ html {[m
+   overflow-x: hidden;[m
+ }[m
+ [m
+[31m-=======[m
+[31m->>>>>>> fb5b9551f50f26dd278c1ec027b4cfebe2206411[m
+ a {[m
+   text-decoration: none !important;[m
+ }[m
+[32m+[m
+ a:hover {[m
+   text-decoration: none !important;[m
+[31m-<<<<<<< HEAD[m
+[31m-}[m
+[31m-=======[m
+ }[m
+[31m->>>>>>> origin[m
+[31m->>>>>>> fb5b9551f50f26dd278c1ec027b4cfebe2206411[m

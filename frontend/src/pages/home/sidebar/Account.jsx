@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
-import { User, MapPin, CreditCard, Settings, LogOut } from "lucide-react";
+import React, { useState, useContext, useEffect } from "react";
+import { User, MapPin, CreditCard, Settings, LogOut, UserCircle } from "lucide-react";
 import { AuthContext } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import PersonalInformation from "../../../components/profilepage/Personal";
 import { AddressesComponent } from "../../../components/profilepage/Addresses";
@@ -10,15 +11,25 @@ import SettingsComponent from "../../../components/profilepage/Settings";
 import profPic from "../../../assets/profile/prof_pic.jpg";
 
 export default function RenterProfilePage() {
-  const { logout } = useContext(AuthContext);
+  const { logout, user, isLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!isLoggedIn || !user) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, user, navigate]);
 
   const handleSignOut = () => {
     if (window.confirm("Are you sure you want to sign out?")) {
       logout(); 
-      window.location.href = "/login"; 
+      navigate("/login");
     }
   };
   const [activeItem, setActiveItem] = useState("personal");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   const navItems = [
     { id: "personal", label: "Personal Information", icon: <User size={20} /> },
@@ -28,22 +39,40 @@ export default function RenterProfilePage() {
     { id: "signout", label: "Sign Out", icon: <LogOut size={20} /> },
   ];
 
+  // Initialize form with real user data from AuthContext
   const [form, setForm] = useState({
-    firstName: "Genlord",
-    lastName: "Loubot",
-    email: "genlord@gmail.com",
-    phone: "+63 912 345 6789",
-    birthday: "",
-    address: "Naga City, Camarines Sur",
-    gender: "female",
+    firstName: user?.name?.split(" ")[0] || "User",
+    lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    birthday: user?.birthday || "",
+    address: user?.address || "",
+    gender: user?.gender || "",
+    bio: user?.bio || "",
   });
+
+  // Update form when user data changes
+  useEffect(() => {
+    if (user) {
+      setForm({
+        firstName: user?.name?.split(" ")[0] || "User",
+        lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+        email: user?.email || "",
+        phone: user?.phone || "",
+        birthday: user?.birthday || "",
+        address: user?.address || "",
+        gender: user?.gender || "",
+        bio: user?.bio || "",
+      });
+    }
+  }, [user]);
 
   const [paymentMethods, setPaymentMethods] = useState([
     {
       id: 1,
       type: "Card",
       cardNumber: "1234567890123456",
-      cardName: "Genlord Loubot",
+      cardName: user?.name || "User",
     },
     {
       id: 2,
@@ -76,9 +105,40 @@ Metro Manila, 1600`,
     },
   ]);
 
-  function handleSave(e) {
-    e.preventDefault();
-    alert("Saved (Demo)");
+  // Save profile changes
+  async function handleSave(updatedForm) {
+    setIsSaving(true);
+    setSaveMessage("");
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify({
+          name: `${updatedForm.firstName} ${updatedForm.lastName}`,
+          phone: updatedForm.phone,
+          address: updatedForm.address,
+          gender: updatedForm.gender,
+          birthday: updatedForm.birthday,
+          bio: updatedForm.bio,
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSaveMessage("Profile updated successfully!");
+        setForm(updatedForm);
+        setTimeout(() => setSaveMessage(""), 3000);
+      } else {
+        setSaveMessage("Error updating profile: " + data.message);
+      }
+    } catch (err) {
+      console.error("Save error:", err);
+      setSaveMessage("Error saving profile. Please try again.");
+    }
+    setIsSaving(false);
   }
 
   return (
@@ -99,17 +159,28 @@ Metro Manila, 1600`,
           <aside className="hidden lg:block">
             <div className="bg-white collection-scale rounded-2xl shadow-sm overflow-hidden">
               <div className="p-6 text-center border-b">
-                <img
-                  src={profPic}
-                  alt="avatar"
-                  className="w-40 h-40 rounded-full mx-auto mb-5"
-                />
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="avatar"
+                    className="w-40 h-40 rounded-full mx-auto mb-5 object-cover"
+                  />
+                ) : (
+                  <div className="w-40 h-40 rounded-full mx-auto mb-5 bg-purple-100 flex items-center justify-center">
+                    <UserCircle size={80} className="text-purple-600" />
+                  </div>
+                )}
                 <h3 className="text-[20px] font-semibold">
-                  {form.firstName} {form.lastName}
+                  {user?.name || "User"}
                 </h3>
                 <div className="text-[15px] text-gray-500 mt-0.5">
-                  genlord@gmail.com
+                  {user?.email || "user@email.com"}
                 </div>
+                {user?.role && (
+                  <div className="text-[12px] text-gray-400 mt-1 uppercase font-medium">
+                    {user.role}
+                  </div>
+                )}
               </div>
 
               <nav className="p-4">

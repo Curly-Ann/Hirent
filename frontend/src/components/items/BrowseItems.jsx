@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, Eye, ShoppingBag, Check, MapPin } from "lucide-react";
+import { AuthContext } from "../../context/AuthContext";
 
 const BrowseItems = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem("wishlist");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [collection, setCollection] = useState(() => {
+    const saved = localStorage.getItem("collection");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [justAdded, setJustAdded] = useState([]);
 
   const items = [
     { id: 1, name: "Gucci duffle bag", price: "₱350/day", originalPrice: "₱1160", rating: 4, reviews: 50, image: "/assets/items/gucci_duffle_bag.png", badge: "-35%", badgeColor: "#7A1CA9", location: "Cebu" },
-    { id: 2, name: "RGB liquid CPU Cooler", price: "₱650/day", rating: 4, reviews: 23, image: "/assets/items/RGB_liquid_CPU.png", badge: null, location: "Davao" },
-    { id: 3, name: "MacBook Pro", price: "₱450/day", rating: 4.8, reviews: (49), image: "/assets/items/macbook.png", badge: "-10%", badgeColor: "#7A1CA9", location: "Quezon City" },
+    { id: 3, name: "MacBook Pro", price: "₱450/day", rating: 4.8, reviews: 49, image: "/assets/items/macbook.png", badge: "-10%", badgeColor: "#7A1CA9", location: "Quezon City" },
     { id: 4, name: "Nikon DSLR", price: "₱550/day", rating: 4.5, reviews: 5, image: "/assets/items/camera.png", badge: null, location: "Naga City, Camarines Sur" },
     { id: 5, name: "Electric Bike", price: "₱700/day", rating: 3.5, reviews: 3, image: "/assets/items/bike.png", badge: null, location: "Davao City, Davao del Sur" },
     { id: 6, name: "Drill Set", price: "₱120/day", rating: 4.0, reviews: 3, image: "/assets/items/drill.png", badge: null, location: "Baguio City, Benguet" },
@@ -32,10 +40,26 @@ const BrowseItems = () => {
   }, [maxIndex]);
 
   const toggleWishlist = (id) => {
-    setWishlist((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+    setWishlist((prevWishlist) => {
+      const updated = prevWishlist.includes(id)
+        ? prevWishlist.filter((i) => i !== id)
+        : [...prevWishlist, id];
+      localStorage.setItem("wishlist", JSON.stringify(updated));
+      // Trigger storage event for navbar update
+      window.dispatchEvent(new Event("wishlistUpdated"));
+      return updated;
+    });
   };
 
-  const handleAddTocollection = (item) => {
+  const handleAddToCollection = (item) => {
+    if (!collection.includes(item.id)) {
+      const updated = [...collection, item.id];
+      setCollection(updated);
+      localStorage.setItem("collection", JSON.stringify(updated));
+      // Trigger storage event for navbar update
+      window.dispatchEvent(new Event("collectionUpdated"));
+    }
+    
     if (!justAdded.includes(item.id)) {
       setJustAdded((prev) => [...prev, item.id]);
       setTimeout(() => setJustAdded((prev) => prev.filter((id) => id !== item.id)), 2000);
@@ -78,14 +102,21 @@ const BrowseItems = () => {
                     )}
 
                     <div className="absolute top-3 right-3 flex gap-1 z-50">
-                      <button onClick={() => toggleWishlist(item.id)} className="bg-white  text-purple-900   rounded-full shadow p-1 hover:bg-gray-200 transition">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          toggleWishlist(item.id);
+                        }} 
+                        className="bg-white text-purple-900 rounded-full shadow p-1 hover:bg-gray-200 transition"
+                      >
                         <Heart
                           size={18}
                           strokeWidth={1.5}
                           className={`${wishlist.includes(item.id) ? "fill-[#ec0b0b] stroke-[#ec0b0b]" : "stroke-[#af50df]"}`}
                         />
                       </button>
-                      <button className="bg-white  text-purple-900   rounded-full shadow p-1 hover:bg-gray-200 transition">
+                      <button className="bg-white text-purple-900 rounded-full shadow p-1 hover:bg-gray-200 transition">
                         <Eye className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
                       </button>
                     </div>
@@ -106,7 +137,7 @@ const BrowseItems = () => {
                         Book Item
                       </button>
                       <button
-                        onClick={() => handleAddTocollection(item)}
+                        onClick={() => handleAddToCollection(item)}
                         className={`flex-[1] border border-[#7A1CA9]  rounded-br-2xl font-medium py-2.5 flex justify-center items-center gap-1 transition-all duration-300 text-[12.5px] ${justAdded.includes(item.id)
                             ? "bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
                             : "text-[#7A1CA9] hover:bg-purple-100"
@@ -147,14 +178,23 @@ const BrowseItems = () => {
           </div>
         </div>
 
-        {/* Login button */}
-        <div className=" flex justify-center">
-          <button
-            onClick={() => navigate("/login")}
-            className="px-4 py-2 border-2 rounded-lg font-inter font-semibold text-sm inline-flex items-center gap-2 text-[#7A1CA9] border-[#7A1CA9]  hover:bg-purple-50 transition-colors "
-          >
-            Login to see more
-          </button>
+        {/* Login or See More button */}
+        <div className="flex justify-center">
+          {!isLoggedIn ? (
+            <button
+              onClick={() => navigate("/signup")}
+              className="px-6 py-2.5 border-2 rounded-lg font-inter font-semibold text-sm inline-flex items-center gap-2 text-[#7A1CA9] border-[#7A1CA9] hover:bg-purple-50 transition-colors"
+            >
+              Login to see more
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/browse")}
+              className="px-6 py-2.5 border-2 rounded-lg font-inter font-semibold text-sm inline-flex items-center gap-2 text-[#7A1CA9] border-[#7A1CA9] hover:bg-purple-50 transition-colors"
+            >
+              See more
+            </button>
+          )}
         </div>
       </div>
     </section>

@@ -3,16 +3,45 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Search, Heart, ShoppingBag, Bell, Menu } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
 import hirentLogo from "../../assets/hirent-logo.png";
-import { getFakeUser } from "../../utils/fakeAuth";
 
 const Navbar = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState("");
   const location = useLocation();
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout, user } = useContext(AuthContext);
+  const [collectionCount, setCollectionCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  useEffect(() => {
+    // Load initial counts from localStorage
+    const savedCollection = localStorage.getItem("collection");
+    const savedWishlist = localStorage.getItem("wishlist");
+    
+    if (savedCollection) {
+      setCollectionCount(JSON.parse(savedCollection).length);
+    }
+    if (savedWishlist) {
+      setWishlistCount(JSON.parse(savedWishlist).length);
+    }
 
-  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+    // Listen for updates
+    const handleCollectionUpdate = () => {
+      const saved = localStorage.getItem("collection");
+      setCollectionCount(saved ? JSON.parse(saved).length : 0);
+    };
+
+    const handleWishlistUpdate = () => {
+      const saved = localStorage.getItem("wishlist");
+      setWishlistCount(saved ? JSON.parse(saved).length : 0);
+    };
+
+    window.addEventListener("collectionUpdated", handleCollectionUpdate);
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+
+    return () => {
+      window.removeEventListener("collectionUpdated", handleCollectionUpdate);
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
+    };
+  }, []);
 
   const handleSearch = () => {
     if (onSearch) onSearch(inputValue.trim());
@@ -22,13 +51,8 @@ const Navbar = ({ onSearch }) => {
     if (e.key === "Enter") handleSearch();
   };
 
-  const [collectionCount, setCollectionCount] = useState(0);
-
-  useEffect(() => {
-    const user = getFakeUser();
-    if (user && user.collection) setCollectionCount(user.collection.length);
-    else setCollectionCount(0);
-  }, []);
+  // Get user name from context
+  const userName = user?.name || "User";
 
   return (
     <>
@@ -48,7 +72,7 @@ const Navbar = ({ onSearch }) => {
             {/* Menu Icon: show on mobile only */}
             <Menu
               className="w-5 h-5 text-white cursor-pointer hover:opacity-80 transition lg:hidden"
-              onClick={toggleSidebar}
+              onClick={() => {}}
             />
             <img src={hirentLogo} alt="HiRENT" className="h-6" />
           </div>
@@ -107,7 +131,19 @@ const Navbar = ({ onSearch }) => {
                 {/* Icons */}
                 <div className="flex h-full">
                   {[
-                    { icon: <Heart className="w-5 h-5" />, path: "/wishlist" },
+                    { 
+                      icon: (
+                        <div className="relative">
+                          <Heart className="w-5 h-5" />
+                          {wishlistCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                              {wishlistCount}
+                            </span>
+                          )}
+                        </div>
+                      ), 
+                      path: "/wishlist" 
+                    },
                     {
                       icon: (
                         <div className="relative">
@@ -164,15 +200,14 @@ const Navbar = ({ onSearch }) => {
 
           {/* Greeting + Logout */}
           <div className="flex items-center text-white text-[13px] space-x-2">
-            <span>Hi, {getFakeUser()?.name || "User"}!</span>
+            <span>Hi, {userName}!</span>
             <span className="text-white">|</span>
-            <NavLink
-              to="/login"
+            <button
               onClick={logout}
               className="text-white hover:underline hover:opacity-90 transition"
             >
               Logout
-            </NavLink>
+            </button>
           </div>
         </div>
       </nav>

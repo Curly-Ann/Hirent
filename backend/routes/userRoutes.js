@@ -1,11 +1,8 @@
-import express from 'express';
-import { getAllUsers, createUser } from '../controllers/userController.js';
-import userController from '../controllers/userController.js';
-import { validateUser } from '../validators/userValidator.js';   
-
+const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
 
-router.get('/users', userController.getAllUsers);
-router.post('/users', validateUser, userController.createUser);
+router.get("/", userController.getAllUsers);
+router.post("/", userController.createUser);
 
-export default router;
+module.exports = router;

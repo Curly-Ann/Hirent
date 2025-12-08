@@ -1,67 +1,80 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MoveRight } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
-const HeroSection = () => {
-  const navigate = useNavigate(); // hook to programmatically navigate
+const HeroSection = ({ user }) => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
     <section
-      className="relative px-8 md:px-16 lg:px-24 py-28 md:py-28"
+      className="relative px-8 md:px-16 lg:px-24 py-28"
       style={{
         backgroundImage: 'url("/assets/bg/landingBg.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      {/* Gradient overlay */}
-      <div className="absolute inset-0" />
-
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row items-center md:items-start">
-          {/* Left: Text content */}
-          <div className="max-w-3xl md:flex-1">
-            <h1 className="text-[36px] font-inter font-bold text-black mt-12 mb-3 leading-tight">
+        <div className="flex flex-col md:flex-row items-center">
+          
+          <div className="max-w-3xl">
+
+            <h1 className="text-[36px] font-bold text-black mt-12 mb-3 leading-tight">
               Rent What You Need.<br />
               Earn From What You Don't.
             </h1>
-            <p className="text-[16px] font-inter text-black mb-5 leading-relaxed">
-              Save money, reduce waste, and join the sharing economy with HiRENT.<br />
-              Discover thousands of items available for rent near you.
+
+            <p className="text-[16px] text-black mb-5 leading-relaxed">
+              Save money, reduce waste, and join the sharing economy with HiRENT.
+              {user?.city && (
+                <span className="block mt-1 text-[#7A1CA9] font-semibold">
+                  Showing results near: {user.city}
+                </span>
+              )}
             </p>
 
             <div className="flex flex-wrap gap-3 mb-12">
-              <button
-                className="px-3 py-1.5 text-white rounded-md font-inter font-medium hover:opacity-90 transition shadow-md flex items-center gap-2 text-[13px]"
-                style={{ backgroundColor: '#7A1CA9' }}
-                onClick={() => navigate('/browse')} // Navigate to Browse Rentals
-              >
-                Explore Rentals <MoveRight size={12} />
-              </button>
-
-              <button
-                className="px-3 py-1.5 bg-white  text-purple-900   rounded-md font-inter font-medium hover:bg-black hover:bg-opacity-5 transition text-[13px]"
-                style={{ border: '1px solid #000000', color: '#000000' }}
-                onClick={() => navigate('/how-it-works')} // Navigate to How It Works
-              >
-                Learn More
-              </button>
+              {isLoggedIn ? (
+                <>
+                  <button
+                    className="px-3 py-1.5 text-white rounded-md font-medium flex items-center gap-2 text-[13px]"
+                    style={{ backgroundColor: '#7A1CA9' }}
+                    onClick={() => navigate('/browse')}
+                  >
+                    Explore Rentals <MoveRight size={12} />
+                  </button>
+                  <button
+                    className="px-3 py-1.5 bg-white text-black border border-black rounded-md font-medium text-[13px]"
+                    onClick={() => navigate('/owner/dashboard')}
+                  >
+                    My Dashboard
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="px-3 py-1.5 text-white rounded-md font-medium flex items-center gap-2 text-[13px]"
+                    style={{ backgroundColor: '#7A1CA9' }}
+                    onClick={() => navigate('/signup')}
+                  >
+                    Get Started <MoveRight size={12} />
+                  </button>
+                  <button
+                    className="px-3 py-1.5 bg-white text-black border border-black rounded-md font-medium text-[13px]"
+                    onClick={() => navigate('/login')}
+                  >
+                    Login
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Stats Section */}
             <div className="flex flex-wrap gap-8 md:gap-12">
-              <div>
-                <h3 className="text-[30px] font-inter font-bold" style={{ color: '#7A1CA9' }}>10,000+</h3>
-                <p className="text-xs md:text-sm font-inter font-medium" style={{ color: '#1F2937' }}>Items Listed</p>
-              </div>
-              <div>
-                <h3 className="text-[30px] font-inter font-bold" style={{ color: '#7A1CA9' }}>5,000+</h3>
-                <p className="text-xs md:text-sm font-inter font-medium" style={{ color: '#1F2937' }}>Active Users</p>
-              </div>
-              <div>
-                <h3 className="text-[30px] font-inter font-bold" style={{ color: '#7A1CA9' }}>99%</h3>
-                <p className="text-xs md:text-sm font-inter font-medium" style={{ color: '#1F2937' }}>Satisfaction</p>
-              </div>
+              <HeroStat number="10,000+" label="Items Listed" />
+              <HeroStat number="5,000+" label="Active Users" />
+              <HeroStat number="99%" label="Satisfaction" />
             </div>
 
           </div>
@@ -70,5 +83,12 @@ const HeroSection = () => {
     </section>
   );
 };
+
+const HeroStat = ({ number, label }) => (
+  <div>
+    <h3 className="text-[30px] font-bold" style={{ color: '#7A1CA9' }}>{number}</h3>
+    <p className="text-xs md:text-sm font-medium text-gray-700">{label}</p>
+  </div>
+);
 
 export default HeroSection;
