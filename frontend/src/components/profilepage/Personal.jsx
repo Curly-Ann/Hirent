@@ -19,6 +19,10 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
   function handleGender(g) {
     setForm((s) => ({ ...s, gender: g }));
   }
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    handleSave(form);
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] mr-16 ml-4 gap-8">
       {/* LEFT: Form container */}
@@ -36,7 +40,7 @@ export default function PersonalInformation({ form, setForm, handleSave }) {
             </p>
           </div>
         </div>
-        <form className="mt-6 space-y-4" onSubmit={handleSave}>
+        <form className="mt-6 space-y-4" onSubmit={handleFormSubmit}>
           {/* First & Last Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">

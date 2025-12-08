@@ -105,11 +105,16 @@ const AuthForm = ({ mode }) => {
 
       if (data.token) {
         // Store token and user data
-        login(data.token, data.user || { email: formData.email });
+        const user = data.user || { email: formData.email };
+        login(data.token, user);
         
-        // Redirect to home page after successful authentication
+        // Redirect based on user role
         setTimeout(() => {
-          navigate("/", { replace: true });
+          if (user.role === 'owner') {
+            navigate('/owner/dashboard', { replace: true });
+          } else {
+            navigate('/', { replace: true });
+          }
         }, 300);
       } else {
         setError("No token received from server");
@@ -122,8 +127,8 @@ const AuthForm = ({ mode }) => {
 
   // GOOGLE LOGIN HANDLER
   const handleGoogleAuth = () => {
-    // Redirect to backend Google OAuth endpoint
-    window.location.href = `http://localhost:5000/api${ENDPOINTS.AUTH.GOOGLE}`;
+    // Redirect to backend Google OAuth endpoint (renters use the standard route)
+    window.location.href = 'http://localhost:5000/api/auth/google';
   };
 
   return (

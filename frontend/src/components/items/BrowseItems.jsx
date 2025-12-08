@@ -3,18 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { Heart, Eye, ShoppingBag, Check, MapPin } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
 
+// Helper function to fetch updated count from backend
+const fetchWishlistCount = async (token) => {
+  try {
+    const response = await fetch('http://localhost:5000/api/wishlist/count', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    return data.count || 0;
+  } catch (error) {
+    console.error('Error fetching wishlist count:', error);
+    return 0;
+  }
+};
+
+const fetchCollectionCount = async (token) => {
+  try {
+    const response = await fetch('http://localhost:5000/api/collection/count', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    return data.count || 0;
+  } catch (error) {
+    console.error('Error fetching collection count:', error);
+    return 0;
+  }
+};
+
 const BrowseItems = () => {
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, updateWishlistCount, updateCollectionCount } = useContext(AuthContext);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [wishlist, setWishlist] = useState(() => {
-    const saved = localStorage.getItem("wishlist");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [collection, setCollection] = useState(() => {
-    const saved = localStorage.getItem("collection");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [wishlist, setWishlist] = useState([]);
+  const [collection, setCollection] = useState([]);
   const [justAdded, setJustAdded] = useState([]);
 
   const items = [
@@ -39,25 +60,70 @@ const BrowseItems = () => {
     return () => clearInterval(interval);
   }, [maxIndex]);
 
-  const toggleWishlist = (id) => {
-    setWishlist((prevWishlist) => {
-      const updated = prevWishlist.includes(id)
-        ? prevWishlist.filter((i) => i !== id)
-        : [...prevWishlist, id];
-      localStorage.setItem("wishlist", JSON.stringify(updated));
-      // Trigger storage event for navbar update
-      window.dispatchEvent(new Event("wishlistUpdated"));
-      return updated;
-    });
+  const toggleWishlist = async (id) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const method = wishlist.includes(id) ? 'remove' : 'add';
+      const response = await fetch(`http://localhost:5000/api/wishlist/${method}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ itemId: id.toString() })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setWishlist((prevWishlist) => {
+          const updated = prevWishlist.includes(id)
+            ? prevWishlist.filter((i) => i !== id)
+            : [...prevWishlist, id];
+          return updated;
+        });
+        // Update the wishlist count in navbar with the count from response
+        updateWishlistCount(data.count);
+      }
+    } catch (error) {
+      console.error('Error toggling wishlist:', error);
+    }
   };
 
-  const handleAddToCollection = (item) => {
-    if (!collection.includes(item.id)) {
-      const updated = [...collection, item.id];
-      setCollection(updated);
-      localStorage.setItem("collection", JSON.stringify(updated));
-      // Trigger storage event for navbar update
-      window.dispatchEvent(new Event("collectionUpdated"));
+  const handleAddToCollection = async (item) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/collection/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ itemId: item.id.toString() })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCollection((prevCollection) => {
+          if (!prevCollection.includes(item.id)) {
+            return [...prevCollection, item.id];
+          }
+          return prevCollection;
+        });
+        // Update the collection count in navbar with the count from response
+        updateCollectionCount(data.count);
+      }
+    } catch (error) {
+      console.error('Error adding to collection:', error);
     }
     
     if (!justAdded.includes(item.id)) {
@@ -121,7 +187,7 @@ const BrowseItems = () => {
                       </button>
                     </div>
 
-                    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                    <div className="relative w-full h-full flex items-center justify-center overflow-hidden cursor-pointer" onClick={() => navigate(`/items/${item.id}`)}>
                       <img
                         src={item.image}
                         alt={item.name}

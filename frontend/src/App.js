@@ -38,6 +38,7 @@ import AboutPage from "./pages/home/navbar/AboutPage";
 import { HowItWorksSection } from "./pages/home/navbar/HowItWorks";
 import NotificationsPage from "./pages/notifications/NotificationsPage";
 import ProductDetails from "./pages/ProductDetails";
+import ItemDetails from "./pages/ItemDetails";
 
 // ===== SIDEBAR PAGES =====
 import MyRentals from "./pages/home/sidebar/MyRentals";
@@ -266,6 +267,7 @@ function App() {
               <Route path="/how-it-works" element={<HowItWorksSection />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/items/:id" element={<ItemDetails />} />
 
               {/* Sidebar Pages */}
               <Route path="/my-rentals" element={<MyRentals />} />

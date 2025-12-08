@@ -11,7 +11,7 @@ import SettingsComponent from "../../../components/profilepage/Settings";
 import profPic from "../../../assets/profile/prof_pic.jpg";
 
 export default function RenterProfilePage() {
-  const { logout, user, isLoggedIn } = useContext(AuthContext);
+  const { logout, user, isLoggedIn, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Redirect if not logged in
@@ -127,7 +127,21 @@ Metro Manila, 1600`,
       });
 
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.user) {
+        // Update AuthContext with new user data to keep user logged in and update navbar
+        updateUser({
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          phone: data.user.phone,
+          address: data.user.address,
+          gender: data.user.gender,
+          birthday: data.user.birthday,
+          bio: data.user.bio,
+          avatar: data.user.avatar,
+          role: data.user.role,
+          authProvider: data.user.authProvider
+        });
         setSaveMessage("Profile updated successfully!");
         setForm(updatedForm);
         setTimeout(() => setSaveMessage(""), 3000);

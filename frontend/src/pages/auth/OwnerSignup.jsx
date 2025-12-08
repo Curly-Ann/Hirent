@@ -86,11 +86,12 @@ const OwnerSignup = () => {
 
       if (data.token) {
         // Store token and user data
-        login(data.token, data.user || { email: formData.email, role: "owner" });
+        const user = data.user || { email: formData.email, role: "owner" };
+        login(data.token, user);
         
-        // Redirect to owner setup
+        // Redirect to owner dashboard
         setTimeout(() => {
-          navigate("/ownersetup", { replace: true });
+          navigate('/owner/dashboard', { replace: true });
         }, 300);
       } else {
         setError("No token received from server");
@@ -215,6 +216,9 @@ const OwnerSignup = () => {
 
                 <button
                   type="button"
+                  onClick={() => {
+                    window.location.href = 'http://localhost:5000/api/auth/google/owner';
+                  }}
                   className="w-full border border-gray-400 flex items-center justify-center gap-2 py-3 text-[14px] rounded-md text-gray-700 hover:text-[#9935cb] hover:border-[#9935cb] transition-all"
                 >
                   <img
