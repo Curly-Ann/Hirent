@@ -15,7 +15,36 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['email', 'google'],
     default: 'email'
-  }
+  },
+  // Owner Setup Fields
+  ownerSetupCompleted: { type: Boolean, default: false },
+  sellerType: { type: String, enum: ['individual', 'business'], default: 'individual' },
+  phone: { type: String },
+  ownerAddress: { type: String },
+  pickupAddress: { type: String },
+  region: { type: String },
+  regionName: { type: String },
+  province: { type: String },
+  provinceName: { type: String },
+  city: { type: String },
+  cityName: { type: String },
+  barangay: { type: String },
+  postalCode: { type: String },
+  // Additional profile fields
+  address: { type: String },
+  gender: { type: String },
+  birthday: { type: String },
+  bio: { type: String },
+  // Business/Owner profile fields
+  businessName: { type: String },
+  businessType: { type: String },
+  taxId: { type: String },
+  bankName: { type: String },
+  accountNumber: { type: String },
+  accountName: { type: String },
+  ewalletProvider: { type: String },
+  ewalletNumber: { type: String },
+  ewalletName: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

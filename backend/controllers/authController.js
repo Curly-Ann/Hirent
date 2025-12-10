@@ -134,7 +134,7 @@ const loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Return success with token and user data
+    // Return success with token and all user data
     console.log("[LOGIN] Sending success response...");
     return res.status(200).json({
       success: true,
@@ -143,8 +143,39 @@ const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
         role: user.role,
         authProvider: user.authProvider,
+        // Personal info
+        phone: user.phone,
+        address: user.address,
+        gender: user.gender,
+        birthday: user.birthday,
+        bio: user.bio,
+        // Owner setup fields
+        ownerSetupCompleted: user.ownerSetupCompleted,
+        sellerType: user.sellerType,
+        ownerAddress: user.ownerAddress,
+        pickupAddress: user.pickupAddress,
+        region: user.region,
+        regionName: user.regionName,
+        province: user.province,
+        provinceName: user.provinceName,
+        city: user.city,
+        cityName: user.cityName,
+        barangay: user.barangay,
+        postalCode: user.postalCode,
+        // Business fields
+        businessName: user.businessName,
+        businessType: user.businessType,
+        taxId: user.taxId,
+        // Payment fields
+        bankName: user.bankName,
+        accountNumber: user.accountNumber,
+        accountName: user.accountName,
+        ewalletProvider: user.ewalletProvider,
+        ewalletNumber: user.ewalletNumber,
+        ewalletName: user.ewalletName,
       },
       message: "Login successful",
     });
@@ -162,25 +193,55 @@ const loginUser = async (req, res) => {
 const googleAuth = async (req, res) => {
   try {
     const { googleId, email, name, avatar } = req.user;
+    const { state } = req.query; // state=owner for owner signup flow
+
+    // Normalize email
+    const normalizedEmail = email?.toLowerCase().trim();
+
+    console.log("[GOOGLE AUTH] Processing:", { email: normalizedEmail, state });
 
     // Check if user exists
-    let user = await User.findOne({ $or: [{ googleId }, { email }] });
+    let user = await User.findOne({ $or: [{ googleId }, { email: normalizedEmail }] });
+    let isNewUser = false;
 
     if (!user) {
-      // Create new user if doesn't exist
+      // NEW USER - Determine role based on state parameter
+      const role = state === "owner" ? "owner" : "renter";
+      console.log("[GOOGLE AUTH] Creating new user with role:", role);
+
       user = new User({
         googleId,
-        email,
+        email: normalizedEmail,
         name,
         avatar,
+        role,
         authProvider: "google",
       });
       await user.save();
-    } else if (!user.googleId) {
-      // Link Google account if user exists with email
-      user.googleId = googleId;
-      user.authProvider = "google";
-      if (avatar) user.avatar = avatar;
+      isNewUser = true;
+      console.log("[GOOGLE AUTH] New user created:", user._id, "role:", role);
+    } else {
+      // EXISTING USER
+      console.log("[GOOGLE AUTH] User exists:", user._id);
+
+      // Link Google account if not already linked
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.authProvider = "google";
+        console.log("[GOOGLE AUTH] Linked Google account to existing user");
+      }
+
+      // Update avatar if provided
+      if (avatar && !user.avatar) {
+        user.avatar = avatar;
+      }
+
+      // Add owner role if state=owner and user doesn't have it
+      if (state === "owner" && user.role !== "owner") {
+        user.role = "owner";
+        console.log("[GOOGLE AUTH] Upgraded user to owner role");
+      }
+
       await user.save();
     }
 
@@ -191,23 +252,59 @@ const googleAuth = async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    // Build response with all user fields
+    const userResponse = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      role: user.role,
+      authProvider: user.authProvider,
+      isNewUser, // Flag for new users
+      ownerSetupCompleted: user.ownerSetupCompleted, // Owner setup status
+      // Personal info
+      phone: user.phone,
+      address: user.address,
+      gender: user.gender,
+      birthday: user.birthday,
+      bio: user.bio,
+      // Owner setup fields
+      sellerType: user.sellerType,
+      ownerAddress: user.ownerAddress,
+      pickupAddress: user.pickupAddress,
+      region: user.region,
+      regionName: user.regionName,
+      province: user.province,
+      provinceName: user.provinceName,
+      city: user.city,
+      cityName: user.cityName,
+      barangay: user.barangay,
+      postalCode: user.postalCode,
+      // Business fields
+      businessName: user.businessName,
+      businessType: user.businessType,
+      taxId: user.taxId,
+      // Payment fields
+      bankName: user.bankName,
+      accountNumber: user.accountNumber,
+      accountName: user.accountName,
+      ewalletProvider: user.ewalletProvider,
+      ewalletNumber: user.ewalletNumber,
+      ewalletName: user.ewalletName,
+    };
+
     // Redirect to frontend with token in query parameter
     const redirectUrl = `http://localhost:3000/auth-callback?token=${token}&user=${encodeURIComponent(
-      JSON.stringify({
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role,
-      })
+      JSON.stringify(userResponse)
     )}`;
 
+    console.log("[GOOGLE AUTH] Redirecting to:", redirectUrl);
     res.redirect(redirectUrl);
   } catch (err) {
-    console.error("Google auth error:", err);
+    console.error("[GOOGLE AUTH] Error:", err.message);
     res.redirect(
       `http://localhost:3000/signup?error=${encodeURIComponent(
-        "Google authentication failed"
+        "Google authentication failed: " + err.message
       )}`
     );
   }
@@ -232,6 +329,29 @@ const updateProfile = async (req, res) => {
       bio,
       currentPassword,
       newPassword,
+      // Owner setup fields
+      sellerType,
+      ownerAddress,
+      pickupAddress,
+      region,
+      regionName,
+      province,
+      provinceName,
+      city,
+      cityName,
+      barangay,
+      postalCode,
+      ownerSetupCompleted,
+      // Business fields
+      businessName,
+      businessType,
+      taxId,
+      bankName,
+      accountNumber,
+      accountName,
+      ewalletProvider,
+      ewalletNumber,
+      ewalletName,
     } = req.body;
 
     // Find user
@@ -255,13 +375,38 @@ const updateProfile = async (req, res) => {
       user.password = await bcrypt.hash(newPassword, salt);
     }
 
-    // --- Update other profile fields ---
+    // --- Update basic profile fields ---
     if (name) user.name = name;
     if (phone) user.phone = phone;
     if (address) user.address = address;
     if (gender) user.gender = gender;
     if (birthday) user.birthday = birthday;
     if (bio) user.bio = bio;
+
+    // --- Update owner setup fields ---
+    if (sellerType) user.sellerType = sellerType;
+    if (ownerAddress) user.ownerAddress = ownerAddress;
+    if (pickupAddress) user.pickupAddress = pickupAddress;
+    if (region) user.region = region;
+    if (regionName) user.regionName = regionName;
+    if (province) user.province = province;
+    if (provinceName) user.provinceName = provinceName;
+    if (city) user.city = city;
+    if (cityName) user.cityName = cityName;
+    if (barangay) user.barangay = barangay;
+    if (postalCode) user.postalCode = postalCode;
+    if (ownerSetupCompleted !== undefined) user.ownerSetupCompleted = ownerSetupCompleted;
+
+    // --- Update business fields ---
+    if (businessName) user.businessName = businessName;
+    if (businessType) user.businessType = businessType;
+    if (taxId) user.taxId = taxId;
+    if (bankName) user.bankName = bankName;
+    if (accountNumber) user.accountNumber = accountNumber;
+    if (accountName) user.accountName = accountName;
+    if (ewalletProvider) user.ewalletProvider = ewalletProvider;
+    if (ewalletNumber) user.ewalletNumber = ewalletNumber;
+    if (ewalletName) user.ewalletName = ewalletName;
 
     await user.save();
 
@@ -280,6 +425,29 @@ const updateProfile = async (req, res) => {
         avatar: user.avatar,
         role: user.role,
         authProvider: user.authProvider,
+        // Owner setup fields
+        ownerSetupCompleted: user.ownerSetupCompleted,
+        sellerType: user.sellerType,
+        ownerAddress: user.ownerAddress,
+        pickupAddress: user.pickupAddress,
+        region: user.region,
+        regionName: user.regionName,
+        province: user.province,
+        provinceName: user.provinceName,
+        city: user.city,
+        cityName: user.cityName,
+        barangay: user.barangay,
+        postalCode: user.postalCode,
+        // Business fields
+        businessName: user.businessName,
+        businessType: user.businessType,
+        taxId: user.taxId,
+        bankName: user.bankName,
+        accountNumber: user.accountNumber,
+        accountName: user.accountName,
+        ewalletProvider: user.ewalletProvider,
+        ewalletNumber: user.ewalletNumber,
+        ewalletName: user.ewalletName,
       },
     });
   } catch (err) {
