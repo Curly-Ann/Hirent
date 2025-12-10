@@ -20,7 +20,7 @@ A modern full-stack rental marketplace application built with React, Node.js, Ex
 
 ## 🎯 Project Overview
 
-**HiRENT** is a peer-to-peer rental marketplace platform that connects renters with owners. Users can:
+**Hirent** is a peer-to-peer rental marketplace platform that connects renters with owners. Users can:
 
 - **Renters**: Browse items, add to wishlist, make bookings, chat with owners
 - **Owners**: List items for rent, manage bookings, track earnings, communicate with renters
