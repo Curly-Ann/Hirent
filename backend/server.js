@@ -22,7 +22,12 @@ const app = express();
 // -------------------------
 // Middleware
 // -------------------------
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
@@ -125,6 +130,9 @@ app.use("/api/auth", require("./routes/authRoutes"));
 
 // User Routes
 app.use("/api/users", require("./routes/userRoutes"));
+
+// Owner Routes
+app.use("/api/owners", require("./routes/ownerRoutes"));
 
 // Items Routes
 app.use("/api/items", require("./routes/itemRoutes"));

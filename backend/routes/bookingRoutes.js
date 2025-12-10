@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../middleware/authMiddleware');
+const validationHandler = require('../utils/validators/validationHandler');
 
 const {
   createBookingValidator,
   cancelBookingValidator,
   updateBookingStatusValidator,
-} = require('../validators/bookingValidator');
+} = require('../utils/validators/bookingValidator');
 
 const {
   createBooking,
@@ -27,6 +28,7 @@ router.post(
   '/',
   auth,
   createBookingValidator,
+  validationHandler,
   createBooking
 );
 
@@ -42,6 +44,7 @@ router.put(
   '/:id/cancel',
   auth,
   cancelBookingValidator,
+  validationHandler,
   cancelBooking
 );
 
@@ -61,6 +64,7 @@ router.put(
   '/:id/status',
   auth,
   updateBookingStatusValidator,
+  validationHandler,
   updateBookingStatus
 );
 

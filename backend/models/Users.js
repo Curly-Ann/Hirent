@@ -44,7 +44,11 @@ const UserSchema = new mongoose.Schema({
   accountName: { type: String },
   ewalletProvider: { type: String },
   ewalletNumber: { type: String },
-  ewalletName: { type: String }
+  ewalletName: { type: String },
+  // Verification Status
+  emailVerified: { type: Boolean, default: false },
+  phoneVerified: { type: Boolean, default: false },
+  idVerified: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

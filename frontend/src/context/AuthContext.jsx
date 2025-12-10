@@ -3,33 +3,23 @@ import React, { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  // Initialize from localStorage immediately to prevent logout on refresh
+  const storedToken = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  const storedUser = typeof window !== 'undefined' ? localStorage.getItem("user") : null;
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(!!storedToken);
+  const [user, setUser] = useState(storedUser ? (() => {
+    try {
+      return JSON.parse(storedUser);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+      return null;
+    }
+  })() : null);
+  const [token, setToken] = useState(storedToken);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [collectionCount, setCollectionCount] = useState(0);
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Check for existing token on mount (restore session on refresh)
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    
-    if (storedToken) {
-      setToken(storedToken);
-      setIsLoggedIn(true);
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch (e) {
-          console.error("Error parsing user data:", e);
-        }
-      }
-    }
-    
-    // Mark as initialized to prevent redirect on refresh
-    setIsInitialized(true);
-  }, []);
+  const [isInitialized, setIsInitialized] = useState(true);
 
   // Fetch counts when logged in
   useEffect(() => {

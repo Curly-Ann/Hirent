@@ -27,8 +27,6 @@ export default function RenterProfilePage() {
   }, [isLoggedIn, user, navigate]);
 
   const [activeItem, setActiveItem] = useState("personal");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState("");
 
   const navItems = [
     { id: "personal", label: "Personal Information", icon: <User size={20} /> },
@@ -116,42 +114,50 @@ export default function RenterProfilePage() {
   };
 
   // -----------------------------
-  // SAVE PROFILE CHANGES (KEEP ORIGINAL)
+  // SAVE PROFILE CHANGES
   // -----------------------------
   async function handleSave(updatedForm) {
-    setIsSaving(true);
-    setSaveMessage("");
-
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Session expired. Please login again.");
+        navigate("/login");
+        return;
+      }
+
       const response = await fetch("http://localhost:5000/api/users/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           name: `${updatedForm.firstName} ${updatedForm.lastName}`,
           phone: updatedForm.phone,
           address: updatedForm.address,
-          gender: updatedForm.gender
+          gender: updatedForm.gender,
+          birthday: updatedForm.birthday,
+          bio: updatedForm.bio,
         }),
       });
 
       const data = await response.json();
 
-      if (data.success && data.user) {
+      if (response.ok && data.success && data.user) {
         updateUser(data.user);
-        setSaveMessage("Profile updated successfully!");
-        setTimeout(() => setSaveMessage(""), 3000);
+        alert("✓ Profile updated successfully!");
+      } else if (data.errors && Array.isArray(data.errors)) {
+        // Handle validation errors from backend
+        const errorMessages = data.errors.map(err => `${err.param}: ${err.msg}`).join("\n");
+        alert("Validation error:\n" + errorMessages);
       } else {
-        setSaveMessage("Error: " + data.message);
+        alert("Error: " + (data.message || "Failed to update profile"));
       }
     } catch (err) {
       console.error("Save error:", err);
-      setSaveMessage("Error saving profile.");
+      alert("Network error. Please try again.");
     }
-
-    setIsSaving(false);
   }
 
   return (
