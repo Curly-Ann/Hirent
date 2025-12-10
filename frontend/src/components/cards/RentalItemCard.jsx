@@ -95,8 +95,9 @@ const RentalItemCard = ({
       {/* Product Info */}
       <div className="text-left mt-3">
         <div className="flex justify-between items-center">
-          <p className="text-purple-900 font-semibold text-sm mt-2 mb-1">
-            {item.name}
+          <p className="text-gray-900 font-semibold">
+            {item.name || item.title}
+
           </p>
 
           {/* Rating */}
