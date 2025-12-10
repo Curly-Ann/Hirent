@@ -9,22 +9,35 @@ const RentalItemCard = ({
   handleAddToCollection,
   navigate,
 }) => {
+  // -------------------------------
+  // 🔥 UNIVERSAL IMAGE FALLBACK LOGIC
+  // -------------------------------
+  const image =
+    item.images?.[0] ||
+    item.images?.avatar ||
+    item.images?.main ||
+    item.images?.other?.[0] ||
+    item.image || // old API support
+    "/placeholder.png"; // final fallback
+
+
   return (
     <div className="rounded-2xl shadow-sm hover:shadow-lg transition-all bg-white text-purple-900 p-3">
       {/* Image Section */}
       <div className="relative bg-gray-100 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden">
+
         {/* Wishlist & Eye Buttons */}
         <div className="absolute top-3 right-3 flex gap-1 z-50">
           {/* Wishlist Button */}
           <button
-            onClick={() => toggleWishlist(item.id)}
+            onClick={() => toggleWishlist(item._id)}
             className="bg-white text-purple-900 rounded-full shadow p-1 hover:bg-gray-200 transition"
           >
             <Heart
               size={18}
               strokeWidth={1.5}
               className={`transition ${
-                wishlist.includes(item.id)
+                wishlist.includes(item._id)
                   ? "fill-[#fd2c48] stroke-[#fd2c48]"
                   : "stroke-[#565656]"
               }`}
@@ -33,7 +46,7 @@ const RentalItemCard = ({
 
           {/* Eye / View Product Button */}
           <button
-            onClick={() => navigate(`/product/${item.id}`)}
+            onClick={() => navigate(`/product/${item._id}`)}
             className="bg-white text-[#565656] rounded-full shadow p-1 hover:bg-gray-200 transition"
           >
             <Eye size={18} strokeWidth={1.5} />
@@ -42,10 +55,10 @@ const RentalItemCard = ({
 
         {/* Product Image */}
         <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-          <img
-            src={item.image}
-            alt={item.name}
-            className="absolute w-[95%] h-[95%] object-contain transition-transform duration-300 hover:scale-110"
+         <img
+           src={item.images?.[0] || "/placeholder.png"}
+          alt={item.title}
+          className="absolute w-[95%] h-[95%] object-contain transition-transform duration-300 hover:scale-110"
           />
         </div>
 
@@ -53,7 +66,7 @@ const RentalItemCard = ({
         <div className="flex w-full rounded-b-2xl overflow-hidden">
           {/* Book item */}
           <button
-            onClick={() => navigate(`/booking/${item.id}`)}
+            onClick={() => navigate(`/booking/${item._id}`)}
             className="flex-[0.8] bg-[#7A1CA9] hover:bg-[#681690] text-white text-[12.5px] font-medium py-2.5 flex justify-center items-center transition"
           >
             Book Item
@@ -63,12 +76,12 @@ const RentalItemCard = ({
           <button
             onClick={() => handleAddToCollection(item)}
             className={`flex-[1] border border-[#7A1CA9] rounded-br-2xl font-medium py-2.5 flex items-center justify-center gap-2 transition-all duration-300 text-[12.5px] ${
-              justAdded.includes(item.id)
+              justAdded.includes(item._id)
                 ? "bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
                 : "text-[#7A1CA9] hover:bg-purple-100"
             }`}
           >
-            {justAdded.includes(item.id) ? (
+            {justAdded.includes(item._id)? (
               <>
                 <Check size={16} className="text-white" /> Added!
               </>
@@ -92,7 +105,7 @@ const RentalItemCard = ({
               const starValue = index + 1;
               const isFull = item.rating >= starValue;
               const isHalf = !isFull && item.rating >= starValue - 0.5;
-              const uniqueId = `half-${item.id}-${index}`;
+              const uniqueId = `half-${item._id} {index}`;
 
               if (isFull) {
                 return (

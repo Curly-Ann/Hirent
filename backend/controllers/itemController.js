@@ -6,12 +6,19 @@ const Item = require("../models/Item");
 exports.getAllItems = async (req, res) => {
   try {
     const items = await Item.find();
-    res.json(items);
+
+    res.json({
+      success: true,
+      items,
+    });
+
   } catch (err) {
-    res.status(500).json({ msg: "Error fetching items" });
+    res.status(500).json({ 
+      success: false,
+      msg: "Error fetching items" 
+    });
   }
 };
-
 // ------------------------
 // SEARCH ITEMS
 // ------------------------

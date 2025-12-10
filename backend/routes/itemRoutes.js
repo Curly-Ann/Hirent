@@ -26,4 +26,6 @@ router.get("/owner/:ownerId", auth, itemsController.getItemsByOwner);
 router.put("/:id", auth, updateItemValidator, validationHandler, upload.array("images", 10), itemsController.updateItem);
 router.delete("/:id", auth, itemsController.deleteItem);
 
+router.get("/", itemsController.getAllItems);
+
 module.exports = router;

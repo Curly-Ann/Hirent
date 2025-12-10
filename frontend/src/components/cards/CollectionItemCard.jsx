@@ -17,7 +17,7 @@ const CollectionCard = ({
 }) => {
   return (
     <div
-      key={item.id}
+      key={item._id}
       className="relative bg-white shadow-md shadow-gray-100 rounded-2xl p-3 hover:shadow-md transition"
     >
       <div className="flex gap-6 relative">
@@ -144,14 +144,14 @@ const CollectionCard = ({
           <div className="absolute bottom-1 right-0 flex items-center gap-1.5">
             {item.status === "approved" || item.status === "pending" ? (
               <button
-                onClick={() => openCancelModal(item.id)}
+                onClick={() => openCancelModal(item._id) }
                 className="px-3 py-1.5 text-[12.5px] shadow-sm rounded-full text-red-500 border border-red-300 bg-red-50 hover:bg-red-100"
               >
                 Cancel Booking
               </button>
             ) : (
               <button
-                onClick={() => handleRemoveItem(item.id)}
+                onClick={() => handleRemoveItem(item._id) }
                 className="px-3 py-1.5 text-[12.5px] shadow-sm rounded-full text-red-500 border border-red-300 bg-red-50 hover:bg-red-100"
               >
                 Remove from collection
@@ -167,14 +167,14 @@ const CollectionCard = ({
               </button>
             ) : item.status === "pending" ? (
               <button
-                onClick={() => navigate(`/edit-booking/${item.id}`)}
+                onClick={() => navigate(`/edit-booking/${item._id}`)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm bg-[#7A1CA9] text-white rounded-full hover:bg-purple-800"
               >
                 Edit Booking Details
               </button>
             ) : (
               <button
-                onClick={() => navigate(`/booking/${item.id}`)}
+                onClick={() => navigate(`/booking/${item._id}`)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm bg-[#7A1CA9] text-white rounded-full hover:bg-purple-800"
               >
                 Continue to Booking
