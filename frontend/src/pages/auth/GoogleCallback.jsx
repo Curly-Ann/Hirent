@@ -35,38 +35,38 @@ const GoogleCallback = () => {
           }
         }
 
+        // Log user in
         login(token, userData);
 
         const userRole = userData?.role || "renter";
         const isNewUser = userData?.isNewUser;
+        const ownerSetupCompleted = userData?.ownerSetupCompleted;
 
         setTimeout(() => {
-          // New user flow
-          if (isNewUser) {
-            if (userRole === "owner") {
+          if (userRole === "owner") {
+            if (isNewUser || !ownerSetupCompleted) {
+              // New owner OR existing owner with incomplete setup
               navigate("/ownersetup", {
                 replace: true,
                 state: { googleData: userData, message: "Complete your owner profile" },
               });
             } else {
+              // Existing owner with setup completed
+              navigate("/owner", { replace: true });
+            }
+          } else {
+            // Renter
+            if (isNewUser) {
               navigate("/signup", {
                 replace: true,
                 state: { googleData: userData, message: "Complete your profile" },
               });
-            }
-          } else {
-            // Existing user flow
-            if (userRole === "owner") {
-              if (!userData?.ownerSetupCompleted) {
-                navigate("/ownersetup", { replace: true });
-              } else {
-                navigate("/owner", { replace: true }); // Redirect to owner folder
-              }
             } else {
-              navigate("/", { replace: true }); // Redirect renter to home
+              navigate("/", { replace: true });
             }
           }
-        }, 100); // small delay to ensure login state is set
+        }, 100); // slight delay to ensure login state
+
       } catch (err) {
         console.error("Google callback error:", err);
         navigate("/signup", {

@@ -196,13 +196,17 @@ const googleAuth = async (req, res) => {
     const { state } = req.query; // state=owner for owner signup flow
 
     const normalizedEmail = email?.toLowerCase().trim();
+    console.log("[GOOGLE AUTH] Processing:", { email: normalizedEmail, state });
 
     // Check if user exists
     let user = await User.findOne({ $or: [{ googleId }, { email: normalizedEmail }] });
     let isNewUser = false;
 
     if (!user) {
+      // NEW USER
       const role = state === "owner" ? "owner" : "renter";
+      console.log("[GOOGLE AUTH] Creating new user with role:", role);
+
       user = new User({
         googleId,
         email: normalizedEmail,
@@ -210,16 +214,30 @@ const googleAuth = async (req, res) => {
         avatar,
         role,
         authProvider: "google",
+        ownerSetupCompleted: role === "owner" ? false : undefined, // default false for owners
       });
+
       await user.save();
       isNewUser = true;
+      console.log("[GOOGLE AUTH] New user created:", user._id, "role:", role);
     } else {
+      // EXISTING USER
+      console.log("[GOOGLE AUTH] User exists:", user._id);
+
       if (!user.googleId) {
         user.googleId = googleId;
         user.authProvider = "google";
+        console.log("[GOOGLE AUTH] Linked Google account to existing user");
       }
+
       if (avatar && !user.avatar) user.avatar = avatar;
-      if (state === "owner" && user.role !== "owner") user.role = "owner";
+
+      if (state === "owner" && user.role !== "owner") {
+        user.role = "owner";
+        user.ownerSetupCompleted = false; // force setup for newly upgraded owners
+        console.log("[GOOGLE AUTH] Upgraded user to owner role");
+      }
+
       await user.save();
     }
 
@@ -230,7 +248,7 @@ const googleAuth = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Build user response
+    // Send user data including ownerSetupCompleted
     const userResponse = {
       id: user._id,
       name: user.name,
@@ -267,28 +285,23 @@ const googleAuth = async (req, res) => {
       ewalletName: user.ewalletName,
     };
 
-    // Dynamically set frontend URL based on environment
-    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
-
-    const redirectUrl = `${FRONTEND_URL}/auth-callback?token=${token}&user=${encodeURIComponent(
+    // Redirect to frontend with token and user info
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth-callback?token=${token}&user=${encodeURIComponent(
       JSON.stringify(userResponse)
     )}`;
 
     console.log("[GOOGLE AUTH] Redirecting to:", redirectUrl);
     res.redirect(redirectUrl);
+
   } catch (err) {
     console.error("[GOOGLE AUTH] Error:", err.message);
-
-    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
-
     res.redirect(
-      `${FRONTEND_URL}/signup?error=${encodeURIComponent(
+      `${process.env.FRONTEND_URL}/signup?error=${encodeURIComponent(
         "Google authentication failed: " + err.message
       )}`
     );
   }
 };
-
 // UPDATE PROFILE
 const updateProfile = async (req, res) => {
   try {
