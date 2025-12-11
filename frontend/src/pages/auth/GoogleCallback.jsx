@@ -1,101 +1,85 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-/**
- * GoogleCallback - Handles the redirect from Google OAuth
- * Extracts token and user data from the URL query parameters
- */
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
-  const processedRef = useRef(false); // Prevent multiple executions
+  const processedRef = useRef(false);
+  const [loadingMessage, setLoadingMessage] = useState("Completing authentication...");
 
   useEffect(() => {
-    // Prevent running effect multiple times in StrictMode
     if (processedRef.current) return;
     processedRef.current = true;
 
-    const handleCallback = () => {
+    const token = searchParams.get("token");
+    const userParam = searchParams.get("user");
+    const error = searchParams.get("error");
+
+    if (error) {
+      console.error("Auth error:", decodeURIComponent(error));
+      setLoadingMessage("Authentication failed.");
+      navigate("/signup", {
+        replace: true,
+        state: { error: decodeURIComponent(error) },
+      });
+      return;
+    }
+
+    if (!token) {
+      console.error("Missing token");
+      setLoadingMessage("Authentication failed: missing token.");
+      navigate("/signup", {
+        replace: true,
+        state: { error: "Missing authentication token" },
+      });
+      return;
+    }
+
+    // Parse user data safely
+    let userData = { role: "renter", isNewUser: false };
+    if (userParam) {
       try {
-        const token = searchParams.get("token");
-        const userParam = searchParams.get("user");
-        const error = searchParams.get("error");
-
-        if (error) {
-          throw new Error(decodeURIComponent(error));
-        }
-
-        if (token) {
-          let userData = null;
-          
-          if (userParam) {
-            try {
-              userData = JSON.parse(decodeURIComponent(userParam));
-            } catch (parseErr) {
-              console.error("Error parsing user data:", parseErr);
-            }
-          }
-
-          login(token, userData);
-
-          setTimeout(() => {
-            const userRole = userData?.role || 'renter';
-            
-            // If new user (not previously in DB), redirect to appropriate signup
-            if (userData?.isNewUser) {
-              console.log("[GoogleCallback] New user detected, redirecting to signup");
-              if (userRole === 'owner') {
-                // New owner - redirect to OwnerSetup to complete profile
-                navigate('/ownersetup', { 
-                  replace: true,
-                  state: { 
-                    googleData: userData,
-                    message: "Complete your owner profile"
-                  }
-                });
-              } else {
-                navigate('/signup', { 
-                  replace: true,
-                  state: { 
-                    googleData: userData,
-                    message: "Complete your profile"
-                  }
-                });
-              }
-            } else {
-              // Existing user - redirect based on role
-              if (userRole === 'owner') {
-                // Check if owner has completed setup
-                const ownerSetupCompleted = userData?.ownerSetupCompleted;
-                if (!ownerSetupCompleted) {
-                  // Owner hasn't completed setup yet - redirect back to setup
-                  console.log("[GoogleCallback] Owner setup incomplete, redirecting to setup");
-                  navigate('/ownersetup', { replace: true });
-                } else {
-                  navigate('/owner/dashboard', { replace: true });
-                }
-              } else {
-                navigate('/', { replace: true });
-              }
-            }
-          }, 100);
-        } else {
-          throw new Error("Missing authentication token");
-        }
+        userData = JSON.parse(decodeURIComponent(userParam));
       } catch (err) {
-        console.error("Google callback error:", err);
-        
-        // Redirect to signup with error message
-        navigate("/signup", {
-          replace: true,
-          state: { error: err.message },
-        });
+        console.error("Error parsing user data:", err);
+      }
+    }
+
+    // Update login context
+    login(token, userData);
+
+    // Redirect logic
+    const redirectUser = () => {
+      if (userData.isNewUser) {
+        // New users go to signup/setup
+        if (userData.role === "owner") {
+          navigate("/ownersetup", {
+            replace: true,
+            state: { googleData: userData },
+          });
+        } else {
+          navigate("/signup", {
+            replace: true,
+            state: { googleData: userData },
+          });
+        }
+      } else {
+        // Existing users
+        if (userData.role === "owner") {
+          if (!userData.ownerSetupCompleted) {
+            navigate("/ownersetup", { replace: true });
+          } else {
+            navigate("/owner/dashboard", { replace: true });
+          }
+        } else {
+          navigate("/", { replace: true });
+        }
       }
     };
 
-    handleCallback();
+    redirectUser();
   }, [searchParams, navigate, login]);
 
   return (
@@ -108,13 +92,13 @@ const GoogleCallback = () => {
             className="w-16 h-16 mx-auto animate-pulse"
           />
         </div>
-        <p className="text-lg font-semibold text-gray-700 mb-4">
-          Signing you in with Google...
-        </p>
+        <p className="text-lg font-semibold text-gray-700 mb-4">{loadingMessage}</p>
         <div className="flex justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-600"></div>
         </div>
-        <p className="text-sm text-gray-500 mt-4">Please wait while we complete your authentication</p>
+        <p className="text-sm text-gray-500 mt-4">
+          Please wait while we complete your authentication
+        </p>
       </div>
     </div>
   );
