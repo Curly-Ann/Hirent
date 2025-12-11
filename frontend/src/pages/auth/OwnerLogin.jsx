@@ -102,7 +102,8 @@ const OwnerLogin = () => {
   // GOOGLE LOGIN → Owner
   // -------------------------------
   const handleGoogleLogin = () => {
-  window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/`;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    window.location.href = `${backendUrl}/auth/google/owner`;
   };
 
   return (
