@@ -195,20 +195,14 @@ const googleAuth = async (req, res) => {
     const { googleId, email, name, avatar } = req.user;
     const { state } = req.query; // state=owner for owner signup flow
 
-    // Normalize email
     const normalizedEmail = email?.toLowerCase().trim();
-
-    console.log("[GOOGLE AUTH] Processing:", { email: normalizedEmail, state });
 
     // Check if user exists
     let user = await User.findOne({ $or: [{ googleId }, { email: normalizedEmail }] });
     let isNewUser = false;
 
     if (!user) {
-      // NEW USER - Determine role based on state parameter
       const role = state === "owner" ? "owner" : "renter";
-      console.log("[GOOGLE AUTH] Creating new user with role:", role);
-
       user = new User({
         googleId,
         email: normalizedEmail,
@@ -219,29 +213,13 @@ const googleAuth = async (req, res) => {
       });
       await user.save();
       isNewUser = true;
-      console.log("[GOOGLE AUTH] New user created:", user._id, "role:", role);
     } else {
-      // EXISTING USER
-      console.log("[GOOGLE AUTH] User exists:", user._id);
-
-      // Link Google account if not already linked
       if (!user.googleId) {
         user.googleId = googleId;
         user.authProvider = "google";
-        console.log("[GOOGLE AUTH] Linked Google account to existing user");
       }
-
-      // Update avatar if provided
-      if (avatar && !user.avatar) {
-        user.avatar = avatar;
-      }
-
-      // Add owner role if state=owner and user doesn't have it
-      if (state === "owner" && user.role !== "owner") {
-        user.role = "owner";
-        console.log("[GOOGLE AUTH] Upgraded user to owner role");
-      }
-
+      if (avatar && !user.avatar) user.avatar = avatar;
+      if (state === "owner" && user.role !== "owner") user.role = "owner";
       await user.save();
     }
 
@@ -252,7 +230,7 @@ const googleAuth = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Build response with all user fields
+    // Build user response
     const userResponse = {
       id: user._id,
       name: user.name,
@@ -260,15 +238,13 @@ const googleAuth = async (req, res) => {
       avatar: user.avatar,
       role: user.role,
       authProvider: user.authProvider,
-      isNewUser, // Flag for new users
-      ownerSetupCompleted: user.ownerSetupCompleted, // Owner setup status
-      // Personal info
+      isNewUser,
+      ownerSetupCompleted: user.ownerSetupCompleted,
       phone: user.phone,
       address: user.address,
       gender: user.gender,
       birthday: user.birthday,
       bio: user.bio,
-      // Owner setup fields
       sellerType: user.sellerType,
       ownerAddress: user.ownerAddress,
       pickupAddress: user.pickupAddress,
@@ -280,11 +256,9 @@ const googleAuth = async (req, res) => {
       cityName: user.cityName,
       barangay: user.barangay,
       postalCode: user.postalCode,
-      // Business fields
       businessName: user.businessName,
       businessType: user.businessType,
       taxId: user.taxId,
-      // Payment fields
       bankName: user.bankName,
       accountNumber: user.accountNumber,
       accountName: user.accountName,
@@ -293,8 +267,10 @@ const googleAuth = async (req, res) => {
       ewalletName: user.ewalletName,
     };
 
-    // Redirect to frontend with token in query parameter
-    const redirectUrl = `http://localhost:3000/auth-callback?token=${token}&user=${encodeURIComponent(
+    // Dynamically set frontend URL based on environment
+    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+
+    const redirectUrl = `${FRONTEND_URL}/auth-callback?token=${token}&user=${encodeURIComponent(
       JSON.stringify(userResponse)
     )}`;
 
@@ -302,8 +278,11 @@ const googleAuth = async (req, res) => {
     res.redirect(redirectUrl);
   } catch (err) {
     console.error("[GOOGLE AUTH] Error:", err.message);
+
+    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+
     res.redirect(
-      `http://localhost:3000/signup?error=${encodeURIComponent(
+      `${FRONTEND_URL}/signup?error=${encodeURIComponent(
         "Google authentication failed: " + err.message
       )}`
     );
