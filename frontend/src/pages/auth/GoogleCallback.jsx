@@ -37,33 +37,36 @@ const GoogleCallback = () => {
 
         login(token, userData);
 
-        // Redirect logic
         const userRole = userData?.role || "renter";
         const isNewUser = userData?.isNewUser;
 
-        if (isNewUser) {
-          if (userRole === "owner") {
-            navigate("/ownersetup", {
-              replace: true,
-              state: { googleData: userData, message: "Complete your owner profile" },
-            });
-          } else {
-            navigate("/signup", {
-              replace: true,
-              state: { googleData: userData, message: "Complete your profile" },
-            });
-          }
-        } else {
-          if (userRole === "owner") {
-            if (!userData?.ownerSetupCompleted) {
-              navigate("/ownersetup", { replace: true });
+        setTimeout(() => {
+          // New user flow
+          if (isNewUser) {
+            if (userRole === "owner") {
+              navigate("/ownersetup", {
+                replace: true,
+                state: { googleData: userData, message: "Complete your owner profile" },
+              });
             } else {
-              navigate("/owner/dashboard", { replace: true });
+              navigate("/signup", {
+                replace: true,
+                state: { googleData: userData, message: "Complete your profile" },
+              });
             }
           } else {
-            navigate("/", { replace: true });
+            // Existing user flow
+            if (userRole === "owner") {
+              if (!userData?.ownerSetupCompleted) {
+                navigate("/ownersetup", { replace: true });
+              } else {
+                navigate("/owner", { replace: true }); // Redirect to owner folder
+              }
+            } else {
+              navigate("/", { replace: true }); // Redirect renter to home
+            }
           }
-        }
+        }, 100); // small delay to ensure login state is set
       } catch (err) {
         console.error("Google callback error:", err);
         navigate("/signup", {
