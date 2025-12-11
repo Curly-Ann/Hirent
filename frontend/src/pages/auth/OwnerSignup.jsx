@@ -103,10 +103,9 @@ const OwnerSignup = () => {
   // -------------------------------
   // GOOGLE SIGNUP → Owner
   // -------------------------------
-  const handleGoogleSignup = () => {
-    window.location.href = `${process.env.REACT_APP_FRONTEND_URL}/auth-callback?token=${token}&user=${JSON.stringify(user)}`;
-  };
-
+  const handleGoogleLogin = () => {
+  window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/owner`;
+};
   return (
     <div className="flex flex-col min-h-screen">
       <div
