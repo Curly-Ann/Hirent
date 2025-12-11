@@ -103,9 +103,8 @@ const OwnerSignup = () => {
   // -------------------------------
   // GOOGLE SIGNUP → Owner
   // -------------------------------
- const handleGoogleSignup = () => {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
-  window.location.href = `${backendUrl}/auth/google/owner`;
+  const handleGoogleSignup = () => {
+  window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/owner`;
   };
   return (
     <div className="flex flex-col min-h-screen">
