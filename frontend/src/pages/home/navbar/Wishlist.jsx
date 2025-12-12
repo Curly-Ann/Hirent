@@ -6,10 +6,9 @@ import { AuthContext } from "../../../context/AuthContext";
 
 import emptyWishlist from "../../../assets/empty-wishlist.png";
 import emptyItems from "../../../assets/empty-listings.png";
-import { ENDPOINTS, makeAPICall } from "../../../config/api";
 
 const WishlistPage = () => {
-  const { wishlist, setWishlist, toggleWishlist, addToCart } = useContext(AuthContext);
+  const { wishlist, toggleWishlist, addToCart, isInitialized } = useContext(AuthContext);
   const [filter, setFilter] = useState("All");
   const [sortOrder, setSortOrder] = useState("latest");
 
@@ -49,29 +48,21 @@ const WishlistPage = () => {
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  // Fetch wishlist from backend
-  const fetchWishlist = async () => {
-    try {
-      const data = await makeAPICall(ENDPOINTS.WISHLIST.GET);
-      if (data?.success && data.items) {
-        setWishlist(data.items);
-      }
-    } catch (err) {
-      console.error("Failed to fetch wishlist:", err);
-    }
-  };
-
-  const handleAddToCollection = async (item) => {
-    await addToCart(item, 1);
-  };
-
   useEffect(() => {
     document.title = "Hirent — Wishlist";
-    fetchWishlist();
     return () => {
       document.title = "Hirent";
     };
   }, []);
+
+  // WAIT FOR CONTEXT INITIALIZATION
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">Loading your wishlist...</p>
+      </div>
+    );
+  }
 
   // Filter & sort items using centralized wishlist state
   const displayedItems = wishlist
@@ -81,6 +72,10 @@ const WishlistPage = () => {
       const dateB = new Date(b.availableFrom);
       return sortOrder === "latest" ? dateB - dateA : dateA - dateB;
     });
+
+  const handleAddToCollection = async (item) => {
+    await addToCart(item, 1);
+  };
 
   const hasWishlistItems = wishlist.length > 0;
   const hasFilteredItems = displayedItems.length > 0;
