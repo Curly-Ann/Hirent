@@ -113,7 +113,7 @@ const Booking = () => {
     setIsBooking(true);
 
     const bookingData = {
-      itemId,
+      itemId: item._id,   
       startDate: rentalData.startDate,
       endDate: rentalData.endDate,
       totalAmount: pricing.total,
@@ -121,7 +121,8 @@ const Booking = () => {
       shippingFee: pricing.shippingFee,
       securityDeposit: pricing.securityDeposit,
       discount: pricing.discount,
-      deliveryMethod,
+      paymentMethod: "cod",         
+      deliveryMethod: "delivery",
       couponCode: couponData?.applied ? couponData.code : null,
       paymentMethod, // Pass selected payment method
     };
