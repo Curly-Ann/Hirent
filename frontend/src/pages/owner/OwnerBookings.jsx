@@ -1,8 +1,9 @@
 // src/pages/owner/OwnerBookings.jsx
 import React, { useState, useEffect, useContext } from "react";
+import ReactDOM from "react-dom";
 import OwnerSidebar from "../../components/layouts/OwnerSidebar";
 import { makeAPICall, ENDPOINTS } from "../../config/api";
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { AuthContext } from "../../context/AuthContext";
 import {
   Search,
@@ -39,11 +40,22 @@ export default function OwnerBookings() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [showApprovalModal, setShowApprovalModal] = useState(null);
   const [showRejectModal, setShowRejectModal] = useState(null);
-  const [rejectReason, setRejectReason] = useState("");
+  const [rejectReasonCode, setRejectReasonCode] = useState("");
+  const [rejectReasonText, setRejectReasonText] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
+
+  // Lock body scroll when reject modal opens
+  useEffect(() => {
+    if (showRejectModal) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "unset";
+      };
+    }
+  }, [showRejectModal]);
 
 
   const formatDate = (dateStr) => {
@@ -54,26 +66,30 @@ export default function OwnerBookings() {
     });
   };
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await makeAPICall(ENDPOINTS.BOOKINGS.OWNER_BOOKINGS);
-        if (response.success && Array.isArray(response.data)) {
-          setBookings(response.data);
-        } else {
-          setBookings([]);
-        }
-      } catch (err) {
-        console.error("Error fetching bookings:", err);
-        setError("Failed to load bookings");
-      } finally {
-        setLoading(false);
+  const fetchBookings = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await makeAPICall(ENDPOINTS.BOOKINGS.OWNER_BOOKINGS);
+      if (response.success && Array.isArray(response.data)) {
+        setBookings(response.data);
+      } else {
+        setBookings([]);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+      setError("Failed to load bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchBookings();
+    
+    // Poll for booking updates every 5 seconds to catch cancellations
+    const interval = setInterval(fetchBookings, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const stats = {
@@ -82,6 +98,7 @@ export default function OwnerBookings() {
     approved: bookings.filter((b) => b.status === "approved").length,
     completed: bookings.filter((b) => b.status === "completed").length,
     rejected: bookings.filter((b) => b.status === "rejected").length,
+    cancelled: bookings.filter((b) => b.status === "cancelled").length,
   };
 
   useEffect(() => {
@@ -118,12 +135,9 @@ export default function OwnerBookings() {
         method: "PUT",
         body: JSON.stringify({ status: "approved" }),
       });
-      setBookings((prev) =>
-        prev.map((b) =>
-          b._id === booking._id ? { ...b, status: "approved" } : b
-        )
-      );
       setShowApprovalModal(null);
+      // Refetch immediately to ensure consistency
+      await fetchBookings();
     } catch (err) {
       console.error("Error approving booking:", err);
       setError("Failed to approve booking");
@@ -132,17 +146,22 @@ export default function OwnerBookings() {
 
   const handleReject = async (booking) => {
     try {
+      const payload = {
+        status: "rejected",
+        reasonCode: rejectReasonCode,
+      };
+      if (rejectReasonCode === "other" && rejectReasonText.trim()) {
+        payload.reasonText = rejectReasonText;
+      }
       await makeAPICall(ENDPOINTS.BOOKINGS.UPDATE_STATUS(booking._id), {
         method: "PUT",
-        body: JSON.stringify({ status: "rejected", reason: rejectReason }),
+        body: JSON.stringify(payload),
       });
-      setBookings((prev) =>
-        prev.map((b) =>
-          b._id === booking._id ? { ...b, status: "rejected" } : b
-        )
-      );
       setShowRejectModal(null);
-      setRejectReason("");
+      setRejectReasonCode("");
+      setRejectReasonText("");
+      // Refetch immediately to ensure consistency
+      await fetchBookings();
     } catch (err) {
       console.error("Error rejecting booking:", err);
       setError("Failed to reject booking");
@@ -180,6 +199,11 @@ export default function OwnerBookings() {
       rejected: {
         label: "Rejected",
         style: "bg-red-100 text-red-700",
+        icon: XCircle,
+      },
+      cancelled: {
+        label: "Cancelled",
+        style: "bg-gray-100 text-gray-700",
         icon: XCircle,
       },
       completed: {
@@ -300,7 +324,7 @@ export default function OwnerBookings() {
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-400" />
               <div className="flex gap-2">
-                {["All", "Pending", "Approved", "Completed", "Rejected"].map(
+                {["All", "Pending", "Approved", "Completed", "Rejected", "Cancelled"].map(
                   (status) => (
                     <button
                       key={status}
@@ -321,7 +345,9 @@ export default function OwnerBookings() {
                             ? stats.approved
                             : status === "Completed"
                             ? stats.completed
-                            : stats.rejected}
+                            : status === "Rejected"
+                            ? stats.rejected
+                            : stats.cancelled}
                           )
                         </span>
                       )}
@@ -429,7 +455,7 @@ export default function OwnerBookings() {
                               {booking.userId?.name || "Unknown"}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {booking.renter?.email || "N/A"}
+                              {booking.userId?.email || "N/A"}
                             </p>
                           </div>
                         </div>
@@ -440,7 +466,7 @@ export default function OwnerBookings() {
                           <div className="flex items-center gap-1">
                             <ClockFading className="w-4 h-4 text-yellow-600" />
                             <p className="text-sm text-yellow-600">
-                              {booking.rentalDuration} {booking.rentalDuration > 1 ? 'days' : 'day'}
+                              {dayjs(booking.endDate).diff(dayjs(booking.startDate), 'day')} {dayjs(booking.endDate).diff(dayjs(booking.startDate), 'day') > 1 ? 'days' : 'day'}
                             </p>
                           </div>
                           <div className="flex items-center gap-1">
@@ -558,10 +584,7 @@ export default function OwnerBookings() {
                                   <span className="text-gray-800">
                                     ₱
                                     {(
-                                      booking.rentalDuration
-                                        ? booking.totalAmount /
-                                          booking.rentalDuration
-                                        : 0
+                                      booking.itemId?.pricePerDay || 'N/A'
                                     ).toLocaleString()}
                                   </span>
                                 </div>
@@ -613,13 +636,13 @@ export default function OwnerBookings() {
                                   </span>
                                   <span className="text-gray-800">
                                     ₱
-                                    {(booking.totalAmount / booking.rentalDuration).toLocaleString()}
+                                    {(booking.itemId?.pricePerDay || 0).toLocaleString()}
                                   </span>
                                 </div>
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">Days</span>
                                   <span className="text-gray-800">
-                                    {booking.rentalDuration}
+                                    {dayjs(booking.endDate).diff(dayjs(booking.startDate), 'day')}
                                   </span>
                                 </div>
                                 <div className="flex justify-between">
@@ -738,7 +761,7 @@ export default function OwnerBookings() {
                 <div className="flex items-center justify-between text-xs mt-1">
                   <span className="text-gray-500">Renter:</span>
                   <span className="text-gray-800">
-                    {showApprovalModal.renter?.name || "Unknown"}
+                    {showApprovalModal.userId?.name || "Unknown"}
                   </span>
                 </div>
               </div>
@@ -763,15 +786,25 @@ export default function OwnerBookings() {
         )}
 
 
-        {showRejectModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl animate-modalSlideIn">
+        {showRejectModal && ReactDOM.createPortal(
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => {
+            setShowRejectModal(null);
+            setRejectReasonCode("");
+            setRejectReasonText("");
+          }}>
+            <div 
+              className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl animate-modalSlideIn"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="reject-modal-title"
+            >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-red-100 rounded-full">
                   <XCircle className="w-6 h-6 text-red-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 id="reject-modal-title" className="text-lg font-semibold text-gray-800">
                     Reject Booking
                   </h3>
                   <p className="text-sm text-gray-500">
@@ -780,15 +813,14 @@ export default function OwnerBookings() {
                 </div>
               </div>
 
-
               <div className="bg-gray-50 p-4 rounded-xl mb-4">
                 <div className="flex items-center gap-3">
                   <img
                     src={
-                      showRejectModal.item?.image ||
+                      showRejectModal.itemId?.images?.[0] ||
                       "https://via.placeholder.com/56"
                     }
-                    alt={showRejectModal.item?.name || "Item"}
+                    alt={showRejectModal.itemId?.title || "Item"}
                     className="w-14 h-14 rounded-lg object-cover"
                     onError={(e) => {
                       e.target.src = "https://via.placeholder.com/56";
@@ -796,39 +828,72 @@ export default function OwnerBookings() {
                   />
                   <div>
                     <p className="font-medium text-gray-800">
-                      {showRejectModal.item?.name || "Unknown"}
+                      {showRejectModal.itemId?.title || "Unknown"}
                     </p>
                     <p className="text-xs text-gray-500 flex items-center gap-1">
                       <Hash className="w-3 h-3" />
                       {showRejectModal._id?.substring(0, 8) || "N/A"}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Renter: {showRejectModal.renter?.name || "Unknown"}
+                      Renter: {showRejectModal.userId?.name || "Unknown"}
                     </p>
                   </div>
                 </div>
               </div>
 
-
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Reason for Rejection
                 </label>
-                <textarea
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  placeholder="Enter the reason for rejecting this booking..."
-                  className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
-                  rows={3}
-                />
+                <div className="space-y-2">
+                  {[/* eslint-disable indent */
+                    { code: "unavailable", label: "Item unavailable" },
+                    { code: "date_conflict", label: "Dates conflict with another booking" },
+                    { code: "payment_issue", label: "Payment issue" },
+                    { code: "policy_violation", label: "Policy violation" },
+                    { code: "other", label: "Other" },
+                  ].map((reason) => (
+                    <label key={reason.code} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="reject-reason"
+                        value={reason.code}
+                        checked={rejectReasonCode === reason.code}
+                        onChange={(e) => {
+                          setRejectReasonCode(e.target.value);
+                          if (e.target.value !== "other") {
+                            setRejectReasonText("");
+                          }
+                        }}
+                        className="w-4 h-4 accent-red-600"
+                      />
+                      <span className="text-sm text-gray-700">{reason.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
+              {rejectReasonCode === "other" && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Please specify
+                  </label>
+                  <textarea
+                    value={rejectReasonText}
+                    onChange={(e) => setRejectReasonText(e.target.value)}
+                    placeholder="Enter the reason for rejecting this booking..."
+                    className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                    rows={3}
+                  />
+                </div>
+              )}
 
               <div className="flex gap-3">
                 <button
                   onClick={() => {
                     setShowRejectModal(null);
-                    setRejectReason("");
+                    setRejectReasonCode("");
+                    setRejectReasonText("");
                   }}
                   className="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition"
                 >
@@ -836,13 +901,15 @@ export default function OwnerBookings() {
                 </button>
                 <button
                   onClick={() => handleReject(showRejectModal)}
-                  className="flex-1 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition"
+                  disabled={!rejectReasonCode || (rejectReasonCode === "other" && !rejectReasonText.trim())}
+                  className="flex-1 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Reject Booking
                 </button>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </main>
 

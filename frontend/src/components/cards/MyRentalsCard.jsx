@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 import {
   Calendar,
   MapPin,
@@ -92,11 +93,11 @@ const RentalCard = ({ item: booking, onViewDetails, onCancel }) => {
 
           <div className="text-[13px] text-gray-900 mt-3">
             <Calendar className="w-4 h-4 inline mr-1" />
-            {new Date(booking.startDate).toLocaleDateString()} →{' '}
-            {new Date(booking.endDate).toLocaleDateString()}
+            {dayjs(booking.startDate).format('M/D/YYYY')} →{' '}
+            {dayjs(booking.endDate).format('M/D/YYYY')}
             <p className="text-yellow-600 flex gap-1 items-center mt-1">
               <Clock className="w-4 h-4" />
-              {countDays()}
+              {dayjs(booking.endDate).diff(dayjs(booking.startDate), 'day')} {dayjs(booking.endDate).diff(dayjs(booking.startDate), 'day') > 1 ? 'days' : 'day'}
             </p>
           </div>
 

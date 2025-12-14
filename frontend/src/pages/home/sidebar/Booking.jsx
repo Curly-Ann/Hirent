@@ -19,6 +19,7 @@ const Booking = () => {
 
   // Fetch item details from backend
   const [productData, setProductData] = useState(null);
+  const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -74,6 +75,22 @@ const Booking = () => {
     if (itemId) {
       fetchItemDetails();
     }
+  }, [itemId]);
+
+  // Fetch booked dates for the item
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      if (!itemId) return;
+      try {
+        const response = await makeAPICall(ENDPOINTS.BOOKINGS.FOR_ITEM(itemId));
+        if (response.success) {
+          setBookedDates(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch booked dates:', error);
+      }
+    };
+    fetchBookedDates();
   }, [itemId]);
 
   const calculatePricing = () => {
@@ -222,7 +239,7 @@ const Booking = () => {
 
           <ApplyCoupon couponData={couponData} setCouponData={setCouponData} />
 
-          <RentalPeriod rentalData={rentalData} setRentalData={setRentalData} />
+          <RentalPeriod rentalData={rentalData} setRentalData={setRentalData} bookedDates={bookedDates} />
 
           <LateReturnPolicy />
 
@@ -237,7 +254,7 @@ const Booking = () => {
             deliveryOptions={productData.deliveryOptions}
           />
 
-          <ReturnDetails deliveryMethod={deliveryMethod} />
+          <ReturnDetails deliveryMethod={deliveryMethod} securityDeposit={pricing.securityDeposit} />
 
           <CancellationPolicy />
 

@@ -24,6 +24,8 @@ export const ENDPOINTS = {
     GOOGLE: `${API_PREFIX}/auth/google`,
     GOOGLE_CALLBACK: `${API_PREFIX}/auth/google/callback`,
     PROFILE: `${API_PREFIX}/auth/profile`,
+    SEND_VERIFICATION_EMAIL: `${API_PREFIX}/auth/send-verification-email`,
+    VERIFY_EMAIL: `${API_PREFIX}/auth/verify-email`,
   },
 
   // -----------------------
@@ -90,6 +92,7 @@ export const ENDPOINTS = {
     CANCEL: (id) => `${API_PREFIX}/bookings/${id}/cancel`,
     UPDATE_STATUS: (id) => `${API_PREFIX}/bookings/${id}/status`,
     OWNER_BOOKINGS: `${API_PREFIX}/bookings/owner`,
+    FOR_ITEM: (itemId) => `${API_PREFIX}/bookings/item/${itemId}`,
   },
 
   // -----------------------
@@ -125,8 +128,9 @@ export const ENDPOINTS = {
   USERS: {
     GET_ALL: `${API_PREFIX}/users`,
     CREATE: `${API_PREFIX}/users`,
+    GET_ME: `${API_PREFIX}/users/me`,
     GET_PROFILE: `${API_PREFIX}/users/profile`,
-    UPDATE_PROFILE: `${API_PREFIX}/users/profile`,
+    UPDATE_PROFILE: `${API_PREFIX}/users/update-profile`,
   },
 
   // -----------------------

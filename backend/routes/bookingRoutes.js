@@ -17,6 +17,7 @@ const {
   getBookingsForMyItems,
   updateBookingStatus,
   getBookingById,
+  getBookingsForItem,
 } = require('../controllers/bookingController');
 
 // ============================
@@ -37,6 +38,13 @@ router.get(
   '/me',
   auth,
   getMyBookings
+);
+
+// Get bookings for item
+router.get(
+  '/item/:itemId',
+  auth,
+  getBookingsForItem
 );
 
 // Cancel booking

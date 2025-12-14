@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { makeAPICall, ENDPOINTS } from "../../config/api";
 import { Search, Bell, Download, ChevronDown, Eye } from "lucide-react";
 
@@ -24,7 +24,9 @@ import { AuthContext } from "../../context/AuthContext"; // ⭐ NEW — to use r
 
 export default function OwnerDashboard() {
   const { user } = useContext(AuthContext); // ⭐ get logged-in owner
-  const ownerId = user?.id;
+  
+  // Memoize ownerId to prevent unnecessary re-fetches
+  const ownerId = useMemo(() => user?.id, [user?.id]);
 
   // --------------------------------------------
   // ⚠️ Fallback avatar if the user has none
@@ -187,9 +189,9 @@ export default function OwnerDashboard() {
 
     const bookingsRows = bookings.map((b) => [
       b._id?.slice(0, 8),
-      b.item?.name || "Unknown",
-      b.renter?.name || "Unknown",
-      "₱ " + (b.totalPrice || 0).toLocaleString(),
+      b.itemId?.title || "Unknown",
+      b.userId?.name || "Unknown",
+      "₱ " + (b.totalAmount || 0).toLocaleString(),
       b.status,
     ]);
 
@@ -236,9 +238,9 @@ export default function OwnerDashboard() {
 
     const tableRows = bookings.map((b) => [
       b._id?.slice(0, 8),
-      b.item?.name,
-      b.renter?.name,
-      "₱ " + (b.totalPrice || 0).toLocaleString(),
+      b.itemId?.title,
+      b.userId?.name,
+      "₱ " + (b.totalAmount || 0).toLocaleString(),
       b.status,
     ]);
 

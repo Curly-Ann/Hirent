@@ -77,8 +77,8 @@ export default function BookingTable({
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
                         <img
-                          src={booking.item?.image || "https://via.placeholder.com/48"}
-                          alt={booking.item?.name || "Item"}
+                          src={booking.itemId?.images?.[0] || "https://via.placeholder.com/48"}
+                          alt={booking.itemId?.title || "Item"}
                           className="w-10 h-10 object-contain"
                           onError={(e) => {
                             e.target.src = "https://via.placeholder.com/48";
@@ -88,11 +88,11 @@ export default function BookingTable({
 
                       <div className="flex flex-col">
                         <span className="font-medium text-gray-900">
-                          {booking.item?.name || "Unknown"}
+                          {booking.itemId?.title || "Unknown"}
                         </span>
-                        {booking.item?.price && (
+                        {booking.itemId?.pricePerDay && (
                           <span className="text-[13px] text-gray-500">
-                            ₱ {booking.item.price} per day
+                            ₱ {booking.itemId.pricePerDay} per day
                           </span>
                         )}
                       </div>
@@ -104,15 +104,15 @@ export default function BookingTable({
                     <div className="flex items-center gap-2">
                       <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
                         <span className="text-xs font-medium text-purple-600">
-                          {(booking.renter?.name || "U").charAt(0)}
+                          {(booking.userId?.name || "U").charAt(0)}
                         </span>
                       </div>
                       <div className="flex flex-col">
                         <span className="font-medium text-gray-900">
-                          {booking.renter?.name || "Unknown"}
+                          {booking.userId?.name || "Unknown"}
                         </span>
                         <span className="text-xs text-gray-500">
-                          {booking.renter?.email || "N/A"}
+                          {booking.userId?.email || "N/A"}
                         </span>
                       </div>
                     </div>
@@ -123,7 +123,7 @@ export default function BookingTable({
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-500" />
                       <span className="text-gray-600">
-                        {formatDate(booking.bookedFrom)}
+                        {formatDate(booking.startDate)}
                       </span>
                     </div>
                   </td>
@@ -131,7 +131,7 @@ export default function BookingTable({
                   {/* Total */}
                   <td className="px-6 py-4">
                     <span className="font-semibold text-gray-900">
-                      ₱{(booking.totalPrice || 0).toLocaleString()}
+                      ₱{(booking.totalAmount || 0).toLocaleString()}
                     </span>
                   </td>
 

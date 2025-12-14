@@ -1,14 +1,14 @@
 const Booking = require('../models/Booking');
 const Item = require('../models/Item');
 const { createNotification } = require('./notificationController');
-const { differenceInDays } = require('date-fns');
+const dayjs = require('dayjs');
 
 // Create a new booking
 exports.createBooking = async (req, res) => {
   try {
     const {
       itemId, startDate, endDate, totalAmount, subtotal,
-      shippingFee, securityDeposit, discount, deliveryMethod, couponCode
+      shippingFee, discount, deliveryMethod, couponCode
     } = req.body;
     const renterId = req.user.userId;
 
@@ -21,6 +21,17 @@ exports.createBooking = async (req, res) => {
       return res.status(400).json({ success: false, msg: 'You cannot book your own item.' });
     }
 
+    const overlap = await Booking.findOne({
+      itemId,
+      status: { $in: ["pending", "approved"] },
+      startDate: { $lt: endDate },
+      endDate: { $gt: startDate },
+    });
+
+    if (overlap) {
+      return res.status(409).json({ success: false, msg: 'The selected dates overlap with an existing booking.' });
+    }
+
     const newBooking = new Booking({
       userId: renterId,
       itemId,
@@ -30,7 +41,7 @@ exports.createBooking = async (req, res) => {
       totalAmount,
       subtotal,
       shippingFee,
-      securityDeposit,
+      securityDeposit: item.securityDeposit || 0,
       discount,
       deliveryMethod,
       couponCode,
@@ -73,7 +84,7 @@ exports.getMyBookings = async (req, res) => {
         const bookingObject = booking.toObject();
         return {
           ...bookingObject,
-          rentalDuration: Math.max(1, differenceInDays(new Date(bookingObject.endDate), new Date(bookingObject.startDate))),
+          rentalDuration: Math.max(1, dayjs(bookingObject.endDate).diff(dayjs(bookingObject.startDate), 'day')),
         };
       });
 
@@ -102,7 +113,7 @@ exports.getBookingsForMyItems = async (req, res) => {
   try {
     const bookings = await Booking.find({ ownerId: req.user.userId })
       .populate('itemId', 'title images pricePerDay category') // Populating necessary item fields
-      .populate('userId', 'name email') // Populating necessary renter fields
+      .populate('userId', 'name email phone address rating') // Populating necessary renter fields
       .sort({ createdAt: -1 });
 
     const validBookings = bookings
@@ -111,7 +122,7 @@ exports.getBookingsForMyItems = async (req, res) => {
         const bookingObject = booking.toObject();
         return {
           ...bookingObject,
-          rentalDuration: Math.max(1, differenceInDays(new Date(bookingObject.endDate), new Date(bookingObject.startDate))),
+          rentalDuration: Math.max(1, dayjs(bookingObject.endDate).diff(dayjs(bookingObject.startDate), 'day')),
         };
       });
 
@@ -126,8 +137,8 @@ exports.getBookingsForMyItems = async (req, res) => {
 exports.getOwnerBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ ownerId: req.params.ownerId })
-      .populate('itemId', 'title images')
-      .populate('userId', 'name email profileImage')
+      .populate('itemId', 'title images pricePerDay')
+      .populate('userId', 'name email phone address rating profileImage')
       .sort({ createdAt: -1 });
     res.json({ success: true, data: bookings });
   } catch (err) {
@@ -139,7 +150,9 @@ exports.getOwnerBookings = async (req, res) => {
 exports.updateBookingStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const booking = await Booking.findById(req.params.id).populate('itemId');
+    const booking = await Booking.findById(req.params.id)
+      .populate('itemId')
+      .populate('userId', 'name email phone address rating');
 
     if (!booking) {
       return res.status(404).json({ success: false, msg: 'Booking not found' });
@@ -239,5 +252,18 @@ exports.getBookingById = async (req, res) => {
     res.json({ success: true, data: booking });
   } catch (err) {
     res.status(500).json({ success: false, msg: 'Error fetching booking', message: err.message });
+  }
+};
+
+// Get all bookings for a specific item
+exports.getBookingsForItem = async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      itemId: req.params.itemId,
+      status: { $in: ['approved', 'pending'] },
+    }).select('startDate endDate');
+    res.json({ success: true, data: bookings });
+  } catch (err) {
+    res.status(500).json({ success: false, msg: 'Error fetching bookings for item', message: err.message });
   }
 };
