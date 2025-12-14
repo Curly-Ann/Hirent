@@ -10,7 +10,7 @@ exports.createBooking = async (req, res) => {
       itemId, startDate, endDate, totalAmount, subtotal,
       shippingFee, discount, deliveryMethod, couponCode
     } = req.body;
-    const renterId = req.user.userId;
+    const renterId = req.user._id;
 
     const item = await Item.findById(itemId);
     if (!item) {
