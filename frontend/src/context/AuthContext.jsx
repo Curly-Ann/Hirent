@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
 import { ENDPOINTS, makeAPICall } from "../config/api";
 
 export const AuthContext = createContext();
@@ -145,26 +145,30 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData));
   };
   
+  // Memoize context value to prevent unnecessary re-renders of consumers
+  const contextValue = useMemo(
+    () => ({
+      isLoggedIn,
+      login,
+      logout,
+      token,
+      user,
+      updateUser,
+      wishlist,
+      cart,
+      toggleWishlist,
+      addToCart,
+      removeFromCart,
+      fetchWishlistAndCart,
+      wishlistCount: wishlist.length,
+      collectionCount: cart.length,
+      isInitialized,
+    }),
+    [isLoggedIn, token, user, wishlist, cart, isInitialized]
+  );
+  
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        login,
-        logout,
-        token,
-        user,
-        updateUser,
-        wishlist,
-        cart,
-        toggleWishlist,
-        addToCart,
-        removeFromCart,
-        fetchWishlistAndCart,
-        wishlistCount: wishlist.length,
-        collectionCount: cart.length,
-        isInitialized,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

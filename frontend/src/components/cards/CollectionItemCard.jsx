@@ -15,7 +15,7 @@ const CollectionCard = ({
   handleRemoveItem,
   navigate,
 }) => {
-  // 🔒 REQUIRED GUARD — prevents white screen crashes
+  // Guard against null itemId
   if (!item || !item.itemId) {
     return null;
   }
@@ -27,34 +27,34 @@ const CollectionCard = ({
     >
       <div className="flex gap-6 relative">
         <img
-          alt="Item image"
-          src={item.itemId.images?.[0] || "/placeholder.png"}
+          alt="Description of image"
+          src={item.itemId?.images?.[0] || '/placeholder.png'}
           className="w-36 h-36 bg-gray-100 object-contain rounded-xl"
         />
 
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <h2 className="font-semibold text-[16px]">
-              {item.itemId.title || "Untitled Item"}
-            </h2>
+            <h2 className="font-semibold text-[16px]">{item.itemId?.title || 'Unknown Item'}</h2>
 
             <div className="text-[13px] mt-1 text-gray-700">
               <div className="flex items-center gap-1">
-                Listed by {item.itemId.owner?.name || "Unknown"}
+                Listed by {item.itemId?.owner?.name || 'Unknown'}
               </div>
 
               {/* STATUS BADGE */}
               <div
                 className={`absolute top-1 right-0 inline-flex items-center gap-1 text-[12px] font-medium px-2.5 py-1 rounded-full ${
-                  item.status === "approved"
+                  item.bookingStatus === "approved"
                     ? "bg-green-200 text-green-800"
-                    : item.status === "pending"
+                    : item.bookingStatus === "pending"
                     ? "bg-yellow-200 text-yellow-800"
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
-                {item.status === "approved" && (
-                  <CircleCheckBig className="w-3 h-3" />
+                {item.bookingStatus === "approved" && <CircleCheckBig className="w-3 h-3" />}
+                {item.bookingStatus === "pending" && <Clock className="w-3 h-3" />}
+                {!item.bookingStatus && (
+                  <CalendarOff className="w-3 h-3" />
                 )}
                 {item.status === "pending" && <Clock className="w-3 h-3" />}
                 {item.status !== "approved" &&
@@ -63,9 +63,9 @@ const CollectionCard = ({
                   )}
 
                 <span>
-                  {item.status === "approved"
+                  {item.bookingStatus === "approved"
                     ? "Approved"
-                    : item.status === "pending"
+                    : item.bookingStatus === "pending"
                     ? "Waiting"
                     : "Not Booked Yet"}
                 </span>
@@ -114,8 +114,7 @@ const CollectionCard = ({
                     <div className="flex items-center gap-1">
                       <ShieldAlert className="w-4 h-4" />
                       <span>
-                        Security Deposit (₱
-                        {item.itemId.securityDeposit ?? 0})
+                        Security Deposit (₱{item.itemId?.securityDeposit || 0})
                       </span>
                     </div>
                   </div>
@@ -124,7 +123,7 @@ const CollectionCard = ({
                 {/* RIGHT SIDE PRICE INFO */}
                 <div className="text-right text-[13px] flex flex-col gap-0.5">
                   <span className="font-bold text-[15px] text-purple-900">
-                    ₱{item.itemId.pricePerDay ?? 0}/day
+                    ₱{item.itemId?.pricePerDay || 0}/day
                   </span>
 
                   {(item.status === "approved" ||
@@ -159,7 +158,7 @@ const CollectionCard = ({
 
           {/* BUTTONS */}
           <div className="absolute bottom-1 right-0 flex items-center gap-1.5">
-            {item.status === "approved" || item.status === "pending" ? (
+            {item.bookingStatus === "approved" || item.bookingStatus === "pending" ? (
               <button
                 onClick={() => openCancelModal(item._id)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm rounded-full text-red-500 border border-red-300 bg-red-50 hover:bg-red-100"
@@ -168,21 +167,21 @@ const CollectionCard = ({
               </button>
             ) : (
               <button
-                onClick={() => handleRemoveItem(item.itemId._id)}
+                onClick={() => handleRemoveItem(item.itemId?._id || item.itemId)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm rounded-full text-red-500 border border-red-300 bg-red-50 hover:bg-red-100"
               >
                 Remove from collection
               </button>
             )}
 
-            {item.status === "approved" ? (
+            {item.bookingStatus === "approved" ? (
               <button
-                onClick={() => alert(`Contacting owner`)}
+                onClick={() => alert(`Contacting owner: ${item.itemId?.owner?.name}`)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm bg-[#7A1CA9] text-white rounded-full hover:bg-purple-800"
               >
                 Message Owner
               </button>
-            ) : item.status === "pending" ? (
+            ) : item.bookingStatus === "pending" ? (
               <button
                 onClick={() => navigate(`/edit-booking/${item._id}`)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm bg-[#7A1CA9] text-white rounded-full hover:bg-purple-800"
@@ -191,7 +190,7 @@ const CollectionCard = ({
               </button>
             ) : (
               <button
-                onClick={() => navigate(`/booking/${item.itemId._id}`)}
+                onClick={() => navigate(`/booking/${item.itemId?._id || item.itemId}`)}
                 className="px-3 py-1.5 text-[12.5px] shadow-sm bg-[#7A1CA9] text-white rounded-full hover:bg-purple-800"
               >
                 Continue to Booking

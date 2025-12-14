@@ -1,32 +1,63 @@
-import { Calendar } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 
-const RentalPeriod = ({ rentalData, setRentalData }) => {
+dayjs.extend(isBetween);
+
+const RentalPeriod = ({ rentalData, setRentalData, bookedDates }) => {
   const [errors, setErrors] = useState({});
-  const startRef = useRef(null);
-  const endRef = useRef(null);
+
+  const isDateRangeAvailable = (start, end) => {
+    if (!start || !end) return true;
+    const startDay = dayjs(start).startOf('day');
+    const endDay = dayjs(end).endOf('day');
+    return !bookedDates.some(({ startDate, endDate }) => {
+      const bookingStart = dayjs(startDate).startOf('day');
+      const bookingEnd = dayjs(endDate).endOf('day');
+      return (
+        startDay.isBetween(bookingStart, bookingEnd, 'day', '[]') ||
+        endDay.isBetween(bookingStart, bookingEnd, 'day', '[]') ||
+        bookingStart.isBetween(startDay, endDay, 'day', '[]') ||
+        bookingEnd.isBetween(startDay, endDay, 'day', '[]')
+      );
+    });
+  };
 
   const calculateDays = (start, end) => {
     if (!start || !end) return 1;
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    if (isNaN(startDate) || isNaN(endDate) || endDate <= startDate) return 1;
-    return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) || 1;
+    const startDay = dayjs(start);
+    const endDay = dayjs(end);
+    if (!startDay.isValid() || !endDay.isValid() || endDay.isBefore(startDay) || endDay.isSame(startDay, 'day')) return 1;
+    return endDay.diff(startDay, 'day') || 1;
+  };
+
+  const shouldDisableDate = (date) => {
+    return bookedDates.some(({ startDate, endDate }) =>
+      date.isBetween(
+        dayjs(startDate).startOf('day'),
+        dayjs(endDate).endOf('day'),
+        'day',
+        '[]'
+      )
+    );
   };
 
   const autoComputeEndDate = (startDate, value, type) => {
     if (!startDate) return;
-    const start = new Date(startDate);
-    const end = new Date(start);
+    const start = dayjs(startDate);
+    let end = start.clone();
 
     const numValue = Number(value);
     if (isNaN(numValue)) return;
 
-    if (type === "days") end.setDate(start.getDate() + numValue);
-    if (type === "weeks") end.setDate(start.getDate() + numValue * 7);
-    if (type === "months") end.setMonth(start.getMonth() + numValue);
+    if (type === "days") end = start.add(numValue, 'day');
+    if (type === "weeks") end = start.add(numValue, 'week');
+    if (type === "months") end = start.add(numValue, 'month');
 
-    const newEndDate = end.toISOString().split("T")[0];
+    const newEndDate = end.format('YYYY-MM-DD');
     setRentalData((prev) => ({
       ...prev,
       endDate: newEndDate,
@@ -35,25 +66,24 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
   };
 
   const computeDurationFromDates = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    if (isNaN(start) || isNaN(end) || end <= start) {
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    if (!start.isValid() || !end.isValid() || end.isBefore(start) || end.isSame(start, 'day')) {
       setRentalData((prev) => ({ ...prev, days: 1, durationValue: 1, durationType: "days" }));
       return;
     }
-    const days = calculateDays(start, end);
+    const days = calculateDays(startDate, endDate);
     setRentalData((prev) => ({ ...prev, days, durationValue: days, durationType: "days" }));
   };
 
-  const handleStartDateChange = (e) => {
-    const start = e.target.value;
-    const today = new Date();
-    const startDate = new Date(start);
-    today.setHours(0, 0, 0, 0);
-    const dayAfterTomorrow = new Date(today);
-    dayAfterTomorrow.setDate(today.getDate() + 2);
+  const handleStartDateChange = (date) => {
+    if (!date) return;
+    
+    const start = date.format('YYYY-MM-DD');
+    const today = dayjs().startOf('day');
+    const dayAfterTomorrow = today.add(2, 'day');
 
-    if (startDate < dayAfterTomorrow) {
+    if (dayjs(start).isBefore(dayAfterTomorrow)) {
       setErrors((prev) => ({ ...prev, startDate: "Start date must be at least 2 days from now." }));
     } else {
       setErrors((prev) => ({ ...prev, startDate: "" }));
@@ -66,13 +96,17 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
     }
   };
 
-  const handleEndDateChange = (e) => {
-    const end = e.target.value;
-    const startDate = new Date(rentalData.startDate);
-    const endDate = new Date(end);
+  const handleEndDateChange = (date) => {
+    if (!date) return;
+    
+    const end = date.format('YYYY-MM-DD');
+    const startDate = dayjs(rentalData.startDate);
+    const endDate = dayjs(end);
 
-    if (rentalData.startDate && endDate <= startDate) {
+    if (rentalData.startDate && (endDate.isBefore(startDate) || endDate.isSame(startDate, 'day'))) {
       setErrors((prev) => ({ ...prev, endDate: "End date must be after the start date." }));
+    } else if (!isDateRangeAvailable(rentalData.startDate, end)) {
+      setErrors((prev) => ({ ...prev, endDate: "Selected date range overlaps with an existing booking." }));
     } else {
       setErrors((prev) => ({ ...prev, endDate: "" }));
     }
@@ -105,70 +139,94 @@ const RentalPeriod = ({ rentalData, setRentalData }) => {
     }
   };
 
-  const openPicker = (ref) => {
-    try {
-      ref.current.showPicker();
-    } catch (e) {
-      ref.current.focus();
-    }
-  };
-
   return (
-    <div className="bg-white text-purple-900 rounded-lg shadow-sm p-6">
-      <h2 className="text-[16px] text-purple-900">Rental Period</h2>
-      <p className="text-[15px] text-gray-600 mb-6">Start date must be scheduled 1–2 days after booking.</p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-[15px] font-medium text-black mb-2">Start Date</label>
-          <div className="relative">
-            <input
-              ref={startRef}
-              type="date"
-              value={rentalData.startDate}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="bg-white text-purple-900 rounded-lg shadow-sm p-6">
+        <h2 className="text-[16px] text-purple-900">Rental Period</h2>
+        <p className="text-[15px] text-gray-600 mb-6">Start date must be scheduled 1–2 days after booking.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-[15px] font-medium text-black mb-2">Start Date</label>
+            <DatePicker
+              value={rentalData.startDate ? dayjs(rentalData.startDate) : null}
               onChange={handleStartDateChange}
-              className="w-full px-4 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10"
+              shouldDisableDate={shouldDisableDate}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  variant: 'outlined',
+                  error: !!errors.startDate,
+                  helperText: errors.startDate,
+                  sx: {
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#d1d5db',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#7A1CA9',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#7A1CA9',
+                      },
+                    },
+                  },
+                },
+              }}
             />
-            <Calendar onClick={() => openPicker(startRef)} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-900 cursor-pointer" />
           </div>
-          {errors.startDate && <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>}
-        </div>
-        <div>
-          <label className="block text-[15px] font-medium text-black mb-2">End Date</label>
-          <div className="relative">
-            <input
-              ref={endRef}
-              type="date"
-              value={rentalData.endDate}
+          <div>
+            <label className="block text-[15px] font-medium text-black mb-2">End Date</label>
+            <DatePicker
+              value={rentalData.endDate ? dayjs(rentalData.endDate) : null}
               onChange={handleEndDateChange}
-              className="w-full px-4 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10"
+              shouldDisableDate={shouldDisableDate}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  variant: 'outlined',
+                  error: !!errors.endDate,
+                  helperText: errors.endDate,
+                  sx: {
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#d1d5db',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#7A1CA9',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#7A1CA9',
+                      },
+                    },
+                  },
+                },
+              }}
             />
-            <Calendar onClick={() => openPicker(endRef)} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-900 cursor-pointer" />
           </div>
-          {errors.endDate && <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>}
-        </div>
-        <div>
-          <label className="block text-[15px] font-medium text-black mb-2">Rental Duration</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              min="1"
-              value={rentalData.durationValue}
-              onChange={handleDurationNumberChange}
-              className="w-20 px-3 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-center"
-            />
-            <select
-              value={rentalData.durationType}
-              onChange={handleDurationTypeChange}
-              className="px-3 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="days">Days</option>
-              <option value="weeks">Weeks</option>
-              <option value="months">Months</option>
-            </select>
+          <div>
+            <label className="block text-[15px] font-medium text-black mb-2">Rental Duration</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="1"
+                value={rentalData.durationValue}
+                onChange={handleDurationNumberChange}
+                className="w-20 px-3 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-center"
+              />
+              <select
+                value={rentalData.durationType}
+                onChange={handleDurationTypeChange}
+                className="px-3 py-2 text-[15px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="days">Days</option>
+                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </LocalizationProvider>
   );
 };
 

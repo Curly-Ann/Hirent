@@ -48,9 +48,9 @@ const CollectionSummary = ({
           <div className="text-[13px] space-y-1 pb-2">
             <p className="font-semibold mt-3 mb-3">Approved Items</p>
             {approvedItems.map((item) => (
-              <div key={item.id} className="flex justify-between">
-                <span>{item.name}</span>
-                <span>₱{item.price.toFixed(2)}</span>
+              <div key={item._id} className="flex justify-between">
+                <span>{item.itemId?.title || item.name || 'Unknown Item'}</span>
+                <span>₱{(item.itemId?.pricePerDay || item.price || 0).toFixed(2)}</span>
               </div>
             ))}
           </div>
@@ -62,23 +62,23 @@ const CollectionSummary = ({
         <div className="text-[13px] space-y-1 pt-2 pb-2">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>₱{approvedTotals.subtotal.toFixed(2)}</span>
+            <span>₱{(approvedTotals?.subtotal || 0).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Shipping</span>
             <span>
               {approvedItems.length > 0
-                ? approvedTotals.shipping === 0
+                ? (approvedTotals?.shipping || 0) === 0
                   ? "Free"
-                  : `₱${approvedTotals.shipping.toFixed(2)}`
+                  : `₱${(approvedTotals?.shipping || 0).toFixed(2)}`
                 : "--"}
             </span>
           </div>
 
-          {approvedTotals.discount > 0 && (
+          {(approvedTotals?.discount || 0) > 0 && (
             <div className="flex justify-between text-green-700">
               <span>Discount</span>
-              <span>-₱{approvedTotals.discount.toFixed(2)}</span>
+              <span>-₱{(approvedTotals?.discount || 0).toFixed(2)}</span>
             </div>
           )}
 
@@ -86,14 +86,14 @@ const CollectionSummary = ({
             <span>Security Deposit</span>
             <span>
               {approvedItems.length > 0
-                ? `₱${approvedSecurityDepositTotal.toFixed(2)}`
+                ? `₱${(approvedSecurityDepositTotal || 0).toFixed(2)}`
                 : "--"}
             </span>
           </div>
 
           <div className="flex justify-between font-bold text-lg">
             <span>Total</span>
-            <span>₱{approvedGrandTotalWithDeposit.toFixed(2)}</span>
+            <span>₱{(approvedGrandTotalWithDeposit || 0).toFixed(2)}</span>
           </div>
         </div>
 

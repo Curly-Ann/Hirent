@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Info } from "lucide-react";
 
-const ReturnDetails = () => {
+const ReturnDetails = ({ securityDeposit = 0 }) => {
   const [depositMethod, setDepositMethod] = useState("cash");
   const [selectedEwallet, setSelectedEwallet] = useState("gcash");
 
@@ -28,7 +28,7 @@ const ReturnDetails = () => {
 
         <div className="bg-gray-50     p-4 rounded-lg flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold  text-gray-900 ">₱1000.00</p>
+            <p className="text-2xl font-bold  text-gray-900 ">₱{securityDeposit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             <p className="text-[15px] text-gray-600 mt-1">Set by item owner</p>
           </div>
 
