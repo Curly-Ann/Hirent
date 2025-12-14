@@ -1,3 +1,4 @@
+// Authentication context for user session management
 import React, { createContext, useState, useEffect, useMemo } from "react";
 import { ENDPOINTS, makeAPICall } from "../config/api";
 

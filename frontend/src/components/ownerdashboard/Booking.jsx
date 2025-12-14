@@ -2,14 +2,26 @@ import React, { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import GoogleStyleCalendar from "../../components/calendar/GoogleStyleCalendar";
 
-export default function Booking({ sampleBookings }) {
+export default function Booking({ 
+  bookings: sampleBookings, 
+  listings = [],
+  selectedItemId = "all",
+  onItemChange = () => {}
+}) {
   // SAFETY: Ensure bookings is always a valid array
   const bookings = Array.isArray(sampleBookings) ? sampleBookings : [];
 
-  // Extract unique items safely
+  // Use real listings from owner's items
   const uniqueItems = useMemo(() => {
+    if (listings && listings.length > 0) {
+      return listings.map(item => ({
+        item: item.title || "Unknown Item",
+        itemKey: item._id,
+      }));
+    }
+    
+    // Fallback: extract from bookings if no listings provided
     const map = {};
-
     bookings.forEach((b) => {
       const key = b?.itemKey;
       if (!key) return;
@@ -23,9 +35,19 @@ export default function Booking({ sampleBookings }) {
     });
 
     return Object.values(map);
-  }, [bookings]);
+  }, [listings, bookings]);
 
-  const [selectedItemKey, setSelectedItemKey] = useState("all");
+  // Use selectedItemId from props, fallback to local state
+  const [localSelectedItemKey, setLocalSelectedItemKey] = useState("all");
+  const selectedItemKey = selectedItemId || localSelectedItemKey;
+
+  // Handle item change
+  const handleItemChange = (value) => {
+    setLocalSelectedItemKey(value);
+    if (onItemChange) {
+      onItemChange(value);
+    }
+  };
 
   // Filter current bookings safely
   const currentBookings =
@@ -47,7 +69,7 @@ export default function Booking({ sampleBookings }) {
         <select
           className="border rounded px-2 py-1 text-sm"
           value={selectedItemKey}
-          onChange={(e) => setSelectedItemKey(e.target.value)}
+          onChange={(e) => handleItemChange(e.target.value)}
         >
           <option value="all">All Items</option>
 

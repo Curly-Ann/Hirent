@@ -45,13 +45,20 @@ const BrowseRentals = () => {
       setLoading(true);
       try {
         const data = await makeAPICall(ENDPOINTS.ITEMS.GET_ALL);
-        setListings(data?.items || []);
-        setFilteredListings(data?.items || []);
+        // Ensure data and data.items are valid before setting state
+        const items = data?.items || [];
+        setListings(items);
+        setFilteredListings(items);
       } catch (err) {
         console.error("Error fetching items:", err);
+        // On error, reset to empty state to prevent rendering stale data
+        setListings([]);
+        setFilteredListings([]);
       } finally {
+        // This block is guaranteed to run, ensuring the loading state is always terminated.
         setLoading(false);
       }
+
     };
 
     fetchItems();

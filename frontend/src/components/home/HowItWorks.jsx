@@ -36,7 +36,7 @@ export default function HowItWorks() {
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-semibold">How It Works</h2>
           <p className="text-gray-100 text-[16px] mt-2">
-            Renting on HiRENT is simple and secure. Get started in three easy
+            Renting on Hirent is simple and secure. Get started in three easy
             steps.
           </p>
         </div>

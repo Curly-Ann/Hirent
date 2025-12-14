@@ -78,7 +78,7 @@ export default function Testimonials() {
             Our Happy Customers
           </h3>
           <p className="text-gray-600 text-[16px]">
-            Real stories from members who love HiRent
+            Real stories from members who love Hirent
           </p>
         </div>
 

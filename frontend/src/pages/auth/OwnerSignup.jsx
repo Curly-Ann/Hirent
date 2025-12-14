@@ -1,3 +1,4 @@
+// Owner signup page component
 import React, { useState, useContext } from "react";
 import "../../assets/Auth.css";
 import logo from "../../assets/logo.png";
@@ -7,7 +8,7 @@ import Footer from "../../components/layouts/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { makeAPICall, ENDPOINTS } from "../../config/api"; // ✓ Use centralized API
+import { makeAPICall, ENDPOINTS } from "../../config/api";
 
 const OwnerSignup = () => {
   const navigate = useNavigate();

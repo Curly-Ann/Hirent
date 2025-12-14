@@ -1,13 +1,16 @@
+// Google OAuth callback handler
 import React, { useContext, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
+// Handle Google authentication callback
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
   const processedRef = useRef(false); // prevent multiple executions
 
+  // Process callback on mount
   useEffect(() => {
     if (processedRef.current) return;
     processedRef.current = true;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Package, AlertTriangle, Loader } from "lucide-react";
+import { ArrowLeft, Package, AlertTriangle, Loader, ShoppingBag } from "lucide-react";
 import CancelConfirmationModal from "../../../components/modals/CancelModal";
 import { ViewDetailsModal } from "../../../components/modals/ViewDetailsModal";
 import RentalSummary from "../../../components/cards/RentalSummary";
@@ -192,10 +192,21 @@ const MyRentalsPage = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500 pt-20">
-            <Package size={64} className="mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold">No Rentals Yet</h2>
-            <p>You haven't rented any items. Start exploring and find something to rent!</p>
+          <div className="flex flex-col items-center justify-center h-full pt-20">
+            <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200 p-6 rounded-2xl mb-6">
+              <ShoppingBag size={64} className="text-[#7A1CA9]" />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">No Rentals Yet</h2>
+            <p className="text-gray-600 text-lg mb-8 max-w-sm">
+              You haven't rented any items yet. Start exploring and find something amazing to rent!
+            </p>
+            <button
+              onClick={() => navigate("/browse")}
+              className="flex items-center gap-2 px-6 py-3 bg-[#7A1CA9] text-white font-semibold rounded-xl hover:bg-[#6a1894] transition shadow-lg"
+            >
+              <ShoppingBag size={20} />
+              Book Now
+            </button>
           </div>
         )}
       </div>

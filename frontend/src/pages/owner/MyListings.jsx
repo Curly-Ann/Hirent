@@ -21,6 +21,10 @@ import DeleteConfirmModal from "../../components/listings/DeleteConfirmModal";
 import ItemPageModal from "../../components/listings/ItemPageModal";
 import ItemActionsMenu from "../../components/listings/ItemActionsMenu";
 
+// In-memory cache for owner listings (same session only)
+const listingsCache = { data: null, timestamp: null };
+const CACHE_DURATION = 60000; // 60 seconds
+
 // Fetch owner listings from backend
 const MyListings = () => {
   const { user } = React.useContext(
@@ -30,24 +34,42 @@ const MyListings = () => {
   const [listings, setListings] = useState([]);
   const [menuOpen, setMenuOpen] = useState(null);
   const [expanded, setExpanded] = useState(null);
+  const hasInitializedRef = React.useRef(false);
 
-  // Function to fetch listings
-  const fetchListings = React.useCallback(async () => {
+  // Function to fetch listings with cache support
+  const fetchListings = React.useCallback(async (skipCache = false) => {
     if (!user?.id) return;
 
     try {
-      // Fetch only items owned by the logged-in user
-      const data = await makeAPICall(ENDPOINTS.ITEMS.BY_OWNER(user.id));
-      setListings(Array.isArray(data) ? data : []);
+      // Check cache first (unless explicitly skipped)
+      const now = Date.now();
+      if (!skipCache && listingsCache.data && listingsCache.timestamp && (now - listingsCache.timestamp) < CACHE_DURATION) {
+        // Use cached data immediately
+        setListings(listingsCache.data);
+        return;
+      }
+
+      // Fetch fresh data from backend
+      const response = await makeAPICall(ENDPOINTS.ITEMS.BY_OWNER(user.id));
+      const items = response?.success && Array.isArray(response.items) ? response.items : [];
+      
+      // Update cache
+      listingsCache.data = items;
+      listingsCache.timestamp = Date.now();
+      
+      setListings(items);
     } catch (err) {
       console.error("Error fetching listings:", err);
     }
   }, [user?.id]);
 
-  // Fetch owner items from backend - refetch when location changes
+  // Fetch owner items on mount only (prevent refetch on navigation)
   useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+    
     fetchListings();
-  }, [user?.id, location, fetchListings]);
+  }, [user?.id, fetchListings]);
 
   // State for modals
   const [editModal, setEditModal] = useState(null);
@@ -57,7 +79,7 @@ const MyListings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
 
-  // Handle duplicate
+  // Handle toggle status - invalidate cache on mutation
   const handleToggleStatus = async (item) => {
     try {
       const newStatus = item.status === "active" ? "inactive" : "active";
@@ -70,12 +92,16 @@ const MyListings = () => {
           Authorization: `Bearer ${token}`,
         },
     });
-      fetchListings(); // Refetch to show the updated status
+      // Invalidate cache and refetch
+      listingsCache.data = null;
+      listingsCache.timestamp = null;
+      await fetchListings(true); // Skip cache, force fresh fetch
     } catch (err) {
       console.error("Error toggling status:", err);
     }
   };
 
+  // Handle duplicate - invalidate cache on mutation
   const handleDuplicate = async (item) => {
     try {
       const { _id, owner, createdAt, updatedAt, __v, ...itemData } = item;
@@ -102,7 +128,10 @@ const MyListings = () => {
       },
       });
       if (response.ok) {
-        fetchListings(); // Refetch to show the new item
+        // Invalidate cache and refetch
+        listingsCache.data = null;
+        listingsCache.timestamp = null;
+        await fetchListings(true); // Skip cache, force fresh fetch
       } else {
         console.error("Failed to duplicate item");
       }
@@ -111,11 +140,14 @@ const MyListings = () => {
     }
   };
 
-  // Handle delete
+  // Handle delete - invalidate cache on mutation
   const handleDelete = async (id) => {
     try {
       await makeAPICall(ENDPOINTS.ITEMS.DELETE(id), { method: "DELETE" });
-      setListings((prev) => prev.filter((item) => item._id !== id));
+      // Invalidate cache and refetch
+      listingsCache.data = null;
+      listingsCache.timestamp = null;
+      await fetchListings(true); // Skip cache, force fresh fetch
       setDeleteModal(null);
     } catch (err) {
       console.error("Error deleting item:", err);
@@ -332,6 +364,7 @@ const MyListings = () => {
                             }
                             alt={item.title}
                             className="w-14 h-14 object-cover rounded-lg border"
+                            onError={(e) => { e.target.src = "https://via.placeholder.com/40"; }}
                           />
                           <div>
                             <p className="font-semibold">{item.title}</p>

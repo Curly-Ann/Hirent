@@ -29,7 +29,7 @@ export default function WhyChoose() {
         {/* Header */}
         <div className="text-center mb-14">
           <h2 className="text-3xl font-semibold text-black">
-            Why Choose HiRent?
+            Why Choose Hirent?
           </h2>
           <p className="text-gray-600 text-[16px] mt-2">
             Join thousands who are saving money and earning more.

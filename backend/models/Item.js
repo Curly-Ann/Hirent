@@ -70,5 +70,8 @@ const ItemSchema = new mongoose.Schema({
 
 ItemSchema.index({ title: "text", description: "text" });
 ItemSchema.index({ owner: 1 });
+ItemSchema.index({ status: 1 });
+ItemSchema.index({ createdAt: -1 });
 
-module.exports = mongoose.models.Item || mongoose.model("Item", ItemSchema);
+// Explicitly bind to the 'items' collection
+module.exports = mongoose.models.Item || mongoose.model("Item", ItemSchema, "items");

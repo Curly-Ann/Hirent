@@ -1,5 +1,5 @@
 // src/pages/owner/OwnerBookings.jsx
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback, useRef } from "react";
 import ReactDOM from "react-dom";
 import OwnerSidebar from "../../components/layouts/OwnerSidebar";
 import { makeAPICall, ENDPOINTS } from "../../config/api";
@@ -32,6 +32,10 @@ import {
   Shield,
 } from "lucide-react";
 
+// In-memory session cache for bookings (NOT localStorage)
+const bookingsCache = { data: null, timestamp: null };
+const CACHE_DURATION = 60000; // 60 seconds
+
 export default function OwnerBookings() {
   const [bookings, setBookings] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -46,6 +50,7 @@ export default function OwnerBookings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
+  const hasInitializedRef = useRef(false);
 
   // Lock body scroll when reject modal opens
   useEffect(() => {
@@ -66,12 +71,16 @@ export default function OwnerBookings() {
     });
   };
 
-  const fetchBookings = async () => {
-    setLoading(true);
+  // Memoized fetch function - stable reference
+  const fetchBookings = useCallback(async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     setError(null);
     try {
       const response = await makeAPICall(ENDPOINTS.BOOKINGS.OWNER_BOOKINGS);
       if (response.success && Array.isArray(response.data)) {
+        // Update cache
+        bookingsCache.data = response.data;
+        bookingsCache.timestamp = Date.now();
         setBookings(response.data);
       } else {
         setBookings([]);
@@ -80,17 +89,27 @@ export default function OwnerBookings() {
       console.error("Error fetching bookings:", err);
       setError("Failed to load bookings");
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchBookings();
-    
-    // Poll for booking updates every 5 seconds to catch cancellations
-    const interval = setInterval(fetchBookings, 5000);
-    return () => clearInterval(interval);
   }, []);
+
+  // Fetch ONLY on initial mount - NO polling
+  useEffect(() => {
+    // Prevent double-fetch in StrictMode
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
+    // Check if cache is valid
+    const now = Date.now();
+    if (bookingsCache.data && bookingsCache.timestamp && (now - bookingsCache.timestamp) < CACHE_DURATION) {
+      // Use cached data immediately
+      setBookings(bookingsCache.data);
+      setLoading(false);
+    } else {
+      // Fetch fresh data
+      fetchBookings();
+    }
+  }, [fetchBookings]);
 
   const stats = {
     total: bookings.length,
@@ -129,22 +148,24 @@ export default function OwnerBookings() {
     return filtered;
   })();
 
-  const handleApprove = async (booking) => {
+  const handleApprove = useCallback(async (booking) => {
     try {
       await makeAPICall(ENDPOINTS.BOOKINGS.UPDATE_STATUS(booking._id), {
         method: "PUT",
         body: JSON.stringify({ status: "approved" }),
       });
       setShowApprovalModal(null);
-      // Refetch immediately to ensure consistency
-      await fetchBookings();
+      // Invalidate cache and refetch immediately
+      bookingsCache.data = null;
+      bookingsCache.timestamp = null;
+      await fetchBookings(false); // Don't show loading spinner
     } catch (err) {
       console.error("Error approving booking:", err);
       setError("Failed to approve booking");
     }
-  };
+  }, [fetchBookings]);
 
-  const handleReject = async (booking) => {
+  const handleReject = useCallback(async (booking) => {
     try {
       const payload = {
         status: "rejected",
@@ -160,20 +181,23 @@ export default function OwnerBookings() {
       setShowRejectModal(null);
       setRejectReasonCode("");
       setRejectReasonText("");
-      // Refetch immediately to ensure consistency
-      await fetchBookings();
+      // Invalidate cache and refetch immediately
+      bookingsCache.data = null;
+      bookingsCache.timestamp = null;
+      await fetchBookings(false); // Don't show loading spinner
     } catch (err) {
       console.error("Error rejecting booking:", err);
       setError("Failed to reject booking");
     }
-  };
+  }, [fetchBookings, rejectReasonCode, rejectReasonText]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      const response = await makeAPICall(ENDPOINTS.BOOKINGS.OWNER_BOOKINGS(user._id));
-      const data = response.success ? response.data : [];
-      setBookings(Array.isArray(data) ? data : []);
+      // Invalidate cache and force fresh fetch
+      bookingsCache.data = null;
+      bookingsCache.timestamp = null;
+      await fetchBookings(false);
       setSearchQuery("");
       setStatusFilter("All");
     } catch (err) {
@@ -182,7 +206,7 @@ export default function OwnerBookings() {
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, [fetchBookings]);
 
   const getStatusBadge = (status) => {
     const statusMap = {

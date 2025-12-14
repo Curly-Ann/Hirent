@@ -1,3 +1,4 @@
+// Owner setup page component
 import React, { useState, useEffect, useContext } from "react";
 import "../../assets/Auth.css";
 import logo from "../../assets/logo.png";
@@ -14,17 +15,17 @@ import {
 } from "select-philippines-address";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
+// Owner setup component
 const OwnerSetup = () => {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
+  // UI state
   const [agree, setAgree] = useState(false);
   const [contactFocused, setContactFocused] = useState(false);
   const [step, setStep] = useState(1);
 
-  // --------------------------
-  // FORM STATES
-  // --------------------------
+  // Form states
   const [formData, setFormData] = useState({
     sellerType: "individual",
     businessName: "",

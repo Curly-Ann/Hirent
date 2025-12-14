@@ -10,6 +10,15 @@ import Tooltip from "@mui/material/Tooltip";
 dayjs.extend(isBetweenPlugin);
 
 export default function GoogleStyleCalendar({ bookings }) {
+  // Filter bookings to only show active ones (not cancelled, rejected, or completed)
+  const activeBookings = React.useMemo(() => {
+    return (bookings || []).filter(booking => {
+      // Only render bookings that should block dates on the calendar
+      const activeStatuses = ['pending', 'approved', 'ongoing'];
+      return activeStatuses.includes(booking.status);
+    });
+  }, [bookings]);
+
   const renderDay = (dayProps) => {
     const day = dayProps.day;
 
@@ -19,7 +28,7 @@ export default function GoogleStyleCalendar({ bookings }) {
     let circleColor = null;
     let tooltipContent = null;
 
-    bookings.forEach((booking) => {
+    activeBookings.forEach((booking) => {
       const start = dayjs(booking.startDate);
       const end = dayjs(booking.endDate);
       const isStart = day.isSame(start, "day");

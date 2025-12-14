@@ -1,3 +1,4 @@
+// Messaging context for real-time chat functionality
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 import { AuthContext } from './AuthContext';

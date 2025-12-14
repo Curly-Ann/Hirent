@@ -1,3 +1,4 @@
+// My rentals page for user booking management
 import React, { useState, useEffect, useMemo } from 'react';
 import { makeAPICall, ENDPOINTS } from '../../config/api';
 import { AuthContext } from '../../context/AuthContext';

@@ -3,11 +3,11 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
-const validationHandler = require("../utils/validators/validationHandler");
+const validationHandler = require("../validators/validationHandler");
 const {
   updateProfileValidator,
   updatePasswordValidator,
-} = require("../utils/validators/userValidator");
+} = require("../validators/userValidator");
 
 // Protected routes (require authentication) - MUST come BEFORE public routes
 // Get current user profile

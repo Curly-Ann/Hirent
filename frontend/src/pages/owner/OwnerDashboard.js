@@ -22,6 +22,10 @@ import BookingTable from "../../components/ownerdashboard/BookingTable";
 
 import { AuthContext } from "../../context/AuthContext"; // ⭐ NEW — to use real user data
 
+// In-memory cache for schedule data
+const scheduleCache = { data: null, timestamp: null };
+const SCHEDULE_CACHE_DURATION = 60000; // 60 seconds
+
 export default function OwnerDashboard() {
   const { user } = useContext(AuthContext); // ⭐ get logged-in owner
   
@@ -39,6 +43,7 @@ export default function OwnerDashboard() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState("all"); // For schedule filtering
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const downloadButtonRef = React.useRef(null);
@@ -48,31 +53,57 @@ export default function OwnerDashboard() {
   // ==================================================
   // FETCH REAL OWNER DATA (NO MOCK DATA ANYWHERE)
   // ==================================================
+  const fetchDashboardData = React.useCallback(async () => {
+    if (!ownerId) return; // wait for user load
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fetch bookings with optional itemId filter for schedule
+      const bookingsUrl = selectedItemId && selectedItemId !== "all" 
+        ? `${ENDPOINTS.BOOKINGS.OWNER_BOOKINGS}?itemId=${selectedItemId}`
+        : ENDPOINTS.BOOKINGS.OWNER_BOOKINGS;
+      
+      const bookingsResponse = await makeAPICall(bookingsUrl);
+      const bookingsData = bookingsResponse?.data && Array.isArray(bookingsResponse.data) ? bookingsResponse.data : [];
+      
+      // Transform bookings for schedule display
+      const transformedBookings = bookingsData.map(booking => ({
+        ...booking,
+        itemKey: booking.itemId?._id || booking.itemId,
+        item: booking.itemId?.title || "Unknown Item",
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        status: booking.status,
+      }));
+      
+      setBookings(transformedBookings);
+
+      // Fetch listings with HTTP cache support (30s TTL)
+      // Browser will use cached response if available within 30s
+      const listingsResponse = await makeAPICall(ENDPOINTS.ITEMS.BY_OWNER(ownerId));
+      setListings(listingsResponse?.success && Array.isArray(listingsResponse.items) ? listingsResponse.items : []);
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      setError("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  }, [ownerId, selectedItemId]);
+
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      if (!ownerId) return; // wait for user load
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const [bookingsResponse, listingsData] = await Promise.all([
-          makeAPICall(ENDPOINTS.BOOKINGS.OWNER_BOOKINGS),
-          makeAPICall(ENDPOINTS.ITEMS.BY_OWNER(ownerId)), // ⭐ REAL OWNER LISTINGS
-        ]);
-
-        setBookings(bookingsResponse?.data && Array.isArray(bookingsResponse.data) ? bookingsResponse.data : []);
-        setListings(Array.isArray(listingsData) ? listingsData : []);
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setError("Failed to load dashboard data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDashboardData();
-  }, [ownerId]);
+  }, [fetchDashboardData]);
+
+  // Invalidate schedule cache when booking status changes
+  const invalidateScheduleCache = React.useCallback(() => {
+    // Clear in-memory cache
+    scheduleCache.data = null;
+    scheduleCache.timestamp = null;
+    // Refetch fresh data
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   // ==================================================
   // REAL STATS — based on backend data
@@ -335,7 +366,12 @@ export default function OwnerDashboard() {
           />
 
           {/* Right column - Booking schedule */}
-          <Booking bookings={bookings} />
+          <Booking 
+            bookings={bookings} 
+            listings={listings}
+            selectedItemId={selectedItemId}
+            onItemChange={setSelectedItemId}
+          />
         </div>
 
         {/* BOOKINGS TABLE */}
