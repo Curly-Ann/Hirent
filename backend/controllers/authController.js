@@ -1,3 +1,4 @@
+// Authentication controller
 const User = require("../models/Users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -106,9 +107,46 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Check if credentials match admin credentials from .env
+    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+    const adminName = process.env.ADMIN_NAME?.replace(/"/g, '').trim();
+    
+    const normalizedEmail = email.toLowerCase().trim();
+    
+    console.log("[LOGIN] Admin check - Email match:", normalizedEmail === adminEmail);
+    console.log("[LOGIN] Admin check - Password match:", password === adminPassword);
+    console.log("[LOGIN] Admin email from env:", adminEmail);
+    console.log("[LOGIN] Admin password from env:", adminPassword);
+    console.log("[LOGIN] Provided password:", password);
+    
+    if (normalizedEmail === adminEmail && password === adminPassword) {
+      console.log("[LOGIN] Admin authentication successful");
+      
+      // Generate JWT token for admin (7 days)
+      const token = jwt.sign(
+        { userId: "admin", email: adminEmail, role: "admin" },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      return res.status(200).json({
+        success: true,
+        token,
+        user: {
+          id: "admin",
+          name: adminName,
+          email: adminEmail,
+          role: "admin",
+          authProvider: "email",
+        },
+        message: "Admin login successful",
+      });
+    }
+
     // Find user by email
     console.log("[LOGIN] Finding user:", email);
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       console.log("[LOGIN] User not found:", email);
       return res.status(401).json({
@@ -131,7 +169,7 @@ const loginUser = async (req, res) => {
     // Generate JWT token (7 days)
     console.log("[LOGIN] Generating JWT token...");
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );

@@ -1,3 +1,4 @@
+// Cart context for shopping cart management
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { ENDPOINTS, makeAPICall } from '../config/api';
 

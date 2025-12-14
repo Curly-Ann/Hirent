@@ -1,3 +1,4 @@
+// Email verification page component
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/solid";
@@ -5,9 +6,12 @@ import logo from "../../assets/logo.png";
 import bg from "../../assets/auth-owner-bg.jpg";
 import Footer from "../../components/layouts/Footer";
 
+// Email verification component
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  // UI state
   const [status, setStatus] = useState("verifying"); // verifying, success, error
   const [message, setMessage] = useState("Verifying your email...");
   const [error, setError] = useState(null);

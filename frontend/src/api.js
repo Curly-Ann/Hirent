@@ -1,3 +1,4 @@
+// API configuration for axios instance
 import axios from 'axios';
 
 const api = axios.create({

@@ -108,13 +108,28 @@ exports.getUserBookings = async (req, res) => {
   }
 };
 
-// Get bookings for items owned by the current user
+// Get bookings for items owned by the current user (with optional itemId filter)
+// IMPORTANT: Only returns active bookings (pending, approved, ongoing) for calendar display
 exports.getBookingsForMyItems = async (req, res) => {
   try {
-    const bookings = await Booking.find({ ownerId: req.user.userId })
+    const { itemId } = req.query;
+    
+    // Build query - always filter by owner AND exclude cancelled/rejected bookings
+    const query = { 
+      ownerId: req.user.userId,
+      // Only include bookings that should block dates on the calendar
+      status: { $in: ['pending', 'approved', 'ongoing'] }
+    };
+    
+    // Add itemId filter if provided
+    if (itemId) {
+      query.itemId = itemId;
+    }
+    
+    const bookings = await Booking.find(query)
       .populate('itemId', 'title images pricePerDay category') // Populating necessary item fields
       .populate('userId', 'name email phone address rating') // Populating necessary renter fields
-      .sort({ createdAt: -1 });
+      .sort({ startDate: 1 }); // Sort by start date for schedule
 
     const validBookings = bookings
       .filter(booking => booking.itemId)
@@ -126,6 +141,8 @@ exports.getBookingsForMyItems = async (req, res) => {
         };
       });
 
+    // Add safe HTTP cache headers for schedule data (private, short TTL)
+    res.set("Cache-Control", "private, max-age=30, stale-while-revalidate=60");
     res.json({ success: true, data: validBookings });
   } catch (err) {
     console.error('[GET OWNER BOOKINGS] Error:', err);

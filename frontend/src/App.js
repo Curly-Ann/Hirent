@@ -22,8 +22,6 @@ import OwnerLogin from "./pages/auth/OwnerLogin";
 import OwnerSignup from "./pages/auth/OwnerSignup";
 import OwnerSetup from "./pages/auth/OwnerSetup";
 import VerifyEmail from "./pages/auth/VerifyEmail";
-import AdminLogin from "./pages/auth/AdminLogin";
-import AdminSignup from "./pages/auth/AdminSignup";
 import BookingConfirmation from "./pages/BookingConfirmation";
 
 // ===== HOMEPAGE SECTIONS =====
@@ -171,110 +169,101 @@ function App() {
               <Route path="/ownersignup" element={<OwnerSignup />} />
               <Route path="/ownersetup" element={<OwnerSetup />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/booking/confirmation/:bookingId" element={<ProtectedRoute><BookingConfirmation /></ProtectedRoute>} />
-            
-            {/* ===== OWNER ROUTES ===== */}
-            <Route path="/ownerlogin" element={<OwnerLogin />} />
-            <Route path="/ownersignup" element={<OwnerSignup />} />
-            <Route path="/ownersetup" element={<OwnerSetup />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
 
-            {/* ===== ADMIN ROUTES (PROTECTED) ===== */}
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin-signup" element={<AdminSignup />} />
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/settings"
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminSettings />
-                </ProtectedRoute>
-              }
-            />
+              {/* ===== ADMIN ROUTES (PROTECTED) ===== */}
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminSettings />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* ===== OWNER DASHBOARD (PROTECTED) ===== */}
-            <Route
-              path="/owner/dashboard"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/add-item"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <AddItem />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/my-listings"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <MyListings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/bookings"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerBookings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/returns"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerReturns />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/messages"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerMessages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/earnings"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerEarnings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/profile"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/owner/settings"
-              element={
-                <ProtectedRoute requiredRole="owner">
-                  <OwnerSettings />
-                </ProtectedRoute>
-              }
-            />
+              {/* ===== OWNER DASHBOARD (PROTECTED) ===== */}
+              <Route
+                path="/owner/dashboard"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/add-item"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <AddItem />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/my-listings"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <MyListings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/bookings"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerBookings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/returns"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerReturns />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/messages"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerMessages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/earnings"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerEarnings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/profile"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/owner/settings"
+                element={
+                  <ProtectedRoute requiredRole="owner">
+                    <OwnerSettings />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* ===== MAIN LAYOUT ROUTES (with navbar and sidebar) ===== */}
-            <Route element={<MainLayout />}>
+              {/* ===== MAIN LAYOUT ROUTES (with navbar and sidebar) ===== */}
+              <Route element={<MainLayout />}>
               {/* Navbar Pages */}
               <Route path="/browse" element={<BrowseRentals />} />
               <Route path="/about" element={<AboutPage />} />

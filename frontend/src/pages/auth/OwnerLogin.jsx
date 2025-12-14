@@ -1,3 +1,4 @@
+// Owner login page component
 import React, { useState, useContext } from "react";
 import "../../assets/Auth.css";
 import logo from "../../assets/logo.png";
@@ -7,23 +8,24 @@ import Footer from "../../components/layouts/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { makeAPICall, ENDPOINTS } from "../../config/api"; // centralized API
+import { makeAPICall, ENDPOINTS } from "../../config/api";
 
+// Owner login component
 const OwnerLogin = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  // Form state
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // UI state
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // -------------------------------
-  // Validation Helpers
-  // -------------------------------
+  // Validation helpers
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const validatePassword = (password) => {
@@ -75,17 +77,19 @@ const OwnerLogin = () => {
     const user = data.user;
     const userRole = user?.role;
 
-    // ENFORCE OWNER LOGIN
-    if (userRole !== "owner") {
-      setError("This account is not registered as an owner.");
+    // Allow admin or owner login
+    if (userRole !== "owner" && userRole !== "admin") {
+      setError("This account is not registered as an owner or admin.");
       return;
     }
 
     // Save Auth
     login(data.token, user);
 
-    // Redirect owner depending on setup
-    if (!user.ownerSetupCompleted) {
+    // Redirect based on role
+    if (userRole === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+    } else if (!user.ownerSetupCompleted) {
       navigate("/ownersetup", { replace: true });
     } else {
       navigate("/owner/dashboard", { replace: true });

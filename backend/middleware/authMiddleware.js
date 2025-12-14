@@ -1,3 +1,4 @@
+// Authentication middleware for JWT verification
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
@@ -12,7 +13,12 @@ module.exports = (req, res, next) => {
     const splitToken = token.split(' ')[1];
     const decoded = jwt.verify(splitToken, process.env.JWT_SECRET);
 
-    req.user = { userId: decoded.userId }; // attach userId to request
+    // Attach user info to request (including role for admin)
+    req.user = {
+      userId: decoded.userId,
+      email: decoded.email,
+      role: decoded.role || 'renter', // default to renter if not specified
+    };
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' });

@@ -102,7 +102,9 @@ const AuthForm = ({ mode }) => {
       login(data.token, user);
 
       setTimeout(() => {
-        if (user.role === "owner") {
+        if (user.role === "admin") {
+          navigate("/admin/dashboard", { replace: true });
+        } else if (user.role === "owner") {
           navigate("/owner/dashboard", { replace: true });
         } else {
           navigate("/", { replace: true });
