@@ -18,6 +18,7 @@ const Booking = () => {
   const { itemId } = useParams();
 
   const [productData, setProductData] = useState(null);
+  const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -67,7 +68,22 @@ const Booking = () => {
     if (itemId) fetchItem();
   }, [itemId]);
 
-  // Pricing calculation
+  // Fetch booked dates for the item
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      if (!itemId) return;
+      try {
+        const response = await makeAPICall(ENDPOINTS.BOOKINGS.FOR_ITEM(itemId));
+        if (response.success) {
+          setBookedDates(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch booked dates:', error);
+      }
+    };
+    fetchBookedDates();
+  }, [itemId]);
+
   const calculatePricing = () => {
     if (!productData) return { subtotal: 0, discount: 0, shippingFee: 0, securityDeposit: 0, total: 0 };
     const price = productData.pricePerDay || 0;
@@ -177,11 +193,24 @@ const Booking = () => {
         <div className="flex-1 space-y-4">
           <ItemSummary product={productData} days={rentalData.days} coupon={couponData} />
           <ApplyCoupon couponData={couponData} setCouponData={setCouponData} />
-          <RentalPeriod rentalData={rentalData} setRentalData={setRentalData} />
+
+          <RentalPeriod rentalData={rentalData} setRentalData={setRentalData} bookedDates={bookedDates} />
+
           <LateReturnPolicy />
-          <PaymentMethod paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
-          <DeliveryMethod deliveryMethod={deliveryMethod} setDeliveryMethod={setDeliveryMethod} deliveryOptions={productData.deliveryOptions} />
-          <ReturnDetails deliveryMethod={deliveryMethod} />
+
+          <PaymentMethod
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+          />
+
+          <DeliveryMethod
+            deliveryMethod={deliveryMethod}
+            setDeliveryMethod={setDeliveryMethod}
+            deliveryOptions={productData.deliveryOptions}
+          />
+
+          <ReturnDetails deliveryMethod={deliveryMethod} securityDeposit={pricing.securityDeposit} />
+
           <CancellationPolicy />
           <RentalTerms />
         </div>

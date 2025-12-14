@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Sidebar from "../../components/layouts/OwnerSidebar";
 import { AuthContext } from "../../context/AuthContext";
+import { makeAPICall, ENDPOINTS } from "../../config/api";
 
 // Default profile template
 const defaultProfile = {
@@ -61,16 +62,9 @@ export default function Profile() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-          credentials: "include",
-        });
-
-        const data = await res.json();
-        if (data.success && data.user) {
+        const data = await makeAPICall(ENDPOINTS.USERS.GET_ME);
+        
+        if (data?.success && data?.user) {
           const nameParts = data.user.name ? data.user.name.split(" ") : ["", ""];
           const firstName = nameParts[0] || "";
           const lastName = nameParts.slice(1).join(" ") || "";
@@ -113,6 +107,8 @@ export default function Profile() {
             phoneVerified: data.user.phoneVerified || false,
             idVerified: data.user.idVerified || false,
           });
+        } else {
+          console.error("Failed to fetch profile: Invalid response", data);
         }
       } catch (err) {
         console.error("Failed to fetch profile:", err);
@@ -147,38 +143,18 @@ export default function Profile() {
   }, []);
 
   // Handle email verification
-  const handleSendVerificationEmail = async () => {
+  const handleSendEmailVerification = async () => {
     try {
       setSendingEmailVerification(true);
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You are not logged in. Please login again.");
-        return;
-      }
-
-      // TODO: Backend - Create endpoint POST /api/users/send-verification-email
-      // TODO: Backend - Generate unique verification token and store in database
-      // TODO: Backend - Send email with verification link containing token
-      // TODO: Backend - Verification link format: {FRONTEND_URL}/verify-email?token={token}
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/send-verification-email`, {
+      const data = await makeAPICall(ENDPOINTS.AUTH.SEND_VERIFICATION_EMAIL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
+      if (data?.success) {
         alert("Verification email sent! Please check your inbox.");
       } else {
-        alert(data.message || "Failed to send verification email");
+        alert(data?.message || "Failed to send verification email");
       }
     } catch (error) {
       console.error("Send verification error:", error);
@@ -312,12 +288,8 @@ export default function Profile() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile`, {
+      const data = await makeAPICall(ENDPOINTS.USERS.UPDATE_PROFILE, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           firstName: profileData.firstName,
           lastName: profileData.lastName,
@@ -339,10 +311,8 @@ export default function Profile() {
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (data.errors && Array.isArray(data.errors)) {
+      if (!data?.success) {
+        if (data?.errors && Array.isArray(data.errors)) {
           const errorMap = {};
           data.errors.forEach((err) => {
             errorMap[err.param] = err.msg;
@@ -350,11 +320,11 @@ export default function Profile() {
           setErrors(errorMap);
           return;
         }
-        alert(data.message || "Failed to save profile");
+        alert(data?.message || "Failed to save profile");
         return;
       }
 
-      if (data.success && data.user) {
+      if (data.user) {
         updateUser(data.user);
         setErrors({});
         setIsEditing(false);
@@ -462,7 +432,7 @@ export default function Profile() {
                     <span className="text-xs font-medium px-2 py-1 rounded bg-green-100 text-green-700">Verified</span>
                   ) : (
                     <button
-                      onClick={handleSendVerificationEmail}
+                      onClick={handleSendEmailVerification}
                       disabled={sendingEmailVerification}
                       className="text-xs font-medium px-3 py-1.5 rounded bg-[#7A1CA9] text-white hover:bg-[#7A1CA9]/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >

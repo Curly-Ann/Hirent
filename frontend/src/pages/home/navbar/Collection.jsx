@@ -20,6 +20,47 @@ const CollectionPage = () => {
   const [selectedCancelId, setSelectedCancelId] = useState(null);
   const [filter, setFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("latest");
+  const [itemsWithBookingStatus, setItemsWithBookingStatus] = useState([]);
+
+  // Fetch booking status for each item in cart
+  useEffect(() => {
+    const enrichItemsWithBookingStatus = async () => {
+      if (!collectionItems || collectionItems.length === 0) {
+        setItemsWithBookingStatus([]);
+        return;
+      }
+
+      try {
+        // Fetch all user bookings
+        const bookingsResponse = await makeAPICall(ENDPOINTS.BOOKINGS.GET_MY);
+        const userBookings = bookingsResponse?.data || [];
+
+        // Create a map of itemId -> booking status
+        const bookingMap = {};
+        userBookings.forEach(booking => {
+          const itemId = booking.itemId?._id || booking.itemId;
+          // Only consider non-cancelled bookings
+          if (booking.status !== 'cancelled') {
+            bookingMap[itemId] = booking.status;
+          }
+        });
+
+        // Enrich cart items with booking status
+        const enrichedItems = collectionItems.map(item => ({
+          ...item,
+          bookingStatus: bookingMap[item.itemId?._id || item.itemId] || null,
+        }));
+
+        setItemsWithBookingStatus(enrichedItems);
+      } catch (error) {
+        console.error("Failed to fetch booking status:", error);
+        // Fallback: use items without booking status
+        setItemsWithBookingStatus(collectionItems);
+      }
+    };
+
+    enrichItemsWithBookingStatus();
+  }, [collectionItems]);
 
   useEffect(() => {
     document.title = "Hirent — Collection";
@@ -28,8 +69,10 @@ const CollectionPage = () => {
     };
   }, []);
 
-  const handleRemoveItem = (id) => {
-    removeFromCart(id);
+  const handleRemoveItem = async (id) => {
+    await removeFromCart(id);
+    // After removal, the cart will be refetched by removeFromCart()
+    // which will trigger the useEffect to re-enrich items with booking status
   };
 
   const calculateItemTotal = (item) => {
@@ -69,11 +112,11 @@ const CollectionPage = () => {
     }
   };
 
-  const filteredItems = collectionItems.filter((item) => {
+  const filteredItems = itemsWithBookingStatus.filter((item) => {
     if (filter === "all") return true;
-    if (filter === "approved") return item.status === "approved";
-    if (filter === "pending") return item.status === "pending";
-    if (filter === "notBooked") return item.status !== "booked";
+    if (filter === "approved") return item.bookingStatus === "approved";
+    if (filter === "pending") return item.bookingStatus === "pending";
+    if (filter === "notBooked") return !item.bookingStatus; // No booking status = not booked
     return true;
   });
 
@@ -83,8 +126,8 @@ const CollectionPage = () => {
     return sortOrder === "latest" ? bDate - aDate : aDate - bDate;
   });
 
-  const notBookedItems = collectionItems.filter((item) => item.status !== "booked");
-  const approvedItems = collectionItems.filter((item) => item.status === "approved");
+  const notBookedItems = itemsWithBookingStatus.filter((item) => !item.bookingStatus);
+  const approvedItems = itemsWithBookingStatus.filter((item) => item.bookingStatus === "approved");
 
   const approvedTotals = approvedItems.reduce(
     (acc, item) => {
