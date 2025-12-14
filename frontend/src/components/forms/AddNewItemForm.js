@@ -206,12 +206,16 @@ export default function AddNewItemForm({ onCancel, onSuccess }) {
   };
 
   const handleImageChange = (e) => {
-    const previews = Array.from(e.target.files).map((file) => ({
-      url: URL.createObjectURL(file),
-      name: file.name,
-    }));
-    setImagePreviews(previews);
-  };
+  const files = Array.from(e.target.files);
+  const previews = files.map((file) => ({
+    file, // keep original file for Cloudinary upload
+    url: URL.createObjectURL(file),
+    name: file.name,
+  }));
+  setImagePreviews(previews);
+
+    e.target.value = null;
+};
 
   const addCustomItem = () => {
     if (!formData.customItem.trim()) return;
@@ -301,8 +305,7 @@ export default function AddNewItemForm({ onCancel, onSuccess }) {
     if (!formData.condition) temp.condition = "Condition required";
     if (!formData.category) temp.category = "Category required";
     if (!formData.location) temp.location = "Location required";
-    const uploadInput = document.getElementById("uploadImg");
-    const fileCount = uploadInput?.files?.length || 0;
+    const fileCount = imagePreviews.length;
     if (fileCount === 0) {
       temp.photo = "At least 1 photo is required.";
     } else if (fileCount > 5) {
@@ -314,65 +317,72 @@ export default function AddNewItemForm({ onCancel, onSuccess }) {
   };
 
   const submitForm = async () => {
-    // 1️⃣ Validate required fields
-    if (!validateFields()) return;
+  if (!validateFields()) return;
 
-    try {
-      // 2️⃣ Prepare FormData for multipart request
-      const form = new FormData();
+  try {
+    let uploadedImageUrls = [];
 
-      // Append all form fields except temporary ones
-      for (const key in formData) {
-        if (key !== "customItem" && key !== "customColor") {
-          const value = formData[key];
-          // Map itemName to title for backend
-          const fieldName = key === "itemName" ? "title" : key;
-          
-          if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
-            form.append(fieldName, JSON.stringify(value));
-          } else {
-            form.append(fieldName, value);
-          }
-        }
-      }
+    // Upload images to Cloudinary
+    if (imagePreviews.length > 0) {
+      const uploadPromises = imagePreviews.map(async (img) => {
+        const formDataCloud = new FormData();
+        formDataCloud.append("file", img.file);
+        formDataCloud.append("upload_preset", "hirent_uploads"); // replace with preset
 
-      // Append images if any
-      const input = document.getElementById("uploadImg");
-      if (input?.files?.length) {
-        Array.from(input.files).forEach((file) => form.append("images", file));
-      }
-
-      // 3️⃣ Send request to backend
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}${ENDPOINTS.ITEMS.CREATE}`, {
-        method: "POST",
-        body: form,
-        headers: {
-          Authorization: token ? `Bearer ${token}` : undefined,
-        },
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/dbpxc4fhz/image/upload", // replace with  Cloud name
+          { method: "POST", body: formDataCloud }
+        );
+        const data = await res.json();
+        return data.secure_url;
       });
 
-      const data = await response.json();
-
-      // 4️⃣ Handle response
-      if (response.ok || data._id || data.success) {
-        alert("Item added successfully!");
-        clearAllFields();
-        // Call onSuccess callback to navigate
-        if (onSuccess) {
-          onSuccess();
-        }
-      } else {
-        const errorMsg = data.msg || data.message || "Failed to add item.";
-        setErrors(prev => ({ ...prev, form: errorMsg }));
-        alert(`Item creation failed: ${errorMsg}`);
-      }
-    } catch (error) {
-      console.error("Error adding item:", error);
-      alert("Something went wrong. Please try again.");
+      uploadedImageUrls = await Promise.all(uploadPromises);
     }
-  };
 
+    // Prepare payload for backend
+    const payload = {};
+    for (const key in formData) {
+      if (key !== "customItem" && key !== "customColor") {
+        let value = formData[key];
+        if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
+          payload[key] = JSON.stringify(value);
+        } else {
+          payload[key] = value;
+        }
+      }
+    }
+
+    // Attach uploaded Cloudinary URLs
+    payload.images = JSON.stringify(uploadedImageUrls);
+
+    // Send to backend
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}${ENDPOINTS.ITEMS.CREATE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (response.ok || data._id || data.success) {
+      alert("Item added successfully!");
+      clearAllFields();
+      if (onSuccess) onSuccess();
+    } else {
+      const errorMsg = data.msg || data.message || "Failed to add item.";
+      setErrors(prev => ({ ...prev, form: errorMsg }));
+      alert(`Item creation failed: ${errorMsg}`);
+    }
+  } catch (error) {
+    console.error("Error adding item:", error);
+    alert("Something went wrong. Please try again.");
+  }
+};
   /* -------------------------
         UI COMPONENT
   ------------------------- */

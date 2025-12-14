@@ -1,5 +1,6 @@
 const Item = require("../models/Item");
 const { RENTABLE_CATEGORIES } = require('../utils/constants');
+const cloudinary = require("../utils/cloudinary");
 
 /* =====================================================
    GET SINGLE ITEM (FULL DATA – INCLUDING IMAGES)
@@ -15,7 +16,6 @@ exports.getSingleItem = async (req, res) => {
       return res.status(404).json({ success: false, msg: "Item not found" });
     }
 
-    // NO CACHE for item details - always fresh
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");
     res.json({ success: true, item });
   } catch (err) {
@@ -25,7 +25,7 @@ exports.getSingleItem = async (req, res) => {
 };
 
 /* =====================================================
-   GET ALL ITEMS (BROWSE – NO IMAGES, FAST)
+   GET ALL ITEMS (BROWSE – FIRST IMAGE ONLY, FAST)
    ===================================================== */
 exports.getAllItems = async (req, res) => {
   try {
@@ -33,17 +33,15 @@ exports.getAllItems = async (req, res) => {
     const limit = Number(req.query.limit) || 12;
 
     console.time("[GET ALL ITEMS] Query Time");
-    
-    // Only fetch active items for browse
+
     const items = await Item.find({ status: 'active' })
       .select("title pricePerDay location images rating status _id category")
       .skip((page - 1) * limit)
       .limit(limit)
       .lean()
       .exec();
-    
+
     console.timeEnd("[GET ALL ITEMS] Query Time");
-    console.log(`[GET ALL ITEMS] Found ${items.length} items on page ${page}`);
 
     const sanitized = items.map(item => ({
       _id: item._id,
@@ -56,18 +54,11 @@ exports.getAllItems = async (req, res) => {
       images: item.images?.length ? [item.images[0]] : []
     }));
 
-    // HTTP Cache Headers for Browse List
     res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=300");
     res.json({ success: true, items: sanitized });
-
   } catch (err) {
-    console.error("[GET ALL ITEMS] Error:", err.message);
-    console.error("[GET ALL ITEMS] Stack:", err.stack);
-    res.status(500).json({
-      success: false,
-      msg: "Error fetching items",
-      error: err.message
-    });
+    console.error("[GET ALL ITEMS] Error:", err);
+    res.status(500).json({ success: false, msg: "Error fetching items" });
   }
 };
 
@@ -96,64 +87,69 @@ exports.searchItems = async (req, res) => {
 /* =====================================================
    CREATE ITEM (OWNER)
    ===================================================== */
+/* =====================================================
+   CREATE ITEM (OWNER)
+   ===================================================== */
 exports.createItem = async (req, res) => {
   try {
     const itemData = { ...req.body };
     itemData.owner = req.user.userId;
 
-    if (itemData.itemName) {
-      itemData.title = itemData.itemName;
-    }
+    // Map itemName to title if present
+    if (itemData.itemName) itemData.title = itemData.itemName;
 
-    const fieldsToParse = ['unavailableDates', 'itemOptions'];
-    fieldsToParse.forEach(field => {
-      if (itemData[field] && typeof itemData[field] === 'string') {
+    // Parse JSON fields if sent as strings
+    const fieldsToParse = ["unavailableDates", "itemOptions"];
+    fieldsToParse.forEach((field) => {
+      if (itemData[field] && typeof itemData[field] === "string") {
         try {
           itemData[field] = JSON.parse(itemData[field]);
         } catch {}
       }
     });
 
-    if (req.files && req.files.length > 0) {
-      itemData.images = req.files.map(file =>
-        `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
-      );
+    // Use frontend-uploaded image URLs
+      if (req.files && req.files.length > 0) {
+      itemData.images = req.files.map(file => file.path); 
     }
 
-    if (!itemData.images || itemData.images.length === 0) {
-      return res.status(400).json({
-        success: false,
-        msg: "At least one image is required."
-      });
+    // Validate image count
+      if (!itemData.images || itemData.images.length === 0) {
+        return res.status(400).json({
+         success: false,
+        msg: "At least one image is required.",
+     });
     }
 
-    if (itemData.images.length > 5) {
-      return res.status(400).json({
-        success: false,
-        msg: "Maximum of 5 images allowed."
-      });
-    }
+if (itemData.images.length > 5) {
+  return res.status(400).json({
+    success: false,
+    msg: "Maximum of 5 images allowed.",
+  });
+}
 
+    // Save item
     const item = new Item(itemData);
     await item.save();
 
     res.status(201).json({
       success: true,
       message: "Item created successfully",
-      item
+      item,
     });
-
   } catch (err) {
     console.error("[CREATE ITEM]", err);
     res.status(500).json({
       success: false,
-      msg: "Error creating item"
+      msg: "Error creating item",
+      error: err.message,
     });
   }
 };
 
+
 /* =====================================================
-   GET ITEMS BY OWNER (NO IMAGES – FAST DASHBOARD)
+   GET ITEMS BY OWNER (THUMBNAILS ONLY)
    ===================================================== */
 exports.getItemsByOwner = async (req, res) => {
   try {
@@ -161,13 +157,11 @@ exports.getItemsByOwner = async (req, res) => {
       .select("_id title pricePerDay location images category status views totalBookings createdAt updatedAt availability")
       .lean();
 
-    // Transform items to include only first image as thumbnail
     const sanitized = items.map(item => ({
       ...item,
       images: item.images?.length ? [item.images[0]] : []
     }));
 
-    // Add safe HTTP cache headers for owner listings (private, short TTL)
     res.set("Cache-Control", "private, max-age=30, stale-while-revalidate=60");
     res.json({ success: true, items: sanitized });
   } catch (err) {
@@ -183,10 +177,11 @@ exports.updateItem = async (req, res) => {
   try {
     const updateData = { ...req.body };
 
-    if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map(file =>
-        `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
-      );
+    // Only update images if new ones are provided
+    if (updateData.images && Array.isArray(updateData.images)) {
+      if (updateData.images.length > 5) {
+        return res.status(400).json({ success: false, msg: "Maximum of 5 images allowed." });
+      }
     }
 
     const updated = await Item.findByIdAndUpdate(
@@ -199,12 +194,7 @@ exports.updateItem = async (req, res) => {
       return res.status(404).json({ success: false, msg: "Item not found" });
     }
 
-    res.json({
-      success: true,
-      message: "Item updated successfully",
-      item: updated
-    });
-
+    res.json({ success: true, message: "Item updated successfully", item: updated });
   } catch (err) {
     console.error("[UPDATE ITEM]", err);
     res.status(500).json({ msg: "Update failed" });
@@ -217,13 +207,8 @@ exports.updateItem = async (req, res) => {
 exports.deleteItem = async (req, res) => {
   try {
     const deleted = await Item.findByIdAndDelete(req.params.id);
-
-    if (!deleted) {
-      return res.status(404).json({ success: false, msg: "Item not found" });
-    }
-
+    if (!deleted) return res.status(404).json({ success: false, msg: "Item not found" });
     res.json({ success: true, msg: "Item deleted successfully" });
-
   } catch (err) {
     console.error("[DELETE ITEM]", err);
     res.status(500).json({ msg: "Delete failed" });
@@ -240,11 +225,7 @@ exports.updateItemStatus = async (req, res) => {
       { status: req.body.status },
       { new: true }
     ).lean();
-
-    if (!updated) {
-      return res.status(404).json({ success: false, msg: "Item not found" });
-    }
-
+    if (!updated) return res.status(404).json({ success: false, msg: "Item not found" });
     res.json({ success: true, item: updated });
   } catch (err) {
     res.status(500).json({ msg: "Status update failed" });
@@ -263,14 +244,10 @@ exports.getRentableCategories = (req, res) => {
    ===================================================== */
 exports.getFeaturedItems = async (req, res) => {
   try {
-    const items = await Item.find({
-      featured: true,
-      status: 'active'
-    })
+    const items = await Item.find({ featured: true, status: 'active' })
       .select("-images")
       .limit(12)
       .lean();
-
     res.json({ success: true, items });
   } catch (err) {
     res.status(500).json({ msg: "Failed to fetch featured items" });
