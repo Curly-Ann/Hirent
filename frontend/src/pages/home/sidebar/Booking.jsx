@@ -113,7 +113,7 @@ const Booking = () => {
     setIsBooking(true);
 
     const bookingData = {
-      itemId: item._id,   
+      itemId: productData._id, 
       startDate: rentalData.startDate,
       endDate: rentalData.endDate,
       totalAmount: pricing.total,

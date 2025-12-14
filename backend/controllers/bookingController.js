@@ -8,18 +8,16 @@ exports.createBooking = async (req, res) => {
   try {
     const {
       itemId, startDate, endDate, totalAmount, subtotal,
-      shippingFee, discount, deliveryMethod, couponCode
+      shippingFee, discount, deliveryMethod, couponCode, paymentMethod,
     } = req.body;
-    const renterId = req.user._id;
+
+    const renterId = req.user.userId;
 
     const item = await Item.findById(itemId);
-    if (!item) {
-      return res.status(404).json({ success: false, msg: 'Item not found' });
-    }
+    if (!item) return res.status(404).json({ success: false, msg: 'Item not found' });
 
-    if (item.owner.toString() === renterId) {
+    if (item.owner.toString() === renterId)
       return res.status(400).json({ success: false, msg: 'You cannot book your own item.' });
-    }
 
     const overlap = await Booking.findOne({
       itemId,
@@ -28,13 +26,11 @@ exports.createBooking = async (req, res) => {
       endDate: { $gt: startDate },
     });
 
-    if (overlap) {
-      return res.status(409).json({ success: false, msg: 'The selected dates overlap with an existing booking.' });
-    }
+    if (overlap) return res.status(409).json({ success: false, msg: 'Selected dates overlap with an existing booking.' });
 
     const newBooking = new Booking({
-      userId: renterId,
-      itemId,
+      userId: renterId,       
+      itemId: item._id,
       ownerId: item.owner,
       startDate,
       endDate,
@@ -43,8 +39,8 @@ exports.createBooking = async (req, res) => {
       shippingFee,
       securityDeposit: item.securityDeposit || 0,
       discount,
-      deliveryMethod,
-      couponCode,
+      deliveryMethod,         
+      paymentMethod,          
     });
 
     await newBooking.save();
@@ -63,11 +59,13 @@ exports.createBooking = async (req, res) => {
       message: 'Booking created successfully',
       data: newBooking,
     });
+
   } catch (err) {
     console.error('[CREATE BOOKING] Error:', err);
     res.status(500).json({ success: false, msg: 'Error creating booking', message: err.message });
   }
 };
+
 
 // Get bookings made by the current user (renter)
 exports.getMyBookings = async (req, res) => {
