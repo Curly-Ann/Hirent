@@ -24,22 +24,29 @@ const app = express();
 // -------------------------
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://hirentttttt.netlify.app",
+  "https://hirenttttttt.netlify.app",
 ];
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://hirenttttttt.netlify.app"
-    ],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.options("*", cors());
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
@@ -62,7 +69,10 @@ app.use(session({
   secret: process.env.JWT_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set true in production with HTTPS
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  } // Set true in production with HTTPS
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -141,9 +151,16 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"]
-  }
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST"],
+  },
 });
 
 io.on('connection', (socket) => {

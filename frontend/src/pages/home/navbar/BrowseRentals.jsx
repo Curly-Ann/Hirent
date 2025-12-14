@@ -27,6 +27,8 @@ const BrowseRentals = () => {
   });
 
   const [sortOption, setSortOption] = useState("Popular");
+
+  // ✅ Wishlist should store ITEM IDS ONLY
   const [wishlist, setWishlist] = useState([]);
   const [justAdded, setJustAdded] = useState([]);
 
@@ -36,32 +38,39 @@ const BrowseRentals = () => {
   }, []);
 
   // -----------------------------
-  // 🔥 FETCH ITEMS FROM API
+  // 🔥 FETCH ITEMS
   // -----------------------------
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true);
       try {
         const data = await makeAPICall(ENDPOINTS.ITEMS.GET_ALL);
-        setListings(data.items || []);
-        setFilteredListings(data.items || []);
+        setListings(data?.items || []);
+        setFilteredListings(data?.items || []);
       } catch (err) {
         console.error("Error fetching items:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchItems();
   }, []);
 
   // -----------------------------
-  // 🔥 FETCH USER WISHLIST
+  // 🔥 FETCH WISHLIST (FIXED)
   // -----------------------------
   useEffect(() => {
     const loadWishlist = async () => {
       try {
         const data = await makeAPICall(ENDPOINTS.WISHLIST.GET);
-        setWishlist(data.wishlist || []);
+
+        // ✅ Normalize wishlist → array of item IDs
+        const ids = (data?.wishlist || []).map((item) =>
+          typeof item === "string" ? item : item._id
+        );
+
+        setWishlist(ids);
       } catch (err) {
         console.error("Error loading wishlist:", err);
       }
@@ -71,12 +80,14 @@ const BrowseRentals = () => {
   }, []);
 
   // -----------------------------
-  // 🔥 ADD/REMOVE WISHLIST
+  // 🔥 TOGGLE WISHLIST
   // -----------------------------
   const toggleWishlist = async (itemId) => {
     try {
       if (wishlist.includes(itemId)) {
-        await makeAPICall(ENDPOINTS.WISHLIST.REMOVE(itemId), { method: "DELETE" });
+        await makeAPICall(ENDPOINTS.WISHLIST.REMOVE(itemId), {
+          method: "DELETE",
+        });
         setWishlist((prev) => prev.filter((id) => id !== itemId));
       } else {
         await makeAPICall(ENDPOINTS.WISHLIST.ADD, {
@@ -91,7 +102,7 @@ const BrowseRentals = () => {
   };
 
   // -----------------------------
-  // 🔥 ADD TO COLLECTION (CART)
+  // 🔥 ADD TO CART
   // -----------------------------
   const handleAddToCollection = async (item) => {
     try {
@@ -101,7 +112,6 @@ const BrowseRentals = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      // Show "added" animation
       setJustAdded((prev) => [...prev, item._id]);
       setTimeout(() => {
         setJustAdded((prev) => prev.filter((id) => id !== item._id));
@@ -112,7 +122,7 @@ const BrowseRentals = () => {
   };
 
   // -----------------------------
-  // 🔥 FILTER + SORT LOGIC
+  // 🔥 FILTER + SORT
   // -----------------------------
   useEffect(() => {
     let filtered = [...listings];
@@ -144,11 +154,17 @@ const BrowseRentals = () => {
       const end = dayjs(filters.toDate);
 
       filtered = filtered.filter((item) => {
-        if (item.availabilityType === 'always' || item.availabilityType === 'specific-dates') {
-          const isUnavailable = item.unavailableDates.some(range => {
+        if (
+          item.availabilityType === "always" ||
+          item.availabilityType === "specific-dates"
+        ) {
+          const isUnavailable = item.unavailableDates?.some((range) => {
             const unavailableStart = dayjs(range.start);
             const unavailableEnd = dayjs(range.end);
-            return start.isBefore(unavailableEnd) && end.isAfter(unavailableStart);
+            return (
+              start.isBefore(unavailableEnd) &&
+              end.isAfter(unavailableStart)
+            );
           });
           return !isUnavailable;
         }
@@ -156,15 +172,16 @@ const BrowseRentals = () => {
       });
     }
 
-    // Sorting
     if (sortOption === "Lowest Price") {
       filtered.sort((a, b) => a.pricePerDay - b.pricePerDay);
     } else if (sortOption === "Highest Price") {
       filtered.sort((a, b) => b.pricePerDay - a.pricePerDay);
     } else if (sortOption === "Newest") {
-      filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      filtered.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
     } else if (sortOption === "Popular") {
-      filtered.sort((a, b) => b.rating - a.rating);
+      filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
 
     setFilteredListings(filtered);
@@ -186,18 +203,28 @@ const BrowseRentals = () => {
             <h2 className="text-[20px] text-gray-800 font-semibold flex items-center gap-1">
               <span className="inline-block w-3 h-6 bg-[#7A1CA9] rounded mr-2"></span>
               {filters.category || "All Rentals"}
-              <span className="text-[#9129c5] ml-1">({filteredListings.length})</span>
+              <span className="text-[#9129c5] ml-1">
+                ({filteredListings.length})
+              </span>
             </h2>
 
             <SortDropdown onSortChange={setSortOption} />
           </div>
 
           {loading ? (
-            <div className="text-center text-gray-500 py-20">Loading listings...</div>
+            <div className="text-center text-gray-500 py-20">
+              Loading listings...
+            </div>
           ) : filteredListings.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
-              <img src={emptyListingsVector} alt="No Listings" className="w-52 h-72 mb-4" />
-              <h2 className="text-[24px] font-bold text-gray-600 mb-1">No Rentals Found</h2>
+              <img
+                src={emptyListingsVector}
+                alt="No Listings"
+                className="w-52 h-72 mb-4"
+              />
+              <h2 className="text-[24px] font-bold text-gray-600 mb-1">
+                No Rentals Found
+              </h2>
               <p className="text-[16px] text-gray-400 mb-6 text-center max-w-sm">
                 Try adjusting your search or filters.
               </p>
@@ -208,7 +235,7 @@ const BrowseRentals = () => {
                 <RentalItemCard
                   key={item._id}
                   item={item}
-                  wishlist={wishlist.map(i => i._id)}
+                  wishlist={wishlist}
                   justAdded={justAdded}
                   toggleWishlist={toggleWishlist}
                   handleAddToCollection={handleAddToCollection}
